@@ -375,6 +375,8 @@ nav.raised{box-shadow:0 4px 24px rgba(26,18,9,.08)}
 .pe-save:hover{opacity:.88}
 .pe-cancel{padding:.75rem 1.2rem;background:rgba(255,255,255,.08);color:rgba(255,255,255,.6);border:none;border-radius:7px;font-family:var(--sans);font-size:.78rem;font-weight:600;cursor:pointer;transition:background .2s}
 .pe-cancel:hover{background:rgba(255,255,255,.13)}
+.pe-section-badge{display:inline-flex;align-items:center;gap:.4rem;font-size:.62rem;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--clay);background:rgba(196,92,42,.12);border:1px solid rgba(196,92,42,.25);border-radius:4px;padding:.28rem .8rem;margin-bottom:.8rem}
+.pe-section-badge.gold{color:var(--gold);background:rgba(197,163,60,.1);border-color:rgba(197,163,60,.25)}
 
 .search-overlay{position:fixed;inset:0;background:rgba(26,18,9,.72);z-index:700;display:flex;align-items:flex-start;justify-content:center;padding-top:4rem;opacity:0;pointer-events:none;transition:opacity .25s}
 .search-overlay.open{opacity:1;pointer-events:all}
@@ -2068,181 +2070,7 @@ footer{background:var(--ink);color:rgba(255,255,255,.45);padding:5rem 2.5rem 2re
     </select>
     <span class="gf-count" id="ropaCount"></span>
   </div>
-  <div class="pgrid" id="ropaGrid">
-
-    <!-- ════ PRODUCTO ROPA 1 ════ -->
-    <div class="pcard" data-prox="1" data-name="Remera Esencial" data-price="18900" data-stock="0" data-bg="#C88858">
-      <div class="pcard-img">
-        <div class="pcard-thumb pc-r1">Remera</div>
-        <span class="pcard-tag tag-hot">Más vendido</span>
-        <div class="pcard-prox">
-          <span class="pcard-prox-badge">Próximamente</span>
-          <p class="pcard-prox-txt">Disponible pronto</p>
-        </div>
-      </div>
-      <div class="pcard-body">
-        <p class="pcard-cat">Mujer · Básicos</p>
-        <p class="pcard-name">Remera Esencial</p>
-        <p class="pcard-sub">100% algodón peinado · Talle generoso</p>
-        <div class="pcard-foot">
-          <span class="pcard-price">$18.900</span>
-          <span class="pcard-stars">★★★★★</span>
-        </div>
-      </div>
-    </div>
-
-    <!-- ════ PRODUCTO ROPA 2 ════ -->
-    <div class="pcard" data-prox="1" data-name="Jean Clásico Recto" data-price="54900" data-stock="0" data-bg="#6888A8">
-      <div class="pcard-img">
-        <div class="pcard-thumb pc-r2">Jean</div>
-        <span class="pcard-tag tag-new">Nuevo</span>
-        <div class="pcard-prox">
-          <span class="pcard-prox-badge">Próximamente</span>
-          <p class="pcard-prox-txt">Disponible pronto</p>
-        </div>
-      </div>
-      <div class="pcard-body">
-        <p class="pcard-cat">Unisex · Pantalones</p>
-        <p class="pcard-name">Jean Clásico Recto</p>
-        <p class="pcard-sub">Denim premium · Varios talles y colores</p>
-        <div class="pcard-foot">
-          <span class="pcard-price">$54.900</span>
-          <span class="pcard-stars">★★★★☆</span>
-        </div>
-      </div>
-    </div>
-
-    <!-- ════ PRODUCTO ROPA 3 ════ -->
-    <div class="pcard" data-prox="1" data-name="Buzo Canguro" data-price="38500" data-stock="0" data-bg="#789860">
-      <div class="pcard-img">
-        <div class="pcard-thumb pc-r3">Buzo</div>
-        <span class="pcard-tag tag-sale">−20%</span>
-        <div class="pcard-prox">
-          <span class="pcard-prox-badge">Próximamente</span>
-          <p class="pcard-prox-txt">Disponible pronto</p>
-        </div>
-      </div>
-      <div class="pcard-body">
-        <p class="pcard-cat">Unisex · Abrigos</p>
-        <p class="pcard-name">Buzo Canguro</p>
-        <p class="pcard-sub">Interior afelpado · Ideal para el frío</p>
-        <div class="pcard-foot">
-          <div>
-            <span class="pcard-price-old">$48.200</span>
-            <span class="pcard-price-sale">$38.500</span>
-          </div>
-          <span class="pcard-stars">★★★★★</span>
-        </div>
-      </div>
-    </div>
-
-    <!-- ════ PRODUCTO ROPA 4 ════ -->
-    <div class="pcard" data-prox="1" data-name="Vestido Lino Natural" data-price="62000" data-stock="0" data-bg="#A87878">
-      <div class="pcard-img">
-        <div class="pcard-thumb pc-r4">Vestido</div>
-        <span class="pcard-tag tag-new">Nuevo</span>
-        <div class="pcard-prox">
-          <span class="pcard-prox-badge">Próximamente</span>
-          <p class="pcard-prox-txt">Disponible pronto</p>
-        </div>
-      </div>
-      <div class="pcard-body">
-        <p class="pcard-cat">Mujer · Vestidos</p>
-        <p class="pcard-name">Vestido Lino Natural</p>
-        <p class="pcard-sub">100% lino · Fresco y elegante</p>
-        <div class="pcard-foot">
-          <span class="pcard-price">$62.000</span>
-          <span class="pcard-stars">★★★★☆</span>
-        </div>
-      </div>
-    </div>
-
-    <!-- ════ PRODUCTO ROPA 5 ════ -->
-    <div class="pcard" data-prox="1" data-name="Campera Ripstop" data-price="89900" data-stock="0" data-bg="#B0A068">
-      <div class="pcard-img">
-        <div class="pcard-thumb pc-r5">Campera</div>
-        <span class="pcard-tag tag-hot">Bestseller</span>
-        <div class="pcard-prox">
-          <span class="pcard-prox-badge">Próximamente</span>
-          <p class="pcard-prox-txt">Disponible pronto</p>
-        </div>
-      </div>
-      <div class="pcard-body">
-        <p class="pcard-cat">Unisex · Abrigos</p>
-        <p class="pcard-name">Campera Ripstop</p>
-        <p class="pcard-sub">Impermeable · Liviana · 3 colores</p>
-        <div class="pcard-foot">
-          <span class="pcard-price">$89.900</span>
-          <span class="pcard-stars">★★★★★</span>
-        </div>
-      </div>
-    </div>
-
-    <!-- ════ PRODUCTO ROPA 6 ════ -->
-    <div class="pcard" data-prox="1" data-name="Short Deportivo" data-price="22500" data-stock="0" data-bg="#7878B0">
-      <div class="pcard-img">
-        <div class="pcard-thumb pc-r6">Short</div>
-        <div class="pcard-prox">
-          <span class="pcard-prox-badge">Próximamente</span>
-          <p class="pcard-prox-txt">Disponible pronto</p>
-        </div>
-      </div>
-      <div class="pcard-body">
-        <p class="pcard-cat">Unisex · Deportivo</p>
-        <p class="pcard-name">Short Deportivo</p>
-        <p class="pcard-sub">Dry fit · Bolsillos laterales</p>
-        <div class="pcard-foot">
-          <span class="pcard-price">$22.500</span>
-          <span class="pcard-stars">★★★★☆</span>
-        </div>
-      </div>
-    </div>
-
-    <!-- ════ PRODUCTO ROPA 7 ════ -->
-    <div class="pcard" data-prox="1" data-name="Camisa Oxford" data-price="47000" data-stock="0" data-bg="#A88860">
-      <div class="pcard-img">
-        <div class="pcard-thumb pc-r7">Camisa</div>
-        <div class="pcard-prox">
-          <span class="pcard-prox-badge">Próximamente</span>
-          <p class="pcard-prox-txt">Disponible pronto</p>
-        </div>
-      </div>
-      <div class="pcard-body">
-        <p class="pcard-cat">Hombre · Camisas</p>
-        <p class="pcard-name">Camisa Oxford</p>
-        <p class="pcard-sub">Algodón 100% · Slim fit</p>
-        <div class="pcard-foot">
-          <span class="pcard-price">$47.000</span>
-          <span class="pcard-stars">★★★★★</span>
-        </div>
-      </div>
-    </div>
-
-    <!-- ════ PRODUCTO ROPA 8 ════ -->
-    <div class="pcard" data-prox="1" data-name="Jogging Premium" data-price="41000" data-stock="0" data-bg="#78A878">
-      <div class="pcard-img">
-        <div class="pcard-thumb pc-r8">Jogging</div>
-        <span class="pcard-tag tag-sale">−15%</span>
-        <div class="pcard-prox">
-          <span class="pcard-prox-badge">Próximamente</span>
-          <p class="pcard-prox-txt">Disponible pronto</p>
-        </div>
-      </div>
-      <div class="pcard-body">
-        <p class="pcard-cat">Unisex · Deportivo</p>
-        <p class="pcard-name">Jogging Premium</p>
-        <p class="pcard-sub">Frisa interior · Cintura elástica</p>
-        <div class="pcard-foot">
-          <div>
-            <span class="pcard-price-old">$48.200</span>
-            <span class="pcard-price-sale">$41.000</span>
-          </div>
-          <span class="pcard-stars">★★★★☆</span>
-        </div>
-      </div>
-    </div>
-
-  </div><!-- fin pgrid ropa -->
+  <div class="pgrid" id="ropaGrid"><!-- productos dinámicos desde admin --></div>
 </div><!-- fin section ropa -->
 
 
@@ -2262,92 +2090,7 @@ footer{background:var(--ink);color:rgba(255,255,255,.45);padding:5rem 2.5rem 2re
       </div>
       <a href="#" class="sec-all">Ver todas las ofertas</a>
     </div>
-    <div class="ogrid">
-
-      <!-- ════ OFERTA 1 ════ -->
-      <div class="ocard" data-prox="1" style="position:relative">
-        <div class="ocard-prox-overlay">
-          <span class="ocard-prox-badge">Próximamente</span>
-          <span class="ocard-prox-sub">Oferta disponible muy pronto</span>
-        </div>
-        <div class="ocard-ribbon">−35%</div>
-        <div class="ocard-img oi-1">Licuadora</div>
-        <div class="ocard-body">
-          <div class="ocard-cat">Cocina · Electrodomésticos</div>
-          <!-- ✏️ EDITAR: Nombre y descripción -->
-          <div class="ocard-name">Licuadora Profesional 900W</div>
-          <div class="ocard-desc">Motor de alta potencia, vaso de tritan irrompible, función turbo. La más vendida del catálogo.</div>
-          <div class="ocard-prices">
-            <!-- ✏️ EDITAR: Precios -->
-            <span class="ocard-new">$95.900</span>
-            <span class="ocard-old">$147.500</span>
-            <span class="ocard-disc">−35%</span>
-          </div>
-          <div class="ocard-timer">
-            <span class="timer-lbl">Termina en</span>
-            <div class="timer-display" data-end="3h">
-              <span class="t-h">03</span><span class="timer-sep">:</span><span class="t-m">00</span><span class="timer-sep">:</span><span class="t-s">00</span>
-            </div>
-          </div>
-          <button class="ocard-btn" onclick="addToCartByName('Licuadora Profesional 900W',95900)">Aprovechar oferta</button>
-        </div>
-      </div>
-
-      <!-- ════ OFERTA 2 ════ -->
-      <div class="ocard" data-prox="1" style="position:relative">
-        <div class="ocard-prox-overlay">
-          <span class="ocard-prox-badge">Próximamente</span>
-          <span class="ocard-prox-sub">Oferta disponible muy pronto</span>
-        </div>
-        <div class="ocard-ribbon">−40%</div>
-        <div class="ocard-img oi-2">Colchón</div>
-        <div class="ocard-body">
-          <div class="ocard-cat">Dormitorio · Descanso</div>
-          <div class="ocard-name">Colchón Espuma Premium</div>
-          <div class="ocard-desc">Espuma de alta densidad 25kg/m³. Apto cama 2 plazas. Comodidad garantizada 10 años.</div>
-          <div class="ocard-prices">
-            <span class="ocard-new">$189.000</span>
-            <span class="ocard-old">$315.000</span>
-            <span class="ocard-disc">−40%</span>
-          </div>
-          <div class="ocard-timer">
-            <span class="timer-lbl">Termina en</span>
-            <div class="timer-display" data-end="5h">
-              <span class="t-h">05</span><span class="timer-sep">:</span><span class="t-m">00</span><span class="timer-sep">:</span><span class="t-s">00</span>
-            </div>
-          </div>
-          <button class="ocard-btn" onclick="addToCartByName('Colchón Espuma Premium',189000)">Aprovechar oferta</button>
-        </div>
-      </div>
-
-      <!-- ════ OFERTA 3 ════ -->
-      <div class="ocard" data-prox="1" style="position:relative">
-        <div class="ocard-prox-overlay">
-          <span class="ocard-prox-badge">Próximamente</span>
-          <span class="ocard-prox-sub">Oferta disponible muy pronto</span>
-        </div>
-        <div class="ocard-ribbon">−30%</div>
-        <div class="ocard-img oi-3">Pack Ropa</div>
-        <div class="ocard-body">
-          <div class="ocard-cat">Ropa · Pack especial</div>
-          <div class="ocard-name">Pack 3 Remeras + Jean</div>
-          <div class="ocard-desc">3 remeras básicas a elección de color + 1 jean recto. Ideal para renovar el básico del guardarropa.</div>
-          <div class="ocard-prices">
-            <span class="ocard-new">$98.000</span>
-            <span class="ocard-old">$140.000</span>
-            <span class="ocard-disc">−30%</span>
-          </div>
-          <div class="ocard-timer">
-            <span class="timer-lbl">Termina en</span>
-            <div class="timer-display" data-end="2h">
-              <span class="t-h">02</span><span class="timer-sep">:</span><span class="t-m">00</span><span class="timer-sep">:</span><span class="t-s">00</span>
-            </div>
-          </div>
-          <button class="ocard-btn" onclick="addToCartByName('Pack 3 Remeras + Jean',98000)">Aprovechar oferta</button>
-        </div>
-      </div>
-
-    </div>
+    <div class="ogrid" id="oportunidadesGrid"><!-- productos dinámicos desde admin --></div>
   </div>
 </div>
 
@@ -2504,23 +2247,24 @@ footer{background:var(--ink);color:rgba(255,255,255,.45);padding:5rem 2.5rem 2re
 
       <div class="pe-row cols-2">
         <div class="pe-group">
-          <label class="pe-label">Nombre<span class="pe-req">*</span></label>
+          <label class="pe-label">Nombre <span class="pe-req">*</span></label>
           <input class="pe-input" id="peName" placeholder="Ej: Licuadora Portátil USB">
         </div>
         <div class="pe-group">
-          <label class="pe-label">Sección<span class="pe-req">*</span></label>
-          <select class="pe-select" id="peSection">
-            <option value="hogar">Hogar</option>
-            <option value="ropa">Ropa</option>
-            <option value="oportunidades">Oportunidades</option>
+          <label class="pe-label">Sección <span class="pe-req">*</span></label>
+          <select class="pe-select" id="peSection" onchange="toggleSectionFields()">
+            <option value="hogar">🏠 Hogar</option>
+            <option value="ropa">👗 Ropa</option>
+            <option value="oportunidades">🔥 Oportunidades</option>
           </select>
         </div>
       </div>
 
       <div class="pe-row cols-2">
         <div class="pe-group">
-          <label class="pe-label">Categoría<span class="pe-req">*</span></label>
+          <label class="pe-label">Categoría <span class="pe-req">*</span></label>
           <input class="pe-input" id="peCat" placeholder="Ej: Cocina · Electrodomésticos">
+          <p class="pe-hint" id="peCatHint"></p>
         </div>
         <div class="pe-group">
           <label class="pe-label">Descripción corta</label>
@@ -2528,17 +2272,67 @@ footer{background:var(--ink);color:rgba(255,255,255,.45);padding:5rem 2.5rem 2re
         </div>
       </div>
 
+      <!-- ── Campos específicos: ROPA ── -->
+      <div id="peRopaFields" style="display:none">
+        <div class="pe-section-badge">👗 Datos de Ropa</div>
+        <div class="pe-row cols-2">
+          <div class="pe-group">
+            <label class="pe-label">Talles disponibles</label>
+            <input class="pe-input" id="peTalles" placeholder="XS, S, M, L, XL, XXL">
+            <p class="pe-hint">Separados por coma · Chips clickeables en la tarjeta</p>
+          </div>
+          <div class="pe-group">
+            <label class="pe-label">Colores disponibles</label>
+            <input class="pe-input" id="peColores" placeholder="Negro, Blanco, Azul marino">
+            <p class="pe-hint">Separados por coma</p>
+          </div>
+        </div>
+        <div class="pe-row cols-2">
+          <div class="pe-group">
+            <label class="pe-label">Material / Composición</label>
+            <input class="pe-input" id="peMaterial" placeholder="Ej: 100% algodón · Tela fresca">
+          </div>
+          <div class="pe-group">
+            <label class="pe-label">Género</label>
+            <select class="pe-select" id="peGenero">
+              <option value="">Sin especificar</option>
+              <option value="Mujer">Mujer</option>
+              <option value="Hombre">Hombre</option>
+              <option value="Unisex">Unisex</option>
+              <option value="Niños">Niños</option>
+            </select>
+          </div>
+        </div>
+      </div>
+
+      <!-- ── Campos específicos: OPORTUNIDADES ── -->
+      <div id="peOportFields" style="display:none">
+        <div class="pe-section-badge gold">🔥 Datos de Oferta</div>
+        <div class="pe-row cols-2">
+          <div class="pe-group">
+            <label class="pe-label">⏱ Duración del timer (horas)</label>
+            <input class="pe-input" id="peTimerHours" type="number" min="1" max="72" placeholder="Ej: 6">
+            <p class="pe-hint">Arranca cuando el cliente carga la página. Vacío = sin timer.</p>
+          </div>
+          <div class="pe-group">
+            <label class="pe-label">Motivo de la oferta</label>
+            <input class="pe-input" id="peOportMotivo" placeholder="Ej: Liquidación · Solo hoy">
+            <p class="pe-hint">Aparece como badge en la tarjeta</p>
+          </div>
+        </div>
+      </div>
+
       <div class="pe-row cols-3">
         <div class="pe-group">
-          <label class="pe-label">Precio<span class="pe-req">*</span></label>
+          <label class="pe-label">Precio <span class="pe-req">*</span></label>
           <input class="pe-input" id="pePrice" type="number" min="0" placeholder="11999">
         </div>
         <div class="pe-group">
-          <label class="pe-label">Precio original <span style="font-size:.6rem;text-transform:none;letter-spacing:0">(con tachado)</span></label>
-          <input class="pe-input" id="pePriceOld" type="number" min="0" placeholder="Dejar vacío si no hay">
+          <label class="pe-label">Precio original <span style="font-size:.6rem;text-transform:none;letter-spacing:0">(tachado)</span></label>
+          <input class="pe-input" id="pePriceOld" type="number" min="0" placeholder="Vacío si no hay">
         </div>
         <div class="pe-group">
-          <label class="pe-label">Stock<span class="pe-req">*</span></label>
+          <label class="pe-label">Stock <span class="pe-req">*</span></label>
           <input class="pe-input" id="peStock" type="number" min="0" placeholder="15">
         </div>
       </div>
@@ -2558,8 +2352,8 @@ footer{background:var(--ink);color:rgba(255,255,255,.45);padding:5rem 2.5rem 2re
         <div class="pe-group">
           <label class="pe-label">Estado</label>
           <select class="pe-select" id="peProx">
-            <option value="0">✅ Activo (visible y comprable)</option>
-            <option value="1">🔒 Próximamente (overlay bloqueado)</option>
+            <option value="0">✅ Activo — visible y comprable</option>
+            <option value="1">🔒 Próximamente — bloqueado</option>
           </select>
         </div>
       </div>
@@ -2567,7 +2361,7 @@ footer{background:var(--ink);color:rgba(255,255,255,.45);padding:5rem 2.5rem 2re
       <div class="pe-row">
         <div class="pe-group">
           <label class="pe-label">Descripción completa</label>
-          <textarea class="pe-textarea" id="peDesc" placeholder="Descripción detallada del producto que aparece en el modal al hacer click..."></textarea>
+          <textarea class="pe-textarea" id="peDesc" placeholder="Descripción que aparece en el modal al hacer click..."></textarea>
         </div>
       </div>
 
@@ -2575,16 +2369,16 @@ footer{background:var(--ink);color:rgba(255,255,255,.45);padding:5rem 2.5rem 2re
         <div class="pe-group">
           <label class="pe-label">Imagen principal</label>
           <input class="pe-input" id="peImg" placeholder="nombre-archivo.jpg">
-          <p class="pe-hint">Nombre del archivo de imagen (debe estar subido a Netlify junto al HTML)</p>
+          <p class="pe-hint">Archivo subido a Netlify junto al index.html</p>
         </div>
         <div class="pe-group">
-          <label class="pe-label">Imágenes galería extra</label>
+          <label class="pe-label">Galería extra</label>
           <input class="pe-input" id="peGallery" placeholder="foto2.jpg, foto3.jpg">
-          <p class="pe-hint">Separadas por coma. Se muestran como carrusel con flechas</p>
+          <p class="pe-hint">Separadas por coma · Carrusel con flechas</p>
         </div>
       </div>
 
-      <div class="pe-row">
+      <div class="pe-row" style="max-width:220px">
         <div class="pe-group">
           <label class="pe-label">Estrellas</label>
           <select class="pe-select" id="peStars">
@@ -5687,8 +5481,87 @@ function renderProductGrid(section) {
   const grid = document.getElementById(section + 'Grid');
   if (!grid) return;
   const prods = dbGetProducts().filter(p => p.section === section);
-  grid.innerHTML = prods.map(renderProductCard).join('');
+  if (!prods.length) {
+    grid.innerHTML = `<div style="grid-column:1/-1;text-align:center;padding:4rem 2rem;color:var(--stone);font-size:.85rem;opacity:.5">
+      <div style="font-size:2.5rem;margin-bottom:.8rem">📭</div>
+      No hay productos en esta sección todavía.<br>
+      <span style="font-size:.75rem">Agregá productos desde el panel de administración.</span>
+    </div>`;
+  } else {
+    grid.innerHTML = prods.map(renderProductCard).join('');
+  }
+  if (section === 'ropa') rebuildRopaFilters();
   initGridCounts();
+}
+
+/* ── Renderiza una oferta como ocard con countdown timer ── */
+function renderOcard(p, idx) {
+  const pct = (p.priceOld && p.priceOld > p.price)
+    ? Math.round((1 - p.price / p.priceOld) * 100) : 0;
+  const ribbonHtml = pct > 0 ? `<div class="ocard-ribbon">−${pct}%</div>` : '';
+  const discHtml   = pct > 0 ? `<span class="ocard-disc">−${pct}%</span>` : '';
+  const oldHtml    = (p.priceOld && p.priceOld > p.price) ? `<span class="ocard-old">${formatPrice(p.priceOld)}</span>` : '';
+
+  const imgHtml = p.img
+    ? `<img src="${p.img}" alt="${p.name}" style="width:100%;height:100%;object-fit:cover">`
+    : `<div class="ocard-img oi-${(idx % 6) + 1}" style="aspect-ratio:16/9">${p.name.split(' ')[0]}</div>`;
+  const imgWrap = p.img
+    ? `<div class="ocard-img" style="aspect-ratio:16/9;overflow:hidden">${imgHtml}</div>`
+    : imgHtml;
+
+  const timerHtml = p.timerHours
+    ? `<div class="ocard-timer">
+        <span class="timer-lbl">Termina en</span>
+        <div class="timer-display" data-end="${p.timerHours}h">
+          <span class="t-h">${String(p.timerHours).padStart(2,'0')}</span><span class="timer-sep">:</span><span class="t-m">00</span><span class="timer-sep">:</span><span class="t-s">00</span>
+        </div>
+      </div>` : '';
+
+  const proxOvl = p.prox
+    ? `<div class="ocard-prox-overlay">
+        <span class="ocard-prox-badge">Próximamente</span>
+        <span class="ocard-prox-sub">Oferta disponible muy pronto</span>
+      </div>` : '';
+
+  const btnAttr = p.prox ? 'disabled style="opacity:.4;cursor:not-allowed"' : '';
+
+  return `<div class="ocard" data-prox="${p.prox?1:0}" style="position:relative">
+    ${proxOvl}
+    ${ribbonHtml}
+    ${imgWrap}
+    <div class="ocard-body">
+      <div class="ocard-cat">${p.cat || ''}</div>
+      <div class="ocard-name">${p.name}</div>
+      <div class="ocard-desc">${p.desc || p.sub || ''}</div>
+      <div class="ocard-prices">
+        <span class="ocard-new">${formatPrice(p.price)}</span>
+        ${oldHtml}
+        ${discHtml}
+      </div>
+      ${timerHtml}
+      <button class="ocard-btn" ${btnAttr} onclick="addToCartByName('${p.name.replace(/'/g,"\\'")}',${p.price})">
+        ${p.prox ? 'Próximamente' : 'Aprovechar oferta'}
+      </button>
+    </div>
+  </div>`;
+}
+
+/* ── Renderiza el grid de oportunidades ── */
+function renderOportunidadesGrid() {
+  const grid = document.getElementById('oportunidadesGrid');
+  if (!grid) return;
+  const prods = dbGetProducts().filter(p => p.section === 'oportunidades');
+  if (!prods.length) {
+    grid.innerHTML = `<div style="grid-column:1/-1;text-align:center;padding:4rem 2rem;color:var(--stone);font-size:.85rem;opacity:.5">
+      <div style="font-size:2.5rem;margin-bottom:.8rem">🏷️</div>
+      No hay ofertas activas todavía.<br>
+      <span style="font-size:.75rem">Agregá ofertas desde el panel de administración.</span>
+    </div>`;
+    return;
+  }
+  grid.innerHTML = prods.map((p, i) => renderOcard(p, i)).join('');
+  // Re-inicializar timers para las nuevas tarjetas
+  initTimers();
 }
 
 /* ══ ADMIN: tabla de productos ══ */
@@ -5746,7 +5619,8 @@ function deleteAdminProduct(id) {
   const p = prods.find(x => x.id === id);
   if (!p || !confirm(`¿Eliminar "${p.name}"? Esta acción no se puede deshacer.`)) return;
   dbSaveProducts(prods.filter(x => x.id !== id));
-  renderProductGrid(p.section);
+  if (p.section === 'oportunidades') renderOportunidadesGrid();
+  else renderProductGrid(p.section);
   renderAdminProducts(
     (document.getElementById('adminProdSearch')?.value||'').trim().toLowerCase(),
     document.getElementById('adminProdSection')?.value||''
@@ -5760,19 +5634,20 @@ function openProductEditor(id) {
   const p     = id ? prods.find(x => x.id === id) : null;
 
   document.getElementById('peTitle').textContent = p ? '✏️ Editar producto' : '+ Nuevo producto';
-  document.getElementById('peId').value       = p?.id || '';
-  document.getElementById('peName').value     = p?.name || '';
-  document.getElementById('peSection').value  = p?.section || 'hogar';
-  document.getElementById('peCat').value      = p?.cat || '';
-  document.getElementById('peSub').value      = p?.sub || '';
-  document.getElementById('pePrice').value    = p?.price ?? '';
-  document.getElementById('pePriceOld').value = p?.priceOld || '';
-  document.getElementById('peStock').value    = p?.stock ?? '';
-  document.getElementById('peDesc').value     = p?.desc || '';
-  document.getElementById('peImg').value      = p?.img || '';
-  document.getElementById('peGallery').value  = (p?.gallery||[]).join(', ');
-  document.getElementById('peProx').value     = p?.prox ? '1' : '0';
-  document.getElementById('peStars').value    = p?.stars || 5;
+  document.getElementById('peId').value        = p?.id || '';
+  document.getElementById('peName').value      = p?.name || '';
+  document.getElementById('peSection').value   = p?.section || 'hogar';
+  document.getElementById('peCat').value       = p?.cat || '';
+  document.getElementById('peSub').value       = p?.sub || '';
+  document.getElementById('pePrice').value     = p?.price ?? '';
+  document.getElementById('pePriceOld').value  = p?.priceOld || '';
+  document.getElementById('peStock').value     = p?.stock ?? '';
+  document.getElementById('peDesc').value      = p?.desc || '';
+  document.getElementById('peImg').value       = p?.img || '';
+  document.getElementById('peGallery').value   = (p?.gallery||[]).join(', ');
+  document.getElementById('peProx').value      = p?.prox ? '1' : '0';
+  document.getElementById('peStars').value     = p?.stars || 5;
+  document.getElementById('peTimerHours').value = p?.timerHours || '';
 
   // Seleccionar tag en el select
   const tagSel = document.getElementById('peTag');
@@ -5781,12 +5656,62 @@ function openProductEditor(id) {
   for (const opt of tagSel.options) {
     if (opt.value === tagVal) { tagSel.value = tagVal; found = true; break; }
   }
-  if (!found) tagSel.value = tagVal; // custom si no matchea
+  if (!found) tagSel.value = tagVal;
+
+  // Mostrar campo timer solo para Oportunidades
+  _peToggleTimer();
+  document.getElementById('peSection').onchange = _peToggleTimer;
 
   document.getElementById('prodEditor').classList.add('open');
   document.body.style.overflow = 'hidden';
   setTimeout(() => document.getElementById('peName').focus(), 80);
 }
+
+function _peToggleTimer() {
+  const sec = document.getElementById('peSection').value;
+  document.getElementById('peTimerRow').style.display = sec === 'oportunidades' ? '' : 'none';
+}
+const toggleTimerField = _peToggleTimer; // alias para el onchange inline del HTML
+
+/* Vista previa de imagen en el editor de producto */
+function pePreviewImg() {
+  const val   = document.getElementById('peImg').value.trim();
+  const prev  = document.getElementById('peImgPreview');
+  const thumb = document.getElementById('peImgThumb');
+  if (!val) { prev.style.display = 'none'; return; }
+  thumb.src = val;
+  thumb.onerror = () => { prev.style.display = 'none'; };
+  thumb.onload  = () => { prev.style.display = 'block'; };
+}
+
+/* Regenera los chips de filtro de Ropa con las categorías reales */
+function rebuildRopaFilters() {
+  const container = document.getElementById('ropaFilters');
+  if (!container) return;
+  const prods = dbGetProducts().filter(p => p.section === 'ropa');
+  // Extraer categorías únicas
+  const cats = [...new Set(prods.map(p => {
+    const parts = (p.cat || '').split('·').map(s => s.trim());
+    return parts[0] || '';
+  }).filter(Boolean))];
+
+  // Reconstruir botones de categoría (manteniendo Todos, Disponibles, Próximamente)
+  const existing = container.querySelectorAll('.gf-btn[data-dyn]');
+  existing.forEach(b => b.remove());
+
+  const insertBefore = container.querySelector('.gf-sep') || container.querySelector('.gf-sort');
+  cats.forEach(cat => {
+    const btn = document.createElement('button');
+    btn.className = 'gf-btn';
+    btn.dataset.dyn = '1';
+    btn.textContent = cat;
+    btn.onclick = function() { filterGrid('ropa', cat, this); };
+    if (insertBefore) container.insertBefore(btn, insertBefore);
+    else container.appendChild(btn);
+  });
+}
+
+
 
 /* ══ EDITOR: cerrar ══ */
 function closeProductEditor() {
@@ -5818,17 +5743,18 @@ function saveProductFromEditor() {
   const gallery    = galleryRaw ? galleryRaw.split(',').map(s=>s.trim()).filter(Boolean) : [];
 
   const prod = {
-    id:       document.getElementById('peId').value || ('p_' + Date.now()),
-    section:  document.getElementById('peSection').value,
-    name, cat: document.getElementById('peCat').value.trim(),
-    sub:      document.getElementById('peSub').value.trim(),
+    id:         document.getElementById('peId').value || ('p_' + Date.now()),
+    section:    document.getElementById('peSection').value,
+    name, cat:  document.getElementById('peCat').value.trim(),
+    sub:        document.getElementById('peSub').value.trim(),
     price,
-    priceOld: (!isNaN(priceOld) && priceOld > price) ? priceOld : null,
+    priceOld:   (!isNaN(priceOld) && priceOld > price) ? priceOld : null,
     stock, stars: parseInt(document.getElementById('peStars').value)||5,
     tag: tagType||'', tagText: finalTagText,
-    prox: document.getElementById('peProx').value === '1',
-    img:  document.getElementById('peImg').value.trim(),
-    gallery, desc: document.getElementById('peDesc').value.trim()
+    prox:       document.getElementById('peProx').value === '1',
+    img:        document.getElementById('peImg').value.trim(),
+    gallery,    desc: document.getElementById('peDesc').value.trim(),
+    timerHours: parseInt(document.getElementById('peTimerHours').value) || null
   };
 
   const prods = dbGetProducts();
@@ -5836,7 +5762,11 @@ function saveProductFromEditor() {
   if (idx > -1) prods[idx] = prod; else prods.push(prod);
 
   dbSaveProducts(prods);
-  renderProductGrid(prod.section);
+  if (prod.section === 'oportunidades') {
+    renderOportunidadesGrid();
+  } else {
+    renderProductGrid(prod.section);
+  }
   renderAdminProducts(
     (document.getElementById('adminProdSearch')?.value||'').trim().toLowerCase(),
     document.getElementById('adminProdSection')?.value||''
@@ -5863,10 +5793,12 @@ document.addEventListener('keydown', e => {
   await syncFromSupabase();
   initEmailJS();
   renderProductGrid('hogar');
+  renderProductGrid('ropa');
+  renderOportunidadesGrid();
   initGridCounts();
   populateReviewProductSelect();
   await renderReviews();
-  await loadWishlist(); // cargar favoritos al iniciar (guest o sesión guardada)
+  await loadWishlist();
 })();
 
 </script>
