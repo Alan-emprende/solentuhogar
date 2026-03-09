@@ -59,8 +59,56 @@
   --radius:3px;
   --trans:.28s cubic-bezier(.4,0,.2,1);
 }
+/* ═══════════ MODO OSCURO ═══════════ */
+body.dark-mode{
+  --ink:#EDE0CC; --clay:#E8845C; --clay-light:#C45C2A; --clay-pale:#2A180E;
+  --sand:#1C1409; --sand-deep:#2C200F; --stone:#9A8A78; --stone-light:#5A4A3A;
+  --leaf:#5A9A6A; --gold:#D4A840; --white:#120E08; --surface:#181208;
+  background:var(--white); color:var(--ink); color-scheme:dark;
+}
+body.dark-mode nav{background:#1A1208;border-bottom-color:#2C2010}
+body.dark-mode .pcard{background:#1E1610}
+body.dark-mode .pcard-body{background:#1E1610}
+body.dark-mode .cart,.dark-mode .cart-head{background:#14100A;border-color:#2C2010}
+body.dark-mode .citem{border-bottom-color:#2C2010}
+body.dark-mode .auth-modal-box{background:#201810}
+body.dark-mode .auth-input{background:#2A1E10;border-color:#3C2E1A;color:var(--ink)}
+body.dark-mode .auth-label{color:var(--stone)}
+body.dark-mode .pay-modal-box{background:#1A1208;border-color:#2C2010}
+body.dark-mode .pay-input{background:#2A1E10;border-color:#3C2E1A;color:var(--ink)}
+body.dark-mode .pay-summary{background:#1E1610;border-color:#2C2010}
+body.dark-mode .pay-success,.dark-mode .success-order{background:var(--sand);color:var(--ink)}
+body.dark-mode #successItemsSummary{background:var(--sand) !important}
+body.dark-mode .coupon-input{background:#2A1E10;border-color:#3C2E1A;color:var(--ink)}
+body.dark-mode .search-box{background:#1A1208}
+body.dark-mode .search-input{background:#2A1E10;color:var(--ink)}
+body.dark-mode .search-result-item:hover{background:#2A1E10}
+body.dark-mode .pdModal{background:#201810}
+body.dark-mode .pdModal-qty-btn{background:#2A1E10;color:var(--ink)}
+body.dark-mode .account-panel{background:#1A1208}
+body.dark-mode .ap-tab{background:#201810;border-color:#2C2010;color:var(--stone)}
+body.dark-mode .ap-tab.active{background:var(--clay);color:#fff;border-color:var(--clay)}
+body.dark-mode .ap-edit-input{background:#2A1E10;border-color:#3C2E1A;color:var(--ink)}
+body.dark-mode .info-modal{background:#201810}
+body.dark-mode .review-form{background:#1E1610;border-color:#2C2010}
+body.dark-mode .review-input,.dark-mode .review-textarea{background:#2A1E10;border-color:#3C2E1A;color:var(--ink)}
+body.dark-mode .rcard{background:#1E1610;border-color:#2C2010}
+body.dark-mode .nl{background:#1A1208}
+body.dark-mode .nl-input{background:#2A1E10;border-color:#3C2E1A;color:var(--ink)}
+body.dark-mode footer{background:#0E0B06}
+body.dark-mode .mobile-nav{background:#1A1208}
+body.dark-mode .mobile-nav-item{border-bottom-color:#2C2010;color:var(--ink)}
+body.dark-mode .gf-btn{background:#2A1E10;border-color:#3C2E1A;color:var(--stone)}
+body.dark-mode .gf-btn.active{background:var(--clay);color:#fff;border-color:var(--clay)}
+body.dark-mode .gf-sort{background:#2A1E10;border-color:#3C2E1A;color:var(--ink)}
+body.dark-mode .announce{background:#0E0B06}
+body.dark-mode .midband{background:#1A1208}
+body.dark-mode .pe-input,.dark-mode .pe-select,.dark-mode .pe-textarea{background:#2A1E10;border-color:#3C2E1A;color:#EDE0CC}
+body.dark-mode .prod-editor-box{background:#1A1208;border-color:#2C2010}
+.dark-toggle-btn{background:none;border:none;cursor:pointer;width:40px;height:40px;border-radius:var(--radius);display:flex;align-items:center;justify-content:center;font-size:1.05rem;transition:background var(--trans);color:var(--stone);flex-shrink:0}
+.dark-toggle-btn:hover{background:var(--sand)}
 html{scroll-behavior:smooth;font-size:16px}
-body{background:var(--white);color:var(--ink);font-family:var(--sans);font-weight:400;overflow-x:hidden;-webkit-font-smoothing:antialiased}
+body{background:var(--white);color:var(--ink);font-family:var(--sans);font-weight:400;overflow-x:hidden;-webkit-font-smoothing:antialiased;transition:background .3s,color .3s}
 
 .announce{background:var(--ink);color:rgba(255,255,255,.7);text-align:center;padding:.55rem 1rem;font-size:.72rem;letter-spacing:.12em;text-transform:uppercase;font-weight:500}
 .announce span{color:var(--gold)}
@@ -1331,6 +1379,7 @@ footer{background:var(--ink);color:rgba(255,255,255,.45);padding:5rem 2.5rem 2re
           <button onclick="testSupabaseConnection()" style="background:var(--clay);border:none;color:#fff;padding:.3rem .8rem;border-radius:4px;cursor:pointer;font-size:.68rem;font-family:var(--sans)">🔌 Probar conexión</button>
           <button onclick="testSupabaseWrite()" style="background:var(--leaf);border:none;color:#fff;padding:.3rem .8rem;border-radius:4px;cursor:pointer;font-size:.68rem;font-family:var(--sans)">💾 Probar escritura</button>
           <button onclick="forceSyncToSupabase()" style="background:#1565c0;border:none;color:#fff;padding:.3rem .8rem;border-radius:4px;cursor:pointer;font-size:.68rem;font-family:var(--sans)">📤 Forzar sincronización</button>
+          <button id="adminPushBtn" onclick="adminEnablePush()" style="background:#6a1b9a;border:none;color:#fff;padding:.3rem .8rem;border-radius:4px;cursor:pointer;font-size:.68rem;font-family:var(--sans)">🔔 Activar notificaciones de pedidos</button>
         </div>
         <!-- Stats con filtros de fecha -->
         <div class="admin-filters">
@@ -1394,6 +1443,7 @@ footer{background:var(--ink);color:rgba(255,255,255,.45);padding:5rem 2.5rem 2re
           <input class="admin-ci" id="newCouponCode" type="text" placeholder="Código (ej: VERANO20)" maxlength="20">
           <input class="admin-ci" id="newCouponDiscount" type="number" min="1" max="100" placeholder="% descuento" style="width:110px;text-transform:none">
           <input class="admin-ci" id="newCouponUses" type="number" min="1" placeholder="Usos máx." style="width:100px;text-transform:none">
+          <input class="admin-ci" id="newCouponExpiry" type="date" title="Vencimiento (opcional)" style="width:150px;text-transform:none;color:rgba(255,255,255,.6)">
           <button class="admin-filter-btn" onclick="adminCreateCoupon()">+ Crear cupón</button>
         </div>
         <div class="admin-coupon-grid" id="adminCouponsGrid"></div>
@@ -1733,18 +1783,28 @@ footer{background:var(--ink);color:rgba(255,255,255,.45);padding:5rem 2.5rem 2re
 
       <div class="pay-step" id="step4">
         <div class="pay-success">
-          <span class="success-icon">✅</span>
-          <div class="success-title">¡Pedido confirmado!</div>
+          <span class="success-icon">🎉</span>
+          <div class="success-title">¡Gracias por tu compra!</div>
           <div class="success-sub">
-            Recibirás la confirmación por email y/o WhatsApp.<br>
+            Te enviamos la confirmación a tu email.<br>
             Tu pedido llega en <strong>24–48hs hábiles</strong>.
           </div>
           <div class="success-order">
             <strong>Número de pedido</strong>
             <span id="orderNumber" style="font-size:1.1rem;font-weight:700;color:var(--clay)">#SOL-0001</span>
           </div>
-          <div id="successItemsSummary" style="background:var(--sand);border-radius:8px;padding:.8rem 1rem;margin-bottom:1rem;font-size:.78rem;text-align:left;line-height:1.8"></div>
-          <button class="pay-btn-next" style="width:100%;" onclick="closePayment()">Volver a la tienda</button>
+          <div id="successItemsSummary" style="background:var(--sand);border-radius:8px;padding:.8rem 1rem;margin-bottom:1.2rem;font-size:.78rem;text-align:left;line-height:1.9"></div>
+          <!-- Acciones post-compra -->
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:.5rem;margin-bottom:1.2rem">
+            <a id="successWaBtn" href="https://wa.me/5491131496246" target="_blank" rel="noopener" style="display:flex;align-items:center;justify-content:center;gap:.4rem;background:#25D366;color:#fff;border-radius:6px;padding:.65rem .5rem;font-size:.78rem;font-weight:700;text-decoration:none;font-family:var(--sans)">💬 WhatsApp</a>
+            <button onclick="shareOrder()" style="display:flex;align-items:center;justify-content:center;gap:.4rem;background:var(--clay);color:#fff;border-radius:6px;padding:.65rem .5rem;font-size:.78rem;font-weight:700;cursor:pointer;border:none;font-family:var(--sans);width:100%">📤 Compartir</button>
+          </div>
+          <!-- Productos sugeridos post-compra -->
+          <div id="successSugeridos" style="margin-bottom:1.2rem;display:none">
+            <p style="font-size:.65rem;letter-spacing:.12em;text-transform:uppercase;color:var(--stone);font-weight:700;margin-bottom:.6rem">También te puede gustar</p>
+            <div id="successSugeridosGrid" style="display:grid;grid-template-columns:repeat(3,1fr);gap:.5rem"></div>
+          </div>
+          <button class="pay-btn-next" style="width:100%" onclick="closePayment()">← Seguir comprando</button>
         </div>
       </div>
     </div>
@@ -1876,6 +1936,7 @@ footer{background:var(--ink);color:rgba(255,255,255,.45);padding:5rem 2.5rem 2re
       <button class="nav-btn" title="Buscar" onclick="openSearch()">
         <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
       </button>
+      <button class="dark-toggle-btn" id="darkToggleBtn" title="Cambiar tema" onclick="toggleDarkMode()">🌙</button>
       <!-- Botón Mi Cuenta / Login -->
       <button class="nav-account-btn" id="navAccountBtn" onclick="handleAccountClick()">
         <div class="nav-account-avatar" id="navAccountAvatar">👤</div>
@@ -2056,11 +2117,18 @@ footer{background:var(--ink);color:rgba(255,255,255,.45);padding:5rem 2.5rem 2re
     <a href="#" class="sec-all">Ver toda la ropa</a>
   </div>
   <!-- Filtros de grilla -->
-  <div class="grid-filters" id="ropaFilters">
+  <div class="grid-filters" id="ropaFilters" style="flex-wrap:wrap;row-gap:.5rem">
     <span class="gf-label">Estado:</span>
-    <button class="gf-btn active" onclick="filterGrid('ropa','all',this)">Todos</button>
-    <button class="gf-btn" onclick="filterGrid('ropa','disponible',this)">Disponibles</button>
-    <button class="gf-btn" onclick="filterGrid('ropa','proximamente',this)">Próximamente</button>
+    <button class="gf-btn active" onclick="filterRopa('estado','all',this)">Todos</button>
+    <button class="gf-btn" onclick="filterRopa('estado','disponible',this)">Disponibles</button>
+    <button class="gf-btn" onclick="filterRopa('estado','proximamente',this)">Próximamente</button>
+    <div class="gf-sep"></div>
+    <span class="gf-label" id="ropaTalleLbl" style="display:none">Talle:</span>
+    <span id="ropaTalleChips" style="display:contents"></span>
+    <span class="gf-label" id="ropaColorLbl" style="display:none">Color:</span>
+    <span id="ropaColorChips" style="display:contents"></span>
+    <span class="gf-label" id="ropaGeneroLbl" style="display:none">Género:</span>
+    <span id="ropaGeneroChips" style="display:contents"></span>
     <div class="gf-sep"></div>
     <span class="gf-label">Ordenar:</span>
     <select class="gf-sort" onchange="sortGrid('ropa',this.value)">
@@ -2368,11 +2436,12 @@ footer{background:var(--ink);color:rgba(255,255,255,.45);padding:5rem 2.5rem 2re
       <div class="pe-row cols-2">
         <div class="pe-group">
           <label class="pe-label">Imagen principal</label>
-          <input class="pe-input" id="peImg" placeholder="nombre-archivo.jpg" oninput="pePreviewImg()">
-          <p class="pe-hint">Nombre del archivo subido a GitHub junto al index.html</p>
-          <div id="peImgPreview" style="display:none;margin-top:.5rem">
-            <img id="peImgThumb" style="width:80px;height:80px;object-fit:cover;border-radius:6px;border:2px solid var(--sand-deep)" alt="preview">
+          <div style="display:flex;gap:.4rem;align-items:stretch">
+            <input class="pe-input" id="peImg" placeholder="URL o nombre de archivo" oninput="pePreviewImg()" style="flex:1;min-width:0">
+            <button type="button" onclick="cloudinaryUpload('peImg')" title="Subir foto desde tu dispositivo" style="background:var(--clay);color:#fff;border:none;border-radius:6px;padding:.5rem .8rem;cursor:pointer;font-size:.7rem;font-weight:700;white-space:nowrap;font-family:var(--sans);flex-shrink:0">📷 Subir</button>
           </div>
+          <p class="pe-hint">Subí directo o pegá una URL — se guarda en Cloudinary</p>
+          <div id="peImgPreview" style="display:none;margin-top:.4rem"><img id="peImgThumb" style="width:72px;height:72px;object-fit:cover;border-radius:6px;border:2px solid var(--sand-deep)" alt=""></div>
         </div>
         <div class="pe-group">
           <label class="pe-label">Galería extra</label>
@@ -3241,6 +3310,7 @@ function verifyAdmin() {
     renderAdminDashboard();
     // Auto-verificar estado de Supabase al abrir
     setTimeout(testSupabaseConnection, 400);
+    setTimeout(initAdminPushBtn, 600);
   } else {
     document.getElementById('adminPassInput').style.borderColor = '#e53935';
     document.getElementById('adminPassInput').value = '';
@@ -3907,6 +3977,8 @@ function confirmarPago() {
     }
 
     goStep(4);
+    sendAdminPushNotification(newOrder); // 🔔 Push al admin
+    fillSuccessSugeridos(newOrder.items.map(i => i.name)); // 💡 Sugeridos
     cartItems = [];
     cartTotal = 0;
     updateCart();
@@ -4332,18 +4404,6 @@ function changeCartQty(idx, delta) {
   updateCart();
 }
 
-// Cantidad en la tarjeta de producto (selector debajo de la card)
-function changeQty(btn, delta) {
-  const ctrl = btn.closest('.qty-ctrl');
-  if (!ctrl) return;
-  const numEl = ctrl.querySelector('.qty-num');
-  const card  = btn.closest('.pcard');
-  const stock = parseInt(card?.dataset.stock || 99);
-  let qty = parseInt(numEl.textContent) + delta;
-  qty = Math.max(1, Math.min(qty, stock));
-  numEl.textContent = qty;
-}
-
 /* ══════════════════════════════════════════════════════
    BUSCADOR
    ══════════════════════════════════════════════════════ */
@@ -4743,38 +4803,6 @@ function dbSaveCoupons(c) {
   try { localStorage.setItem('sol_coupons', JSON.stringify(c)); } catch(e) {}
 }
 
-function applyCoupon() {
-  const code = (document.getElementById('couponInput').value || '').trim().toUpperCase();
-  const msgEl = document.getElementById('couponMsg');
-  const inp = document.getElementById('couponInput');
-  if (!code) return;
-
-  const coupons = dbGetCoupons();
-  const coupon = coupons.find(c => c.code === code);
-
-  if (!coupon) {
-    inp.className = 'coupon-input err';
-    msgEl.className = 'coupon-msg err';
-    msgEl.textContent = '❌ Cupón no válido';
-    activeCoupon = null;
-    refreshCheckoutTotal();
-    return;
-  }
-  if (coupon.uses !== undefined && coupon.usedCount >= coupon.uses) {
-    inp.className = 'coupon-input err';
-    msgEl.className = 'coupon-msg err';
-    msgEl.textContent = '❌ Este cupón ya agotó sus usos';
-    activeCoupon = null;
-    refreshCheckoutTotal();
-    return;
-  }
-  activeCoupon = coupon;
-  inp.className = 'coupon-input ok';
-  msgEl.className = 'coupon-msg ok';
-  msgEl.textContent = `✅ ¡${coupon.discount}% de descuento aplicado!`;
-  refreshCheckoutTotal();
-}
-
 function refreshCheckoutTotal() {
   let total = cartTotal;
   const discountRow = document.getElementById('payDiscountRow');
@@ -4796,50 +4824,10 @@ function refreshCheckoutTotal() {
 }
 
 // Admin: crear cupón
-function adminCreateCoupon() {
-  const code     = (document.getElementById('newCouponCode').value || '').trim().toUpperCase();
-  const discount = parseInt(document.getElementById('newCouponDiscount').value || 0);
-  const uses     = parseInt(document.getElementById('newCouponUses').value || 0) || null;
-  if (!code || !discount || discount < 1 || discount > 100) {
-    showToast('Completá código y % de descuento');
-    return;
-  }
-  const coupons = dbGetCoupons();
-  if (coupons.find(c => c.code === code)) { showToast('Ese código ya existe'); return; }
-  coupons.push({ code, discount, uses, usedCount: 0, creado: new Date().toLocaleDateString('es-AR') });
-  dbSaveCoupons(coupons);
-  document.getElementById('newCouponCode').value = '';
-  document.getElementById('newCouponDiscount').value = '';
-  document.getElementById('newCouponUses').value = '';
-  renderAdminCoupons();
-  showToast(`Cupón ${code} creado ✓`);
-}
-
 function adminDeleteCoupon(code) {
   if (!confirm(`¿Eliminás el cupón "${code}"?`)) return;
   dbSaveCoupons(dbGetCoupons().filter(c => c.code !== code));
   renderAdminCoupons();
-}
-
-function renderAdminCoupons() {
-  const coupons = dbGetCoupons();
-  const grid = document.getElementById('adminCouponsGrid');
-  if (!grid) return;
-  if (!coupons.length) {
-    grid.innerHTML = '<div style="color:rgba(255,255,255,.3);font-size:.78rem;padding:.8rem 0">No hay cupones creados todavía.</div>';
-    return;
-  }
-  grid.innerHTML = coupons.map(c => `
-    <div class="admin-coupon-card">
-      <div class="admin-coupon-code">${c.code}</div>
-      <div class="admin-coupon-detail">
-        ${c.discount}% descuento<br>
-        ${c.uses ? `${c.usedCount||0}/${c.uses} usos` : 'Usos ilimitados'}<br>
-        Creado: ${c.creado||'—'}
-      </div>
-      <button class="admin-coupon-del" onclick="adminDeleteCoupon('${c.code}')">✕</button>
-    </div>
-  `).join('');
 }
 
 /* ══════════════════════════════════════════════════════
@@ -5663,50 +5651,33 @@ function openProductEditor(id) {
   document.getElementById('peProx').value      = p?.prox ? '1' : '0';
   document.getElementById('peStars').value     = p?.stars || 5;
   document.getElementById('peTimerHours').value = p?.timerHours || '';
-  // Campos ropa
-  document.getElementById('peTalles').value    = (p?.talles||[]).join(', ');
-  document.getElementById('peColores').value   = (p?.colores||[]).join(', ');
-  document.getElementById('peMaterial').value  = p?.material || '';
-  document.getElementById('peGenero').value    = p?.genero || '';
-  // Campo oportunidad
-  document.getElementById('peOportMotivo').value = p?.oportunidadMotivo || '';
+  // Campos de ropa
+  ['peTalles','peColores','peMaterial'].forEach(fid => {
+    const el = document.getElementById(fid); if (el) el.value = '';
+  });
+  if (document.getElementById('peTalles'))  document.getElementById('peTalles').value  = (p?.talles||[]).join(', ');
+  if (document.getElementById('peColores')) document.getElementById('peColores').value = (p?.colores||[]).join(', ');
+  if (document.getElementById('peMaterial'))document.getElementById('peMaterial').value= p?.material||'';
+  if (document.getElementById('peGenero'))  document.getElementById('peGenero').value  = p?.genero||'';
+  if (document.getElementById('peOportMotivo')) document.getElementById('peOportMotivo').value = p?.oportunidadMotivo||'';
 
-  // Seleccionar tag en el select
+  // Seleccionar tag
   const tagSel = document.getElementById('peTag');
   const tagVal = (p?.tag && p?.tagText) ? `${p.tag}|${p.tagText}` : '';
   tagSel.value = '';
-  for (const opt of tagSel.options) {
-    if (opt.value === tagVal) { tagSel.value = tagVal; break; }
-  }
+  for (const opt of tagSel.options) { if (opt.value === tagVal) { tagSel.value = tagVal; break; } }
 
-  // Mostrar/ocultar campos según sección
+  // Mostrar/ocultar campos según sección y preview de imagen
   toggleSectionFields();
+  pePreviewImg();
 
   document.getElementById('prodEditor').classList.add('open');
   document.body.style.overflow = 'hidden';
   setTimeout(() => document.getElementById('peName').focus(), 80);
 }
-
-function toggleSectionFields() {
-  const sec = document.getElementById('peSection').value;
-  document.getElementById('peRopaFields').style.display   = sec === 'ropa' ? '' : 'none';
-  document.getElementById('peOportFields').style.display  = sec === 'oportunidades' ? '' : 'none';
-}
-
-// Alias para compatibilidad con código viejo
-function _peToggleTimer() { toggleSectionFields(); }
+const toggleTimerField = _peToggleTimer; // alias para el onchange inline del HTML
 
 /* Vista previa de imagen en el editor de producto */
-function pePreviewImg() {
-  const val   = document.getElementById('peImg').value.trim();
-  const prev  = document.getElementById('peImgPreview');
-  const thumb = document.getElementById('peImgThumb');
-  if (!val) { prev.style.display = 'none'; return; }
-  thumb.src = val;
-  thumb.onerror = () => { prev.style.display = 'none'; };
-  thumb.onload  = () => { prev.style.display = 'block'; };
-}
-
 /* Regenera los chips de filtro de Ropa con las categorías reales */
 function rebuildRopaFilters() {
   const container = document.getElementById('ropaFilters');
@@ -5778,13 +5749,11 @@ function saveProductFromEditor() {
     img:        document.getElementById('peImg').value.trim(),
     gallery,    desc: document.getElementById('peDesc').value.trim(),
     timerHours: parseInt(document.getElementById('peTimerHours').value) || null,
-    // Campos de ropa
-    talles:     document.getElementById('peTalles').value.split(',').map(s=>s.trim()).filter(Boolean),
-    colores:    document.getElementById('peColores').value.split(',').map(s=>s.trim()).filter(Boolean),
-    material:   document.getElementById('peMaterial').value.trim(),
-    genero:     document.getElementById('peGenero').value,
-    // Campo de oportunidad
-    oportunidadMotivo: document.getElementById('peOportMotivo').value.trim()
+    talles:  (document.getElementById('peTalles')?.value||'').split(',').map(s=>s.trim()).filter(Boolean),
+    colores: (document.getElementById('peColores')?.value||'').split(',').map(s=>s.trim()).filter(Boolean),
+    material: document.getElementById('peMaterial')?.value.trim()||'',
+    genero:   document.getElementById('peGenero')?.value||'',
+    oportunidadMotivo: document.getElementById('peOportMotivo')?.value.trim()||''
   };
 
   const prods = dbGetProducts();
@@ -5796,6 +5765,7 @@ function saveProductFromEditor() {
     renderOportunidadesGrid();
   } else {
     renderProductGrid(prod.section);
+    if (prod.section === 'ropa') buildRopaFilterChips();
   }
   renderAdminProducts(
     (document.getElementById('adminProdSearch')?.value||'').trim().toLowerCase(),
@@ -5813,8 +5783,340 @@ document.addEventListener('keydown', e => {
   }
 });
 
-// Arranque
-(async function initApp() {
+/* ══════════════════════════════════════════════════════
+   FEATURE 1 — MODO OSCURO
+   ══════════════════════════════════════════════════════ */
+function toggleDarkMode() {
+  const isDark = document.body.classList.toggle('dark-mode');
+  localStorage.setItem('sol_darkMode', isDark ? '1' : '0');
+  document.getElementById('darkToggleBtn').textContent = isDark ? '☀️' : '🌙';
+}
+(function initDarkMode() {
+  const saved = localStorage.getItem('sol_darkMode');
+  const prefersDark = window.matchMedia?.('(prefers-color-scheme: dark)').matches;
+  if (saved === '1' || (saved === null && prefersDark)) {
+    document.body.classList.add('dark-mode');
+    const btn = document.getElementById('darkToggleBtn');
+    if (btn) btn.textContent = '☀️';
+  }
+})();
+
+/* ══════════════════════════════════════════════════════
+   FEATURE 2 — PUSH NOTIFICATIONS AL ADMIN
+   ══════════════════════════════════════════════════════ */
+async function adminEnablePush() {
+  if (!('Notification' in window)) {
+    showToast('❌ Tu navegador no soporta notificaciones'); return;
+  }
+  const permission = await Notification.requestPermission();
+  if (permission === 'granted') {
+    localStorage.setItem('sol_adminPushEnabled', '1');
+    const btn = document.getElementById('adminPushBtn');
+    if (btn) { btn.textContent = '🔔 Notificaciones activas ✓'; btn.style.background = '#2e7d32'; }
+    showToast('✅ Notificaciones de pedidos activadas');
+    new Notification('Sol en tu Hogar', {
+      body: '¡Listo! Vas a recibir alertas cuando lleguen pedidos nuevos.',
+      icon: 'caja-carrito.jpeg'
+    });
+  } else {
+    showToast('⚠️ Permiso denegado. Habilitalo desde la config del navegador.');
+  }
+}
+function sendAdminPushNotification(order) {
+  if (!('Notification' in window)) return;
+  if (Notification.permission !== 'granted') return;
+  if (!localStorage.getItem('sol_adminPushEnabled')) return;
+  try {
+    new Notification(`🛒 Nuevo pedido #${order.id} — Sol en tu Hogar`, {
+      body: `Total: ${formatPrice(order.total)} · ${order.items.length} producto(s)\nCliente: ${order.contactData?.nombre || 'Desconocido'}`,
+      icon: 'caja-carrito.jpeg',
+      badge: 'caja-carrito.jpeg',
+      tag: 'new-order-' + order.id,
+      requireInteraction: true
+    });
+  } catch(e) { console.warn('Push error:', e); }
+}
+// Inicializar estado del botón push al entrar al admin
+function initAdminPushBtn() {
+  const btn = document.getElementById('adminPushBtn');
+  if (!btn) return;
+  if (!('Notification' in window)) {
+    btn.textContent = '🔕 Notificaciones no disponibles'; btn.disabled = true; return;
+  }
+  if (Notification.permission === 'granted' && localStorage.getItem('sol_adminPushEnabled')) {
+    btn.textContent = '🔔 Notificaciones activas ✓'; btn.style.background = '#2e7d32';
+  }
+}
+
+/* ══════════════════════════════════════════════════════
+   FEATURE 3 — FILTROS ROPA (talle · color · género)
+   ══════════════════════════════════════════════════════ */
+// Estado activo de los filtros de ropa
+const _ropaFilter = { estado: 'all', talle: '', color: '', genero: '' };
+
+function buildRopaFilterChips() {
+  const prods = dbGetProducts().filter(p => p.section === 'ropa');
+  const talles  = [...new Set(prods.flatMap(p => p.talles  || []))].sort();
+  const colores = [...new Set(prods.flatMap(p => p.colores || []))].sort();
+  const generos = [...new Set(prods.map(p => p.genero).filter(Boolean))];
+
+  function makeChips(containerId, labelId, values, filterKey) {
+    const container = document.getElementById(containerId);
+    const label     = document.getElementById(labelId);
+    if (!container) return;
+    container.innerHTML = '';
+    if (!values.length) { if (label) label.style.display = 'none'; return; }
+    if (label) label.style.display = '';
+    values.forEach(val => {
+      const btn = document.createElement('button');
+      btn.className = 'gf-btn';
+      btn.textContent = val;
+      btn.onclick = () => { _ropaFilter[filterKey] = (_ropaFilter[filterKey] === val ? '' : val); buildRopaFilterChips(); applyRopaFilters(); };
+      if (_ropaFilter[filterKey] === val) btn.classList.add('active');
+      container.appendChild(btn);
+    });
+  }
+  makeChips('ropaTalleChips',  'ropaTalleLbl',  talles,  'talle');
+  makeChips('ropaColorChips',  'ropaColorLbl',  colores, 'color');
+  makeChips('ropaGeneroChips', 'ropaGeneroLbl', generos, 'genero');
+}
+
+function filterRopa(filterKey, value, btn) {
+  _ropaFilter[filterKey] = value;
+  // Deactivar botones del mismo grupo
+  if (filterKey === 'estado') {
+    document.querySelectorAll('#ropaFilters .gf-btn[onclick*="estado"]').forEach(b => b.classList.remove('active'));
+    if (btn) btn.classList.add('active');
+  }
+  applyRopaFilters();
+}
+
+function applyRopaFilters() {
+  const grid = document.getElementById('ropaGrid');
+  if (!grid) return;
+  let visible = 0;
+  grid.querySelectorAll('.pcard').forEach(card => {
+    const isProx   = card.dataset.prox === '1';
+    const prodId   = card.dataset.id;
+    const prod     = dbGetProducts().find(p => p.id === prodId) || {};
+    let show = true;
+    // Estado
+    if (_ropaFilter.estado === 'disponible' && isProx)  show = false;
+    if (_ropaFilter.estado === 'proximamente' && !isProx) show = false;
+    // Talle
+    if (_ropaFilter.talle && !(prod.talles || []).includes(_ropaFilter.talle)) show = false;
+    // Color
+    if (_ropaFilter.color && !(prod.colores || []).includes(_ropaFilter.color)) show = false;
+    // Género
+    if (_ropaFilter.genero && prod.genero !== _ropaFilter.genero) show = false;
+    card.classList.toggle('hidden', !show);
+    if (show) visible++;
+  });
+  const countEl = document.getElementById('ropaCount');
+  if (countEl) countEl.textContent = `${visible} producto${visible !== 1 ? 's' : ''}`;
+}
+
+/* ══════════════════════════════════════════════════════
+   FEATURE 4 — CUPONES CON FECHA DE VENCIMIENTO
+   ══════════════════════════════════════════════════════ */
+// Parchamos adminCreateCoupon para leer el campo de vencimiento
+const _origAdminCreateCoupon = adminCreateCoupon;
+function adminCreateCoupon() {
+  const code     = (document.getElementById('newCouponCode')?.value || '').trim().toUpperCase();
+  const discount = parseInt(document.getElementById('newCouponDiscount')?.value || 0);
+  const uses     = parseInt(document.getElementById('newCouponUses')?.value || 0) || null;
+  const expiry   = document.getElementById('newCouponExpiry')?.value || '';
+  if (!code || !discount || discount < 1 || discount > 100) {
+    showToast('Completá código y % de descuento'); return;
+  }
+  const coupons = dbGetCoupons();
+  if (coupons.find(c => c.code === code)) { showToast('Ese código ya existe'); return; }
+  coupons.push({ code, discount, uses, usedCount: 0, expiry, creado: new Date().toLocaleDateString('es-AR') });
+  dbSaveCoupons(coupons);
+  ['newCouponCode','newCouponDiscount','newCouponUses','newCouponExpiry'].forEach(id => {
+    const el = document.getElementById(id); if (el) el.value = '';
+  });
+  renderAdminCoupons();
+  showToast(`Cupón ${code} creado ✓`);
+}
+
+// Parchamos applyCoupon para validar vencimiento
+const _origApplyCoupon = applyCoupon;
+function applyCoupon() {
+  const code  = (document.getElementById('couponInput')?.value || '').trim().toUpperCase();
+  const msgEl = document.getElementById('couponMsg');
+  const inp   = document.getElementById('couponInput');
+  if (!code) return;
+  const coupons = dbGetCoupons();
+  const coupon  = coupons.find(c => c.code === code);
+  if (!coupon) {
+    inp.className = 'coupon-input err'; msgEl.className = 'coupon-msg err';
+    msgEl.textContent = '❌ Cupón no válido'; activeCoupon = null; refreshCheckoutTotal(); return;
+  }
+  if (coupon.expiry && new Date(coupon.expiry) < new Date()) {
+    inp.className = 'coupon-input err'; msgEl.className = 'coupon-msg err';
+    msgEl.textContent = '❌ Este cupón venció el ' + new Date(coupon.expiry).toLocaleDateString('es-AR');
+    activeCoupon = null; refreshCheckoutTotal(); return;
+  }
+  if (coupon.uses != null && (coupon.usedCount || 0) >= coupon.uses) {
+    inp.className = 'coupon-input err'; msgEl.className = 'coupon-msg err';
+    msgEl.textContent = '❌ Este cupón agotó sus usos'; activeCoupon = null; refreshCheckoutTotal(); return;
+  }
+  activeCoupon = coupon;
+  inp.className = 'coupon-input ok'; msgEl.className = 'coupon-msg ok';
+  msgEl.textContent = `✅ ¡${coupon.discount}% de descuento aplicado!`;
+  refreshCheckoutTotal();
+}
+
+// Parchamos renderAdminCoupons para mostrar vencimiento
+const _origRenderAdminCoupons = renderAdminCoupons;
+function renderAdminCoupons() {
+  const coupons = dbGetCoupons();
+  const grid    = document.getElementById('adminCouponsGrid');
+  if (!grid) return;
+  if (!coupons.length) {
+    grid.innerHTML = '<div style="color:rgba(255,255,255,.3);font-size:.78rem;padding:.8rem 0">No hay cupones creados todavía.</div>'; return;
+  }
+  const today = new Date(); today.setHours(0,0,0,0);
+  grid.innerHTML = coupons.map(c => {
+    const expired = c.expiry && new Date(c.expiry) < today;
+    const expiryStr = c.expiry ? `Vence: ${new Date(c.expiry).toLocaleDateString('es-AR')}` : 'Sin vencimiento';
+    return `<div class="admin-coupon-card" style="${expired ? 'opacity:.45' : ''}">
+      <div class="admin-coupon-code">${c.code}${expired ? ' <span style="font-size:.55rem;color:#e53935">VENCIDO</span>' : ''}</div>
+      <div class="admin-coupon-detail">
+        ${c.discount}% descuento<br>
+        ${c.uses ? `${c.usedCount||0}/${c.uses} usos` : 'Usos ilimitados'}<br>
+        ${expiryStr}<br>
+        Creado: ${c.creado||'—'}
+      </div>
+      <button class="admin-coupon-del" onclick="adminDeleteCoupon('${c.code}')">✕</button>
+    </div>`;
+  }).join('');
+}
+
+/* ══════════════════════════════════════════════════════
+   FEATURE 5 — PÁGINA "GRACIAS POR TU COMPRA"
+   ══════════════════════════════════════════════════════ */
+function shareOrder() {
+  const orderNum = document.getElementById('orderNumber')?.textContent || '';
+  const text = `¡Acabo de comprar en Sol en tu Hogar! 🌟\nPedido ${orderNum}\nhttps://alan-emprende.github.io/solentuhogar/`;
+  if (navigator.share) {
+    navigator.share({ title: 'Mi compra en Sol en tu Hogar', text }).catch(() => {});
+  } else {
+    navigator.clipboard?.writeText(text).then(() => showToast('📋 Comprobante copiado'));
+  }
+}
+
+function fillSuccessSugeridos(excludeNames = []) {
+  const container = document.getElementById('successSugeridos');
+  const grid      = document.getElementById('successSugeridosGrid');
+  if (!container || !grid) return;
+  const all = dbGetProducts().filter(p => !p.prox && p.stock > 0 && !excludeNames.includes(p.name));
+  const picks = all.sort(() => Math.random() - .5).slice(0, 3);
+  if (!picks.length) { container.style.display = 'none'; return; }
+  container.style.display = '';
+  grid.innerHTML = picks.map(p => `
+    <div onclick="closePayment();setTimeout(()=>openProduct(document.querySelector('[data-id=\\'${p.id}\\']')),300)"
+         style="cursor:pointer;border-radius:8px;overflow:hidden;border:1.5px solid var(--sand-deep);transition:transform .2s" onmouseover="this.style.transform='scale(1.03)'" onmouseout="this.style.transform=''">
+      <div style="aspect-ratio:1;background:var(--sand);overflow:hidden">
+        ${p.img ? `<img src="${p.img}" alt="${p.name}" style="width:100%;height:100%;object-fit:cover">` : `<div style="width:100%;height:100%;display:flex;align-items:center;justify-content:center;color:var(--stone);font-size:.65rem;padding:.3rem;text-align:center">${p.name}</div>`}
+      </div>
+      <div style="padding:.35rem .4rem;font-size:.65rem;font-weight:600;color:var(--ink);line-height:1.3">${p.name}<br><span style="color:var(--clay)">${formatPrice(p.price)}</span></div>
+    </div>`).join('');
+}
+
+/* ══════════════════════════════════════════════════════
+   FEATURE 6 — SUBIDA DE IMÁGENES CLOUDINARY
+   ══════════════════════════════════════════════════════ */
+// INSTRUCCIONES: Creá una cuenta gratis en cloudinary.com
+// Luego editá estas 2 líneas con tus datos:
+const CLOUDINARY_CLOUD_NAME    = 'djihiaahb';
+const CLOUDINARY_UPLOAD_PRESET = 'Galeria de Sol en tu hogar';
+
+function cloudinaryUpload(targetInputId) {
+  if (CLOUDINARY_CLOUD_NAME === 'TU_CLOUD_NAME') {
+    showToast('⚙️ Configurá Cloudinary primero (cloud name + upload preset)');
+    // Fallback: input de archivo del sistema
+    _localFileUpload(targetInputId); return;
+  }
+  const input = document.createElement('input');
+  input.type = 'file'; input.accept = 'image/*';
+  input.onchange = async () => {
+    const file = input.files[0];
+    if (!file) return;
+    if (file.size > 8 * 1024 * 1024) { showToast('❌ Imagen demasiado grande (máx 8MB)'); return; }
+    showToast('⏳ Subiendo imagen...');
+    try {
+      const fd = new FormData();
+      fd.append('file', file);
+      fd.append('upload_preset', CLOUDINARY_UPLOAD_PRESET);
+      fd.append('folder', 'solentuhogar');
+      const res  = await fetch(`https://api.cloudinary.com/v1_1/${CLOUDINARY_CLOUD_NAME}/image/upload`, { method:'POST', body: fd });
+      const data = await res.json();
+      if (data.secure_url) {
+        const inp = document.getElementById(targetInputId);
+        if (inp) { inp.value = data.secure_url; pePreviewImg(); }
+        showToast('✅ Imagen subida correctamente');
+      } else { showToast('❌ Error al subir: ' + (data.error?.message || 'desconocido')); }
+    } catch(e) { showToast('❌ Error de red al subir imagen'); }
+  };
+  input.click();
+}
+
+function _localFileUpload(targetInputId) {
+  const input = document.createElement('input');
+  input.type  = 'file'; input.accept = 'image/*';
+  input.onchange = () => {
+    const file = input.files[0];
+    if (!file) return;
+    const reader = new FileReader();
+    reader.onload = e => {
+      const inp = document.getElementById(targetInputId);
+      if (inp) { inp.value = e.target.result; pePreviewImg(); }
+      showToast('📷 Imagen cargada localmente (solo para vista previa)');
+    };
+    reader.readAsDataURL(file);
+  };
+  input.click();
+}
+
+function pePreviewImg() {
+  const val   = document.getElementById('peImg')?.value.trim();
+  const prev  = document.getElementById('peImgPreview');
+  const thumb = document.getElementById('peImgThumb');
+  if (!prev || !thumb) return;
+  if (!val) { prev.style.display = 'none'; return; }
+  thumb.src = val;
+  thumb.onerror = () => { prev.style.display = 'none'; };
+  thumb.onload  = () => { prev.style.display = 'block'; };
+}
+
+/* ══════════════════════════════════════════════════════
+   FEATURE FIXES — bug fixes de sesión anterior
+   ══════════════════════════════════════════════════════ */
+// toggleSectionFields: muestra campos correctos en editor de producto
+function toggleSectionFields() {
+  const sec = document.getElementById('peSection')?.value;
+  const ropaF  = document.getElementById('peRopaFields');
+  const oportF = document.getElementById('peOportFields');
+  if (ropaF)  ropaF.style.display  = sec === 'ropa'          ? '' : 'none';
+  if (oportF) oportF.style.display = sec === 'oportunidades' ? '' : 'none';
+}
+function _peToggleTimer() { toggleSectionFields(); }
+
+// changeQty para tarjetas de producto (selector cantidad)
+function changeQty(btn, delta) {
+  const ctrl  = btn.closest('.qty-ctrl');
+  if (!ctrl) return;
+  const numEl = ctrl.querySelector('.qty-num');
+  const card  = btn.closest('.pcard');
+  const stock = parseInt(card?.dataset.stock || 99);
+  let qty = parseInt(numEl.textContent) + delta;
+  qty = Math.max(1, Math.min(qty, stock));
+  numEl.textContent = qty;
+}
+
+
   initTimers();
   updateCart();
   updateNavAccount();
@@ -5825,6 +6127,7 @@ document.addEventListener('keydown', e => {
   renderProductGrid('hogar');
   renderProductGrid('ropa');
   renderOportunidadesGrid();
+  buildRopaFilterChips(); // Construir chips de filtro ropa
   initGridCounts();
   populateReviewProductSelect();
   await renderReviews();
