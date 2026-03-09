@@ -855,6 +855,13 @@ footer{background:var(--ink);color:rgba(255,255,255,.45);padding:5rem 2.5rem 2re
 .auth-forgot a{font-size:.7rem;color:var(--stone);text-decoration:none;transition:color .2s}
 .auth-forgot a:hover{color:var(--clay)}
 .auth-terms{font-size:.65rem;color:var(--stone-light);text-align:center;margin-top:.7rem;line-height:1.4}
+.auth-back{background:none;border:none;color:var(--stone);font-size:.78rem;cursor:pointer;padding:.3rem 0;display:flex;align-items:center;gap:.3rem;font-family:var(--sans)}
+.auth-back:hover{color:var(--clay)}
+.reset-step{display:none}
+.reset-step.active{display:block}
+.reset-code-input{width:100%;text-align:center;font-size:1.8rem;letter-spacing:.35em;font-weight:700;border:2px solid var(--sand-deep);border-radius:8px;padding:.7rem;font-family:var(--sans);color:var(--ink)}
+.reset-code-input:focus{outline:none;border-color:var(--clay)}
+.reset-msg{font-size:.75rem;text-align:center;min-height:1.2rem;margin:.4rem 0}
 
 /* ── Mini-modal verificación de email al registrarse ── */
 .verify-overlay{position:fixed;inset:0;background:rgba(26,18,9,.55);z-index:700;display:flex;align-items:center;justify-content:center;padding:1rem;opacity:0;pointer-events:none;transition:opacity .25s}
@@ -1120,6 +1127,44 @@ footer{background:var(--ink);color:rgba(255,255,255,.45);padding:5rem 2.5rem 2re
         <p id="regGenErr" style="font-size:.75rem;margin-bottom:.4rem;color:#e53935;min-height:1rem"></p>
         <button class="auth-btn" onclick="doRegister()">Crear mi cuenta</button>
         <p class="auth-terms">Al registrarte aceptás nuestros <a href="#" style="color:var(--clay)">términos y condiciones</a>.</p>
+      </div>
+
+      <!-- Formulario restablecer contraseña -->
+      <div class="auth-form" id="formReset">
+        <button class="auth-back" onclick="switchAuthTab('login')">← Volver al inicio de sesión</button>
+        <!-- Paso 1: ingresar email -->
+        <div class="reset-step active" id="resetStep1">
+          <p style="font-size:.82rem;color:var(--stone);margin:.4rem 0 1rem">Ingresá tu email y te enviamos un código para restablecer tu contraseña.</p>
+          <div class="auth-group" style="margin-bottom:.8rem">
+            <label class="auth-label">Email de tu cuenta</label>
+            <input class="auth-input" type="email" id="resetEmail" placeholder="tu@email.com" onkeydown="if(event.key==='Enter')sendResetCode()">
+          </div>
+          <p class="reset-msg" id="resetMsg1" style="color:#e53935"></p>
+          <button class="auth-btn" id="btnSendReset" onclick="sendResetCode()">📧 Enviar código</button>
+        </div>
+        <!-- Paso 2: ingresar código -->
+        <div class="reset-step" id="resetStep2">
+          <p style="font-size:.82rem;color:var(--stone);margin:.4rem 0 .6rem">Te enviamos un código de 6 dígitos a <strong id="resetEmailLabel"></strong>.</p>
+          <input class="reset-code-input" id="resetCodeInput" type="text" inputmode="numeric" maxlength="6" placeholder="000000"
+            oninput="this.value=this.value.replace(/\D/g,'');checkResetCode()"
+            onkeydown="if(event.key==='Enter')checkResetCode()">
+          <p class="reset-msg" id="resetMsg2"></p>
+          <button class="verify-resend" onclick="sendResetCode(true)">No recibí el código — Reenviar</button>
+        </div>
+        <!-- Paso 3: nueva contraseña -->
+        <div class="reset-step" id="resetStep3">
+          <p style="font-size:.82rem;color:var(--stone);margin:.4rem 0 .8rem">Elegí tu nueva contraseña.</p>
+          <div class="auth-group" style="margin-bottom:.6rem">
+            <label class="auth-label">Nueva contraseña</label>
+            <input class="auth-input" type="password" id="resetNewPass" placeholder="Mín. 6 caracteres">
+          </div>
+          <div class="auth-group" style="margin-bottom:.8rem">
+            <label class="auth-label">Repetir contraseña</label>
+            <input class="auth-input" type="password" id="resetNewPass2" placeholder="Repetir" onkeydown="if(event.key==='Enter')saveNewPassword()">
+          </div>
+          <p class="reset-msg" id="resetMsg3" style="color:#e53935"></p>
+          <button class="auth-btn" onclick="saveNewPassword()">🔒 Guardar nueva contraseña</button>
+        </div>
       </div>
     </div>
   </div>
@@ -2658,27 +2703,36 @@ function dbGetUsers() {
 }
 function dbSaveUsers(users) {
   localStorage.setItem('sol_users', JSON.stringify(users));
-  // Sync a Supabase si está activo (no bloqueante)
-  if (SUPABASE_ACTIVE && dbClient) {
-    users.forEach(u => {
-      const { password, ...safeUser } = u;
-      dbClient.from('users').upsert({ ...safeUser, password: u.password }).then(() => {});
-    });
-  }
+}
+// Guardar un usuario específico en Supabase
+async function dbUpsertUser(u) {
+  if (!SUPABASE_ACTIVE || !dbClient) return;
+  try {
+    const { error } = await dbClient.from('users').upsert({
+      id: u.id, nombre: u.nombre, apellido: u.apellido,
+      email: u.email, tel: u.tel || '', dni: u.dni || '',
+      direccion: u.direccion || '', password: u.password,
+      creado: u.creado || '', tipo: u.tipo || 'cliente'
+    }, { onConflict: 'id' });
+    if (error) console.error('❌ Supabase users error:', error.message);
+  } catch(e) { console.error('❌ Supabase users exception:', e); }
 }
 function dbGetOrders() {
   return JSON.parse(localStorage.getItem('sol_orders') || '[]');
 }
 function dbSaveOrders(orders) {
   localStorage.setItem('sol_orders', JSON.stringify(orders));
-  if (SUPABASE_ACTIVE && dbClient) {
-    orders.forEach(o => {
-      dbClient.from('orders').upsert({
-        id: o.id, user_id: o.userId, items: o.items,
-        total: o.total, estado: o.estado, fecha: o.fecha, metodo: o.metodo
-      }).then(() => {});
-    });
-  }
+}
+// Guardar un pedido específico en Supabase
+async function dbUpsertOrder(o) {
+  if (!SUPABASE_ACTIVE || !dbClient) return;
+  try {
+    const { error } = await dbClient.from('orders').upsert({
+      id: o.id, user_id: o.userId, items: o.items,
+      total: o.total, estado: o.estado, fecha: o.fecha, metodo: o.metodo || ''
+    }, { onConflict: 'id' });
+    if (error) console.error('❌ Supabase orders error:', error.message);
+  } catch(e) { console.error('❌ Supabase orders exception:', e); }
 }
 function dbGetSession() {
   return JSON.parse(localStorage.getItem('sol_session') || 'null');
@@ -2742,6 +2796,16 @@ function switchAuthTab(tab) {
   document.getElementById('tabReg').classList.toggle('active', tab === 'registro');
   document.getElementById('formLogin').classList.toggle('active', tab === 'login');
   document.getElementById('formReg').classList.toggle('active', tab === 'registro');
+  document.getElementById('formReset').classList.toggle('active', tab === 'reset');
+  // Ocultar tabs cuando estamos en reset
+  document.querySelector('.auth-tabs').style.display = tab === 'reset' ? 'none' : '';
+  if (tab === 'reset') {
+    // Resetear al paso 1
+    document.querySelectorAll('.reset-step').forEach(s => s.classList.remove('active'));
+    document.getElementById('resetStep1').classList.add('active');
+    document.getElementById('resetMsg1').textContent = '';
+    document.getElementById('resetEmail').value = document.getElementById('loginEmail')?.value || '';
+  }
 }
 
 function doLogin() {
@@ -2931,6 +2995,7 @@ function _finalizeRegister() {
 
   users.push(newUser);
   dbSaveUsers(users);
+  dbUpsertUser(newUser); // guardar en Supabase
   loginUser(newUser);
   closeAuth();
 }
@@ -2975,19 +3040,121 @@ function updateNavAccount() {
 
 function forgotPass(e) {
   e.preventDefault();
-  const email = document.getElementById('loginEmail').value.trim();
-  if (!email) {
-    alert('Ingresá tu email primero y luego hacé click en "¿Olvidaste tu contraseña?"');
+  // Pre-llenar el email si ya lo ingresó
+  const loginEmail = document.getElementById('loginEmail')?.value || '';
+  switchAuthTab('reset');
+  if (loginEmail) document.getElementById('resetEmail').value = loginEmail;
+}
+
+/* ── Reset de contraseña ── */
+async function sendResetCode(isResend = false) {
+  const emailEl = document.getElementById('resetEmail');
+  const email   = (emailEl?.value || '').trim().toLowerCase();
+  const msgEl   = document.getElementById('resetMsg1');
+  const btn     = document.getElementById('btnSendReset');
+
+  if (!email || !email.includes('@')) {
+    msgEl.textContent = 'Ingresá un email válido.';
     return;
   }
+
   const users = dbGetUsers();
-  const user = users.find(u => u.email === email.toLowerCase());
+  const user  = users.find(u => u.email === email);
   if (!user) {
-    alert('No encontramos una cuenta con ese email.');
+    msgEl.textContent = 'No encontramos una cuenta con ese email.';
     return;
   }
-  // En producción esto enviaría un email real
-  alert('📧 En una tienda real, te enviaríamos un link de recuperación a ' + email + '.\n\nPor ahora contactanos por WhatsApp para recuperar tu contraseña.');
+
+  btn.disabled = true;
+  btn.textContent = '⏳ Enviando...';
+  msgEl.textContent = '';
+
+  const code = Math.floor(100000 + Math.random() * 900000).toString();
+  sessionStorage.setItem('_resetCode', code);
+  sessionStorage.setItem('_resetEmail', email);
+
+  // Sin EmailJS → mostrar código directo (modo desarrollo)
+  if (typeof emailjs === 'undefined' || EMAILJS_PUBLIC_KEY === 'TU_PUBLIC_KEY') {
+    btn.disabled = false; btn.textContent = '📧 Enviar código';
+    document.getElementById('resetEmailLabel').textContent = email;
+    document.getElementById('resetCodeInput').value = '';
+    document.getElementById('resetMsg2').textContent = '';
+    document.querySelectorAll('.reset-step').forEach(s => s.classList.remove('active'));
+    document.getElementById('resetStep2').classList.add('active');
+    return;
+  }
+
+  try {
+    await emailjs.send(EMAILJS_SERVICE_ID, EMAILJS_VERIFY_ID, {
+      customer_email: email,
+      verify_code:    code,
+      tienda:         'Sol en tu Hogar'
+    });
+    btn.disabled = false; btn.textContent = '📧 Enviar código';
+    document.getElementById('resetEmailLabel').textContent = email;
+    document.getElementById('resetCodeInput').value = '';
+    document.getElementById('resetMsg2').textContent = '';
+    document.querySelectorAll('.reset-step').forEach(s => s.classList.remove('active'));
+    document.getElementById('resetStep2').classList.add('active');
+    if (isResend) showToast('📧 Código reenviado');
+  } catch(err) {
+    btn.disabled = false; btn.textContent = '📧 Enviar código';
+    msgEl.textContent = 'No se pudo enviar el email. Intentá de nuevo.';
+  }
+}
+
+function checkResetCode() {
+  const input = document.getElementById('resetCodeInput');
+  const msg   = document.getElementById('resetMsg2');
+  const val   = (input?.value || '').trim();
+  if (val.length < 6) return;
+
+  if (val === sessionStorage.getItem('_resetCode')) {
+    msg.style.color = 'var(--leaf)';
+    msg.textContent = '✅ Código correcto. Elegí tu nueva contraseña.';
+    setTimeout(() => {
+      document.querySelectorAll('.reset-step').forEach(s => s.classList.remove('active'));
+      document.getElementById('resetStep3').classList.add('active');
+      document.getElementById('resetMsg3').textContent = '';
+      document.getElementById('resetNewPass').focus();
+    }, 600);
+  } else {
+    msg.style.color = '#e53935';
+    msg.textContent = '❌ Código incorrecto. Revisá el email.';
+    input.style.borderColor = '#e53935';
+    setTimeout(() => { input.style.borderColor = ''; }, 1500);
+  }
+}
+
+async function saveNewPassword() {
+  const pass  = document.getElementById('resetNewPass').value;
+  const pass2 = document.getElementById('resetNewPass2').value;
+  const msg   = document.getElementById('resetMsg3');
+  const email = sessionStorage.getItem('_resetEmail');
+
+  if (pass.length < 6)  { msg.textContent = 'La contraseña debe tener al menos 6 caracteres.'; return; }
+  if (pass !== pass2)   { msg.textContent = 'Las contraseñas no coinciden.'; return; }
+
+  const users = dbGetUsers();
+  const idx   = users.findIndex(u => u.email === email);
+  if (idx < 0) { msg.textContent = 'Error: usuario no encontrado.'; return; }
+
+  users[idx].password = btoa(pass);
+  dbSaveUsers(users);
+  await dbUpsertUser(users[idx]); // actualizar en Supabase
+
+  // Actualizar sesión si es el usuario actual
+  if (currentUser && currentUser.email === email) {
+    currentUser.password = btoa(pass);
+    dbSaveSession(currentUser);
+  }
+
+  sessionStorage.removeItem('_resetCode');
+  sessionStorage.removeItem('_resetEmail');
+
+  showToast('🔒 Contraseña actualizada correctamente');
+  closeAuth();
+  switchAuthTab('login');
 }
 
 /* ══════════════════════════════════════════════════════
@@ -3080,6 +3247,7 @@ function saveEditData() {
   users[idx].dni       = document.getElementById('aeDni').value.trim();
   users[idx].direccion = document.getElementById('aeDir').value.trim();
   dbSaveUsers(users);
+  dbUpsertUser(users[idx]); // sincronizar con Supabase
   currentUser = users[idx];
   dbSaveSession(currentUser);
   updateNavAccount();
@@ -3391,6 +3559,7 @@ function cambiarEstadoPedido(orderId, nuevoEstado) {
   if (idx >= 0) {
     orders[idx].estado = nuevoEstado;
     dbSaveOrders(orders);
+    dbUpsertOrder(orders[idx]); // sincronizar con Supabase
     _adminOrders = orders;
     showToast(`Pedido ${orderId} → ${nuevoEstado} ✓`);
   }
@@ -3742,6 +3911,7 @@ function confirmarPago() {
     };
     orders.push(newOrder);
     dbSaveOrders(orders);
+    dbUpsertOrder(newOrder); // guardar en Supabase
 
     // Enviar email de confirmación
     sendOrderEmail(newOrder, contactData);
