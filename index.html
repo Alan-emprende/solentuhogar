@@ -6,17 +6,17 @@
 <title>Sol en tu Hogar — Artículos del Hogar y Ropa Online</title>
 
 <!-- ══ SEO ══ -->
-<meta name="description" content="Tienda online argentina de artículos para el hogar y ropa. Licuadoras, botellas Stanley, organizadores, indumentaria y más. Envío a todo el país, 12 cuotas sin interés y devoluciones gratis."/>
+<meta name="description" content="Tienda online argentina de artículos para el hogar y ropa. Licuadoras, botellas Stanley, organizadores y más. Envío a todo el país, 12 cuotas sin interés y devoluciones gratis."/>
 <meta name="keywords" content="artículos del hogar, ropa online argentina, botella stanley, licuadora portátil, organizadores, tienda online, envío argentina"/>
 <meta name="robots" content="index, follow"/>
-<link rel="canonical" href="https://solentuhogar.netlify.app/"/>
+<link rel="canonical" href="https://alan-emprende.github.io/solentuhogar/"/>
 
 <!-- ══ Open Graph (WhatsApp, Facebook, Instagram) ══ -->
 <meta property="og:type" content="website"/>
-<meta property="og:url" content="https://solentuhogar.netlify.app/"/>
+<meta property="og:url" content="https://alan-emprende.github.io/solentuhogar/"/>
 <meta property="og:title" content="Sol en tu Hogar — Artículos del Hogar y Ropa Online"/>
 <meta property="og:description" content="Artículos para el hogar y ropa de calidad a precios justos. Envío a todo el país, 12 cuotas sin interés."/>
-<meta property="og:image" content="https://solentuhogar.netlify.app/caja-carrito.jpeg"/>
+<meta property="og:image" content="https://alan-emprende.github.io/solentuhogar/caja-carrito.jpeg"/>
 <meta property="og:locale" content="es_AR"/>
 <meta property="og:site_name" content="Sol en tu Hogar"/>
 
@@ -24,9 +24,9 @@
 <meta name="twitter:card" content="summary_large_image"/>
 <meta name="twitter:title" content="Sol en tu Hogar — Artículos del Hogar y Ropa Online"/>
 <meta name="twitter:description" content="Artículos para el hogar y ropa de calidad a precios justos. Envío a todo el país."/>
-<meta name="twitter:image" content="https://solentuhogar.netlify.app/caja-carrito.jpeg"/>
+<meta name="twitter:image" content="https://alan-emprende.github.io/solentuhogar/caja-carrito.jpeg"/>
 
-<!-- ══ Favicon (emoji SVG — sin archivo extra) ══ -->
+<!-- ══ Favicon emoji SVG ══ -->
 <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>☀️</text></svg>"/>
 <link rel="apple-touch-icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>☀️</text></svg>"/>
 <!-- ✅ Google Analytics — G-PR5GWDZ5M2 configurado -->
@@ -711,8 +711,6 @@ footer{background:var(--ink);color:rgba(255,255,255,.45);padding:5rem 2.5rem 2re
 .success-order strong{display:block;font-size:.68rem;letter-spacing:.1em;text-transform:uppercase;color:var(--stone);margin-bottom:.3rem}
 
 .form-label .req{color:var(--clay);margin-left:2px}
-/* Badge stock bajo */
-.pcard-stock-alert{display:inline-flex;align-items:center;gap:.3rem;font-size:.65rem;font-weight:700;color:#c62828;background:#fff3f3;border:1px solid #ffcdd2;border-radius:4px;padding:.2rem .55rem;margin-bottom:.5rem;letter-spacing:.03em}
 /* Spinner */
 @keyframes spin{to{transform:rotate(360deg)}}
 .spinner{width:18px;height:18px;border:2.5px solid rgba(255,255,255,.3);border-top-color:#fff;border-radius:50%;animation:spin .7s linear infinite}
@@ -731,13 +729,26 @@ footer{background:var(--ink);color:rgba(255,255,255,.45);padding:5rem 2.5rem 2re
 .nav-hamburger.open span:nth-child(3){transform:translateY(-7px) rotate(-45deg)}
 
 /* ── Menú móvil drawer ── */
-.mobile-nav{position:fixed;top:0;left:0;bottom:0;width:280px;background:var(--white);z-index:500;transform:translateX(-110%);transition:transform .35s cubic-bezier(.4,0,.2,1);display:flex;flex-direction:column;box-shadow:8px 0 48px rgba(26,18,9,.15);padding-top:72px}
+.mobile-nav{position:fixed;top:0;left:0;bottom:0;width:280px;background:var(--white);z-index:500;transform:translateX(-110%);transition:transform .35s cubic-bezier(.4,0,.2,1);display:flex;flex-direction:column;box-shadow:8px 0 48px rgba(26,18,9,.15);padding-top:68px}
 .mobile-nav.open{transform:translateX(0)}
-.mobile-nav-logo{padding:1.4rem 1.5rem 1rem;border-bottom:1px solid var(--sand-deep)}
-.mobile-nav-logo .logo-wordmark{font-size:1.1rem}
-.mobile-nav a{display:block;padding:.9rem 1.5rem;font-size:.9rem;font-weight:600;color:var(--ink);text-decoration:none;letter-spacing:.03em;border-bottom:1px solid var(--sand);transition:background var(--trans),color var(--trans)}
+.mobile-nav-logo{padding:1.2rem 1.5rem .8rem;border-bottom:1px solid var(--sand-deep)}
+.mobile-nav a{display:block;padding:.85rem 1.5rem;font-size:.9rem;font-weight:600;color:var(--ink);text-decoration:none;letter-spacing:.03em;border-bottom:1px solid var(--sand);transition:background var(--trans),color var(--trans)}
 .mobile-nav a:hover{background:var(--sand);color:var(--clay)}
-.mobile-nav-sep{padding:.6rem 1.5rem;font-size:.6rem;letter-spacing:.18em;text-transform:uppercase;color:var(--stone-light);font-weight:600;background:var(--sand)}
+.mobile-nav-sep{padding:.55rem 1.5rem;font-size:.6rem;letter-spacing:.18em;text-transform:uppercase;color:var(--stone-light);font-weight:600;background:var(--sand)}
+
+/* ── Stock badge urgencia ── */
+.pcard-stock-alert{display:inline-flex;align-items:center;gap:.3rem;font-size:.65rem;font-weight:700;color:#c62828;background:#fff3f3;border:1px solid #ffcdd2;border-radius:4px;padding:.2rem .55rem;margin-bottom:.4rem;letter-spacing:.03em}
+
+/* ── Wishlist tab en cuenta ── */
+.ap-wish-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:.8rem;margin-top:.5rem}
+.ap-wish-item{background:var(--sand);border-radius:8px;padding:.8rem;display:flex;flex-direction:column;gap:.4rem;position:relative}
+.ap-wish-img{width:100%;height:80px;object-fit:cover;border-radius:5px;background:var(--sand-deep)}
+.ap-wish-name{font-size:.8rem;font-weight:600;color:var(--ink);line-height:1.3}
+.ap-wish-price{font-size:.78rem;color:var(--clay);font-weight:700}
+.ap-wish-rm{position:absolute;top:.5rem;right:.5rem;background:rgba(255,255,255,.9);border:none;border-radius:50%;width:22px;height:22px;cursor:pointer;font-size:.65rem;color:var(--stone);display:flex;align-items:center;justify-content:center}
+.ap-wish-rm:hover{background:var(--clay);color:#fff}
+.ap-wish-empty{text-align:center;padding:2rem 1rem;color:var(--stone);font-size:.85rem}
+.ap-wish-empty span{display:block;font-size:2rem;margin-bottom:.5rem}
 
 @media(max-width:860px){
   .nav-inner{padding:0 1rem;grid-template-columns:auto 1fr auto}
@@ -766,18 +777,18 @@ footer{background:var(--ink);color:rgba(255,255,255,.45);padding:5rem 2.5rem 2re
   .cart{width:100%;max-width:100%}
   .form-row.cols-2,.form-row.cols-3{grid-template-columns:1fr}
   .cuotas-grid{grid-template-columns:repeat(2,1fr)}
-  /* Checkout modal full-screen en mobile */
   .pay-overlay{padding:0}
   .pay-modal{border-radius:0;max-height:100dvh;height:100dvh;width:100%;max-width:100%}
   .pay-modal-inner{flex-direction:column}
   .pay-summary{width:100%;max-width:100%;border-right:none;border-bottom:1px solid #eee;padding:1rem 1.2rem;max-height:180px;overflow-y:auto}
-  .pay-body-wrap{flex:1;overflow-y:auto;padding:.2rem 0}
+  .pay-body-wrap{flex:1;overflow-y:auto}
   .pay-items-list{max-height:100px}
   .grid-filters{gap:.5rem;flex-wrap:wrap}
   .gf-btn{font-size:.65rem;padding:.3rem .65rem}
   .reviews-head{flex-direction:column;gap:.8rem;align-items:flex-start}
   .account-panel{width:100%;max-width:100%}
   .auth-form-row.cols-2{grid-template-columns:1fr}
+  .ap-wish-grid{grid-template-columns:repeat(2,1fr)}
 }
 @media(max-width:480px){
   .pgrid{grid-template-columns:repeat(2,1fr);gap:.6rem}
@@ -788,7 +799,7 @@ footer{background:var(--ink);color:rgba(255,255,255,.45);padding:5rem 2.5rem 2re
   .footer-grid{grid-template-columns:1fr}
   .pay-steps-bar{padding:.8rem 1rem}
   .ps-label{display:none}
-  .pay-summary{max-height:140px}
+  .ap-wish-grid{grid-template-columns:1fr}
 }
 
 /* ══════════════════════════════════════════════════════
@@ -1165,6 +1176,12 @@ footer{background:var(--ink);color:rgba(255,255,255,.45);padding:5rem 2.5rem 2re
       <span class="ap-menu-badge" id="apOrderBadge" style="display:none">0</span>
       <span class="ap-menu-arrow">›</span>
     </button>
+    <button class="ap-menu-item" onclick="apShowSection('favoritos',this)">
+      <div class="ap-menu-icon">♥</div>
+      <span class="ap-menu-label">Mis favoritos</span>
+      <span class="ap-menu-badge" id="apWishBadge" style="display:none">0</span>
+      <span class="ap-menu-arrow">›</span>
+    </button>
     <button class="ap-menu-item" onclick="apShowSection('faq',this)">
       <div class="ap-menu-icon">💬</div>
       <span class="ap-menu-label">Preguntas y respuestas</span>
@@ -1222,6 +1239,12 @@ footer{background:var(--ink);color:rgba(255,255,255,.45);padding:5rem 2.5rem 2re
     <div class="ap-section" id="apSec-pedidos">
       <div class="ap-section-hdr">Mis pedidos</div>
       <div id="apOrders"></div>
+    </div>
+
+    <!-- ── Mis favoritos ── -->
+    <div class="ap-section" id="apSec-favoritos">
+      <div class="ap-section-hdr">Mis favoritos</div>
+      <div id="apWishList"></div>
     </div>
 
     <!-- ── FAQ ── -->
@@ -1737,7 +1760,7 @@ footer{background:var(--ink);color:rgba(255,255,255,.45);padding:5rem 2.5rem 2re
 <!-- Menú móvil drawer -->
 <div class="mobile-nav" id="mobileNav">
   <div class="mobile-nav-logo">
-    <span class="logo-wordmark"><span class="logo-sun">☀</span> Sol en tu Hogar</span>
+    <span class="logo-wordmark"><span class="logo-sun" style="color:var(--gold)">☀</span> Sol en tu Hogar</span>
     <span class="logo-tagline" style="display:block;margin-top:2px">Ropa &amp; Artículos del Hogar</span>
   </div>
   <div class="mobile-nav-sep">Tienda</div>
@@ -1780,14 +1803,16 @@ footer{background:var(--ink);color:rgba(255,255,255,.45);padding:5rem 2.5rem 2re
 <!-- Navegación -->
 <nav id="navbar">
   <div class="nav-inner">
-    <div class="nav-links">
-      <a href="#hogar" class="nav-link">Hogar</a>
-      <a href="#ropa" class="nav-link">Ropa</a>
-      <a href="#oportunidades" class="nav-link">Oportunidades</a>
+    <div style="display:flex;align-items:center;gap:.4rem">
+      <button class="nav-hamburger" id="navHamburger" onclick="toggleMobileNav()" aria-label="Menú">
+        <span></span><span></span><span></span>
+      </button>
+      <div class="nav-links">
+        <a href="#hogar" class="nav-link">Hogar</a>
+        <a href="#ropa" class="nav-link">Ropa</a>
+        <a href="#oportunidades" class="nav-link">Oportunidades</a>
+      </div>
     </div>
-    <button class="nav-hamburger" id="navHamburger" onclick="toggleMobileNav()" aria-label="Menú">
-      <span></span><span></span><span></span>
-    </button>
     <!-- ✏️ EDITAR: Cambiá el nombre de tu tienda aquí -->
     <a href="#" class="nav-logo">
       <span class="logo-wordmark"><span class="logo-sun">☀</span> Sol en tu Hogar</span>
@@ -2358,15 +2383,15 @@ footer{background:var(--ink);color:rgba(255,255,255,.45);padding:5rem 2.5rem 2re
         </a>
         <p class="footer-desc">Tienda online de ropa y artículos para el hogar. Calidad y precio justo para toda Argentina.</p>
         <div class="footer-socials">
-          <!-- ✏️ EDITAR: Reemplazá el href="#" con el link de cada red social -->
+          <!-- ✏️ EDITAR: reemplazá href="#" con el link de cada red -->
           <a href="#" class="fsoc" title="Instagram" aria-label="Instagram">
-            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="2" width="20" height="20" rx="5" ry="5"/><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"/><line x1="17.5" y1="6.5" x2="17.51" y2="6.5"/></svg>
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="2" width="20" height="20" rx="5"/><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"/><line x1="17.5" y1="6.5" x2="17.51" y2="6.5"/></svg>
           </a>
           <a href="#" class="fsoc" title="Facebook" aria-label="Facebook">
             <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z"/></svg>
           </a>
           <a href="#" class="fsoc" title="TikTok" aria-label="TikTok">
-            <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M19.59 6.69a4.83 4.83 0 0 1-3.77-4.25V2h-3.45v13.67a2.89 2.89 0 0 1-2.88 2.5 2.89 2.89 0 0 1-2.89-2.89 2.89 2.89 0 0 1 2.89-2.89c.28 0 .54.04.79.1V9.01a6.37 6.37 0 0 0-.79-.05 6.34 6.34 0 0 0-6.34 6.34 6.34 6.34 0 0 0 6.34 6.34 6.34 6.34 0 0 0 6.33-6.34V8.69a8.18 8.18 0 0 0 4.78 1.52V6.73a4.85 4.85 0 0 1-1.01-.04z"/></svg>
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M19.59 6.69a4.83 4.83 0 0 1-3.77-4.25V2h-3.45v13.67a2.89 2.89 0 0 1-2.88 2.5 2.89 2.89 0 0 1-2.89-2.89 2.89 2.89 0 0 1 2.89-2.89c.28 0 .54.04.79.1V9.01a6.34 6.34 0 0 0-6.34 6.34 6.34 6.34 0 0 0 6.34 6.34 6.34 6.34 0 0 0 6.33-6.34V8.69a8.18 8.18 0 0 0 4.78 1.52V6.73a4.85 4.85 0 0 1-1.01-.04z"/></svg>
           </a>
           <a href="https://wa.me/5491131496246" class="fsoc" title="WhatsApp" aria-label="WhatsApp" target="_blank">
             <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 0 1-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 0 1-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 0 1 2.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0 0 12.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 0 0 5.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 0 0-3.48-8.413z"/></svg>
@@ -2554,24 +2579,44 @@ footer{background:var(--ink);color:rgba(255,255,255,.45);padding:5rem 2.5rem 2re
    3. En tu proyecto → Settings → API:
       - Copiá "Project URL" → pegalo en SUPABASE_URL
       - Copiá "anon public" key → pegalo en SUPABASE_KEY
-   4. Ejecutá este SQL en el Editor de Supabase:
+   4. Ejecutá este SQL en el Editor de Supabase (SQL Editor → New query):
 
-      CREATE TABLE users (
+      CREATE TABLE IF NOT EXISTS users (
         id text PRIMARY KEY,
         nombre text, apellido text, email text UNIQUE,
         tel text, dni text, direccion text,
         password text, creado text, tipo text DEFAULT 'cliente'
       );
-      CREATE TABLE orders (
+      CREATE TABLE IF NOT EXISTS orders (
         id text PRIMARY KEY,
         user_id text, items jsonb, total int,
         estado text DEFAULT 'Pendiente',
         fecha text, metodo text
       );
+      CREATE TABLE IF NOT EXISTS reviews (
+        id bigint PRIMARY KEY,
+        prod text, name text, stars int,
+        text text, fecha text, visible boolean DEFAULT true
+      );
+      CREATE TABLE IF NOT EXISTS wishlist (
+        id bigserial PRIMARY KEY,
+        user_id text, product_id text,
+        product_name text, price int, img_src text
+      );
+      CREATE TABLE IF NOT EXISTS subscribers (
+        email text PRIMARY KEY,
+        fecha text
+      );
       ALTER TABLE users ENABLE ROW LEVEL SECURITY;
       ALTER TABLE orders ENABLE ROW LEVEL SECURITY;
+      ALTER TABLE reviews ENABLE ROW LEVEL SECURITY;
+      ALTER TABLE wishlist ENABLE ROW LEVEL SECURITY;
+      ALTER TABLE subscribers ENABLE ROW LEVEL SECURITY;
       CREATE POLICY "public_all" ON users FOR ALL USING (true) WITH CHECK (true);
       CREATE POLICY "public_all" ON orders FOR ALL USING (true) WITH CHECK (true);
+      CREATE POLICY "public_all" ON reviews FOR ALL USING (true) WITH CHECK (true);
+      CREATE POLICY "public_all" ON wishlist FOR ALL USING (true) WITH CHECK (true);
+      CREATE POLICY "public_all" ON subscribers FOR ALL USING (true) WITH CHECK (true);
 
    5. ¡Listo! La base de datos funciona en todos los dispositivos.
    ══════════════════════════════════════════════════════ */
@@ -2895,7 +2940,7 @@ function loginUser(user) {
   dbSaveSession(user);
   updateNavAccount();
   showToast('¡Bienvenido/a, ' + user.nombre + '! 👋');
-  // Si el usuario intentó hacer checkout antes de loguearse, retomarlo
+  loadWishlist(); // cargar favoritos del usuario
   if (window._pendingCheckout) {
     window._pendingCheckout = false;
     setTimeout(() => openCheckout(), 350);
@@ -2982,14 +3027,13 @@ function closeAccountPanel() {
 
 /* ── Navegación entre secciones del panel ── */
 function apShowSection(key, btn) {
-  // Ocultar todas las secciones
   document.querySelectorAll('.ap-section').forEach(s => s.classList.remove('visible'));
-  // Desactivar todos los ítems del menú
   document.querySelectorAll('.ap-menu-item').forEach(b => b.classList.remove('active'));
-  // Mostrar sección pedida
   document.getElementById('apSec-' + key)?.classList.add('visible');
-  // Activar botón
   if (btn) btn.classList.add('active');
+  // Llenar sección según key
+  if (key === 'pedidos')   _apFillPedidos();
+  if (key === 'favoritos') _apFillFavoritos();
 }
 
 /* ── Mis datos ── */
@@ -3381,38 +3425,6 @@ function closeSidebars() {
   closeMobileNav();
 }
 
-function toggleMobileNav() {
-  const nav = document.getElementById('mobileNav');
-  const btn = document.getElementById('navHamburger');
-  const scrim = document.getElementById('scrim');
-  const isOpen = nav.classList.contains('open');
-  if (isOpen) {
-    nav.classList.remove('open');
-    btn.classList.remove('open');
-    scrim.classList.remove('open');
-    document.body.style.overflow = '';
-  } else {
-    // Cerrar otros paneles primero
-    document.getElementById('cart').classList.remove('open');
-    document.getElementById('accountPanel').classList.remove('open');
-    nav.classList.add('open');
-    btn.classList.add('open');
-    scrim.classList.add('open');
-    document.body.style.overflow = 'hidden';
-  }
-}
-
-function closeMobileNav() {
-  const nav = document.getElementById('mobileNav');
-  const btn = document.getElementById('navHamburger');
-  if (nav && nav.classList.contains('open')) {
-    nav.classList.remove('open');
-    btn && btn.classList.remove('open');
-    document.getElementById('scrim').classList.remove('open');
-    document.body.style.overflow = '';
-  }
-}
-
 
 /* ══════════════════════════════════════════════════════
    CARRITO
@@ -3786,12 +3798,132 @@ function initTimers() {
 
 
 /* ══════════════════════════════════════════════════════
-   FAVORITOS (wishlist)
+   MENÚ MÓVIL HAMBURGUESA
    ══════════════════════════════════════════════════════ */
+function toggleMobileNav() {
+  const nav   = document.getElementById('mobileNav');
+  const btn   = document.getElementById('navHamburger');
+  const scrim = document.getElementById('scrim');
+  if (nav.classList.contains('open')) {
+    nav.classList.remove('open'); btn.classList.remove('open');
+    scrim.classList.remove('open'); document.body.style.overflow = '';
+  } else {
+    document.getElementById('cart').classList.remove('open');
+    document.getElementById('accountPanel').classList.remove('open');
+    nav.classList.add('open'); btn.classList.add('open');
+    scrim.classList.add('open'); document.body.style.overflow = 'hidden';
+  }
+}
+function closeMobileNav() {
+  const nav = document.getElementById('mobileNav');
+  const btn = document.getElementById('navHamburger');
+  if (nav && nav.classList.contains('open')) {
+    nav.classList.remove('open');
+    btn && btn.classList.remove('open');
+    document.getElementById('scrim').classList.remove('open');
+    document.body.style.overflow = '';
+  }
+}
+
+/* ══════════════════════════════════════════════════════
+   FAVORITOS (wishlist) — guardados en Supabase / localStorage
+   ══════════════════════════════════════════════════════ */
+let _wishItems = [];  // [{ id, name, price, imgSrc }]
+
+function _wishKey() { return currentUser ? 'sol_wish_' + currentUser.id : 'sol_wish_guest'; }
+
+async function loadWishlist() {
+  if (dbClient && currentUser) {
+    try {
+      const { data } = await dbClient.from('wishlist')
+        .select('*').eq('user_id', currentUser.id);
+      if (data && data.length) {
+        _wishItems = data.map(r => ({ id: r.product_id, name: r.product_name, price: r.price, imgSrc: r.img_src }));
+        _syncWishUI(); return;
+      }
+    } catch(e) {}
+  }
+  // Fallback localStorage
+  try { _wishItems = JSON.parse(localStorage.getItem(_wishKey()) || '[]'); } catch(e) { _wishItems = []; }
+  _syncWishUI();
+}
+
+async function saveWishlist() {
+  try { localStorage.setItem(_wishKey(), JSON.stringify(_wishItems)); } catch(e) {}
+  if (dbClient && currentUser) {
+    try {
+      await dbClient.from('wishlist').delete().eq('user_id', currentUser.id);
+      if (_wishItems.length) {
+        await dbClient.from('wishlist').insert(
+          _wishItems.map(w => ({ user_id: currentUser.id, product_id: w.id, product_name: w.name, price: w.price, img_src: w.imgSrc || '' }))
+        );
+      }
+    } catch(e) {}
+  }
+}
+
+function _syncWishUI() {
+  // Sincronizar botones ♡/♥ en las cards
+  document.querySelectorAll('.pcard-wish').forEach(btn => {
+    const card = btn.closest('.pcard');
+    if (!card) return;
+    const name = card.dataset.name;
+    const isWished = _wishItems.some(w => w.name === name);
+    btn.classList.toggle('on', isWished);
+    btn.textContent = isWished ? '♥' : '♡';
+    btn.style.opacity = isWished ? '1' : '';
+  });
+  // Badge del menú
+  const badge = document.getElementById('apWishBadge');
+  if (badge) {
+    badge.textContent = _wishItems.length;
+    badge.style.display = _wishItems.length ? 'inline-block' : 'none';
+  }
+}
+
 function toggleWish(btn) {
-  btn.classList.toggle('on');
-  btn.textContent = btn.classList.contains('on') ? '♥' : '♡';
-  btn.style.opacity = '1';
+  const card  = btn.closest('.pcard');
+  if (!card) return;
+  const name  = card.dataset.name;
+  const price = parseInt(card.dataset.price || 0);
+  const imgEl = card.querySelector('.pcard-img img');
+  const imgSrc = imgEl ? imgEl.src : '';
+  const id    = card.dataset.id || name;
+  const idx   = _wishItems.findIndex(w => w.name === name);
+  if (idx >= 0) {
+    _wishItems.splice(idx, 1);
+    showToast('Eliminado de favoritos');
+  } else {
+    _wishItems.push({ id, name, price, imgSrc });
+    showToast('❤️ Agregado a favoritos');
+  }
+  saveWishlist();
+  _syncWishUI();
+  // Actualizar panel si está abierto
+  if (document.getElementById('apSec-favoritos')?.classList.contains('visible')) _apFillFavoritos();
+}
+
+function _apFillFavoritos() {
+  const el = document.getElementById('apWishList');
+  if (!el) return;
+  if (!_wishItems.length) {
+    el.innerHTML = '<div class="ap-wish-empty"><span>♡</span>Todavía no tenés favoritos.<br>Hacé click en ♡ en cualquier producto.</div>';
+    return;
+  }
+  el.innerHTML = '<div class="ap-wish-grid">' + _wishItems.map(w => `
+    <div class="ap-wish-item">
+      <button class="ap-wish-rm" onclick="removeWishByName('${w.name.replace(/'/g,"\\'")}')">✕</button>
+      ${w.imgSrc ? `<img class="ap-wish-img" src="${w.imgSrc}" alt="${w.name}">` : '<div class="ap-wish-img"></div>'}
+      <div class="ap-wish-name">${w.name}</div>
+      <div class="ap-wish-price">${formatPrice(w.price)}</div>
+    </div>`).join('') + '</div>';
+}
+
+function removeWishByName(name) {
+  _wishItems = _wishItems.filter(w => w.name !== name);
+  saveWishlist();
+  _syncWishUI();
+  _apFillFavoritos();
 }
 
 
@@ -3824,48 +3956,31 @@ async function suscribir() {
   btn.textContent = '⏳ Suscribiendo...';
 
   try {
-    // 1. Guardar en Supabase si está disponible
+    // Guardar en Supabase o localStorage
     if (dbClient) {
-      const { error } = await dbClient.from('subscribers').upsert(
-        { email, fecha: new Date().toISOString().slice(0,10) },
+      await dbClient.from('subscribers').upsert(
+        { email, fecha: new Date().toISOString().slice(0, 10) },
         { onConflict: 'email', ignoreDuplicates: true }
       );
-      if (error && error.code !== '23505') console.warn('Supabase subscriber:', error.message);
     } else {
-      // Fallback: localStorage
       try {
         const subs = JSON.parse(localStorage.getItem('sol_subscribers') || '[]');
         if (!subs.includes(email)) { subs.push(email); localStorage.setItem('sol_subscribers', JSON.stringify(subs)); }
       } catch(e) {}
     }
-
-    // 2. Enviar email de bienvenida por EmailJS
+    // Email de bienvenida por EmailJS (plantilla opcional)
     if (typeof emailjs !== 'undefined' && EMAILJS_PUBLIC_KEY !== 'TU_PUBLIC_KEY') {
-      /* ✏️ Creá una plantilla "newsletter_bienvenida" en EmailJS con:
-         To Email: {{subscriber_email}}
-         Subject: ¡Bienvenido/a a Sol en tu Hogar! 🌟
-         Variables: {{subscriber_email}}, {{tienda}} */
       emailjs.send(EMAILJS_SERVICE_ID, 'template_newsletter', {
-        subscriber_email: email,
-        tienda: 'Sol en tu Hogar'
-      }).catch(() => {}); // Silencioso si no existe la plantilla
+        subscriber_email: email, tienda: 'Sol en tu Hogar'
+      }).catch(() => {});
     }
-
-    // 3. Feedback visual
     el.value = '';
     btn.textContent = '✅ ¡Suscripto!';
     btn.style.background = 'var(--leaf)';
     showToast('¡Gracias! Ya sos parte de nuestra comunidad 🎉');
-    setTimeout(() => {
-      btn.disabled = false;
-      btn.textContent = 'Suscribirme';
-      btn.style.background = '';
-    }, 3500);
-
+    setTimeout(() => { btn.disabled = false; btn.textContent = 'Suscribirme'; btn.style.background = ''; }, 3500);
   } catch(err) {
-    console.error('suscribir error:', err);
-    btn.disabled = false;
-    btn.textContent = 'Suscribirme';
+    btn.disabled = false; btn.textContent = 'Suscribirme';
     showToast('⚠️ Hubo un problema. Intentá de nuevo.');
   }
 }
@@ -4621,11 +4736,40 @@ function initGridCounts() {
    ══════════════════════════════════════════════════════ */
 let selectedStars = 0;
 
-function dbGetReviews() {
+let _reviewsCache = null;
+
+async function dbGetReviews() {
+  if (dbClient) {
+    try {
+      const { data } = await dbClient.from('reviews').select('*').eq('visible', true).order('id', { ascending: false });
+      if (data) { _reviewsCache = data; return data; }
+    } catch(e) {}
+  }
+  // Fallback localStorage
   try { return JSON.parse(localStorage.getItem('sol_reviews') || '[]'); } catch(e) { return []; }
 }
-function dbSaveReviews(r) {
-  try { localStorage.setItem('sol_reviews', JSON.stringify(r)); } catch(e) {}
+
+async function dbSaveReview(review) {
+  // Siempre guardar en localStorage como fallback
+  try {
+    const local = JSON.parse(localStorage.getItem('sol_reviews') || '[]');
+    local.push(review);
+    localStorage.setItem('sol_reviews', JSON.stringify(local));
+  } catch(e) {}
+  // Guardar en Supabase si disponible
+  if (dbClient) {
+    try {
+      await dbClient.from('reviews').insert({
+        id: review.id,
+        prod: review.prod,
+        name: review.name,
+        stars: review.stars,
+        text: review.text,
+        fecha: review.fecha,
+        visible: true
+      });
+    } catch(e) {}
+  }
 }
 
 function pickStar(n) {
@@ -4635,7 +4779,7 @@ function pickStar(n) {
   });
 }
 
-function submitReview() {
+async function submitReview() {
   const prod = document.getElementById('reviewProdSelect').value;
   const name = document.getElementById('reviewNameInput').value.trim();
   const text = document.getElementById('reviewTextInput').value.trim();
@@ -4645,17 +4789,20 @@ function submitReview() {
   if (!selectedStars) { showToast('Elegí una puntuación'); return; }
   if (text.length < 10) { showToast('Escribí una reseña más detallada (mín. 10 caracteres)'); return; }
 
-  const reviews = dbGetReviews();
-  reviews.push({
+  const review = {
     id: Date.now(),
-    prod,
-    name,
+    prod, name,
     stars: selectedStars,
     text,
     fecha: new Date().toLocaleDateString('es-AR'),
     visible: true
-  });
-  dbSaveReviews(reviews);
+  };
+
+  const btn = document.querySelector('.review-submit-btn');
+  btn.disabled = true; btn.textContent = '⏳ Enviando...';
+
+  await dbSaveReview(review);
+  _reviewsCache = null; // limpiar cache para recargar
 
   // Reset form
   document.getElementById('reviewProdSelect').value = '';
@@ -4663,17 +4810,20 @@ function submitReview() {
   document.getElementById('reviewTextInput').value = '';
   selectedStars = 0;
   document.querySelectorAll('.star-pick').forEach(s => s.classList.remove('lit'));
+  btn.disabled = false; btn.textContent = 'Enviar reseña';
 
-  renderReviews();
+  await renderReviews();
   showToast('¡Gracias por tu reseña! ⭐');
 }
 
-function renderReviews() {
+async function renderReviews() {
   const grid = document.getElementById('reviewsGrid');
   if (!grid) return;
-  let reviews = dbGetReviews().filter(r => r.visible !== false);
+  grid.innerHTML = '<div style="text-align:center;padding:2rem;color:var(--stone);font-size:.85rem">Cargando reseñas...</div>';
 
-  // Filtros
+  let reviews = await dbGetReviews();
+  reviews = reviews.filter(r => r.visible !== false);
+
   const prodFilter = document.getElementById('reviewProductFilter')?.value || '';
   const starFilter = parseInt(document.getElementById('reviewStarFilter')?.value || 0);
   if (prodFilter) reviews = reviews.filter(r => r.prod === prodFilter);
@@ -4681,11 +4831,11 @@ function renderReviews() {
   else if (starFilter) reviews = reviews.filter(r => r.stars === starFilter);
 
   if (!reviews.length) {
-    grid.innerHTML = '<div class="reviews-empty" style="grid-column:1/-1"><span>⭐</span>No hay reseñas para este filtro todavía.</div>';
+    grid.innerHTML = '<div class="reviews-empty" style="grid-column:1/-1"><span>⭐</span>Todavía no hay reseñas. ¡Sé el primero!</div>';
     return;
   }
-  const starsStr = n => '★'.repeat(n) + '☆'.repeat(5-n);
-  grid.innerHTML = reviews.slice().reverse().slice(0,12).map(r => `
+  const starsStr = n => '★'.repeat(n) + '☆'.repeat(5 - n);
+  grid.innerHTML = reviews.slice(0, 12).map(r => `
     <div class="rcard">
       <div class="rcard-head">
         <div class="rcard-avatar">${r.name.charAt(0).toUpperCase()}</div>
@@ -4719,10 +4869,19 @@ function populateReviewProductSelect() {
   });
 }
 
-function renderAdminReviews() {
+async function renderAdminReviews() {
   const body = document.getElementById('adminReviewsBody');
   if (!body) return;
-  let reviews = dbGetReviews();
+  let reviews = await dbGetReviews();
+  // incluir ocultas para admin
+  if (dbClient) {
+    try {
+      const { data } = await dbClient.from('reviews').select('*').order('id', { ascending: false });
+      if (data) reviews = data;
+    } catch(e) {}
+  } else {
+    try { reviews = JSON.parse(localStorage.getItem('sol_reviews') || '[]'); } catch(e) { reviews = []; }
+  }
   const filter = document.getElementById('adminReviewFilter')?.value;
   if (filter === '3') reviews = reviews.filter(r => r.stars <= 3);
   else if (filter) reviews = reviews.filter(r => r.stars === parseInt(filter));
@@ -4731,7 +4890,7 @@ function renderAdminReviews() {
     body.innerHTML = '<tr><td colspan="6" class="admin-empty">No hay reseñas todavía</td></tr>';
     return;
   }
-  body.innerHTML = reviews.slice().reverse().map(r => `
+  body.innerHTML = reviews.map(r => `
     <tr>
       <td>${r.name}</td>
       <td style="font-size:.72rem">${r.prod}</td>
@@ -4747,15 +4906,22 @@ function renderAdminReviews() {
   `).join('');
 }
 
-function toggleReviewVisibility(id) {
-  const reviews = dbGetReviews();
-  const idx = reviews.findIndex(r => r.id === id);
-  if (idx >= 0) {
-    reviews[idx].visible = reviews[idx].visible === false ? true : false;
-    dbSaveReviews(reviews);
-    renderAdminReviews();
-    renderReviews();
+async function toggleReviewVisibility(id) {
+  if (dbClient) {
+    try {
+      const { data } = await dbClient.from('reviews').select('visible').eq('id', id).single();
+      if (data) await dbClient.from('reviews').update({ visible: !data.visible }).eq('id', id);
+    } catch(e) {}
+  } else {
+    try {
+      const reviews = JSON.parse(localStorage.getItem('sol_reviews') || '[]');
+      const idx = reviews.findIndex(r => r.id === id);
+      if (idx >= 0) { reviews[idx].visible = !reviews[idx].visible; localStorage.setItem('sol_reviews', JSON.stringify(reviews)); }
+    } catch(e) {}
   }
+  _reviewsCache = null;
+  await renderAdminReviews();
+  await renderReviews();
 }
 
 /* ══════════════════════════════════════════════════════
@@ -5129,14 +5295,18 @@ function renderProductCard(p) {
   const ctaBtn   = p.prox ? '' : `<button class="pcard-cta" onclick="event.stopPropagation();openProduct(this.closest('.pcard'))">Ver producto</button>`;
   const safeDesc = (p.desc||'').replace(/"/g,'&quot;').replace(/\n/g,' ');
   const safeName = p.name.replace(/"/g,'&quot;');
-  // Badge de stock bajo (≤5 unidades, solo si está activo)
+  // Badge stock bajo (≤5 unidades activas)
   const stockBadge = (!p.prox && p.stock > 0 && p.stock <= 5)
     ? `<div class="pcard-stock-alert">⚡ ¡Quedan ${p.stock}!</div>` : '';
+  // Estado wishlist
+  const isWished = _wishItems.some(w => w.name === p.name);
+  const wishClass = isWished ? ' on' : '';
+  const wishChar  = isWished ? '♥' : '♡';
 
   return `<div class="pcard" ${clickAttr} data-id="${p.id}" data-name="${safeName}" data-price="${p.price}" data-stock="${p.stock}" ${gAttr} ${proxAttr} data-desc="${safeDesc}">
   <div class="pcard-img">
     ${imgHtml}${tagHtml}
-    <button class="pcard-wish" onclick="event.stopPropagation();toggleWish(this)">♡</button>
+    <button class="pcard-wish${wishClass}" onclick="event.stopPropagation();toggleWish(this)" style="${isWished?'opacity:1':''}">${wishChar}</button>
     ${ctaBtn}${proxOvl}
   </div>
   <div class="pcard-body">
@@ -5322,21 +5492,28 @@ function saveProductFromEditor() {
   showToast(`✅ "${name}" guardado`);
 }
 
-// ESC cierra el editor de producto
+// ESC cierra el editor de producto y el menú móvil
 document.addEventListener('keydown', e => {
-  if (e.key === 'Escape' && document.getElementById('prodEditor')?.classList.contains('open'))
-    closeProductEditor();
+  if (e.key === 'Escape') {
+    if (document.getElementById('prodEditor')?.classList.contains('open')) closeProductEditor();
+    if (document.getElementById('mobileNav')?.classList.contains('open')) closeMobileNav();
+  }
 });
 
-initTimers();
-updateCart();
-updateNavAccount();
-syncFromSupabase();
-initEmailJS();
-renderProductGrid('hogar');
-initGridCounts();
-populateReviewProductSelect();
-renderReviews();
+// Arranque
+(async function initApp() {
+  initTimers();
+  updateCart();
+  updateNavAccount();
+  await syncFromSupabase();
+  initEmailJS();
+  renderProductGrid('hogar');
+  initGridCounts();
+  populateReviewProductSelect();
+  await renderReviews();
+  await loadWishlist(); // cargar favoritos al iniciar (guest o sesión guardada)
+})();
+
 </script>
 </body>
 </html>
