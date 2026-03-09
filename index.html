@@ -2368,8 +2368,11 @@ footer{background:var(--ink);color:rgba(255,255,255,.45);padding:5rem 2.5rem 2re
       <div class="pe-row cols-2">
         <div class="pe-group">
           <label class="pe-label">Imagen principal</label>
-          <input class="pe-input" id="peImg" placeholder="nombre-archivo.jpg">
-          <p class="pe-hint">Archivo subido a Netlify junto al index.html</p>
+          <input class="pe-input" id="peImg" placeholder="nombre-archivo.jpg" oninput="pePreviewImg()">
+          <p class="pe-hint">Nombre del archivo subido a GitHub junto al index.html</p>
+          <div id="peImgPreview" style="display:none;margin-top:.5rem">
+            <img id="peImgThumb" style="width:80px;height:80px;object-fit:cover;border-radius:6px;border:2px solid var(--sand-deep)" alt="preview">
+          </div>
         </div>
         <div class="pe-group">
           <label class="pe-label">Galería extra</label>
@@ -4329,6 +4332,18 @@ function changeCartQty(idx, delta) {
   updateCart();
 }
 
+// Cantidad en la tarjeta de producto (selector debajo de la card)
+function changeQty(btn, delta) {
+  const ctrl = btn.closest('.qty-ctrl');
+  if (!ctrl) return;
+  const numEl = ctrl.querySelector('.qty-num');
+  const card  = btn.closest('.pcard');
+  const stock = parseInt(card?.dataset.stock || 99);
+  let qty = parseInt(numEl.textContent) + delta;
+  qty = Math.max(1, Math.min(qty, stock));
+  numEl.textContent = qty;
+}
+
 /* ══════════════════════════════════════════════════════
    BUSCADOR
    ══════════════════════════════════════════════════════ */
@@ -5648,30 +5663,38 @@ function openProductEditor(id) {
   document.getElementById('peProx').value      = p?.prox ? '1' : '0';
   document.getElementById('peStars').value     = p?.stars || 5;
   document.getElementById('peTimerHours').value = p?.timerHours || '';
+  // Campos ropa
+  document.getElementById('peTalles').value    = (p?.talles||[]).join(', ');
+  document.getElementById('peColores').value   = (p?.colores||[]).join(', ');
+  document.getElementById('peMaterial').value  = p?.material || '';
+  document.getElementById('peGenero').value    = p?.genero || '';
+  // Campo oportunidad
+  document.getElementById('peOportMotivo').value = p?.oportunidadMotivo || '';
 
   // Seleccionar tag en el select
   const tagSel = document.getElementById('peTag');
   const tagVal = (p?.tag && p?.tagText) ? `${p.tag}|${p.tagText}` : '';
-  let found = false;
+  tagSel.value = '';
   for (const opt of tagSel.options) {
-    if (opt.value === tagVal) { tagSel.value = tagVal; found = true; break; }
+    if (opt.value === tagVal) { tagSel.value = tagVal; break; }
   }
-  if (!found) tagSel.value = tagVal;
 
-  // Mostrar campo timer solo para Oportunidades
-  _peToggleTimer();
-  document.getElementById('peSection').onchange = _peToggleTimer;
+  // Mostrar/ocultar campos según sección
+  toggleSectionFields();
 
   document.getElementById('prodEditor').classList.add('open');
   document.body.style.overflow = 'hidden';
   setTimeout(() => document.getElementById('peName').focus(), 80);
 }
 
-function _peToggleTimer() {
+function toggleSectionFields() {
   const sec = document.getElementById('peSection').value;
-  document.getElementById('peTimerRow').style.display = sec === 'oportunidades' ? '' : 'none';
+  document.getElementById('peRopaFields').style.display   = sec === 'ropa' ? '' : 'none';
+  document.getElementById('peOportFields').style.display  = sec === 'oportunidades' ? '' : 'none';
 }
-const toggleTimerField = _peToggleTimer; // alias para el onchange inline del HTML
+
+// Alias para compatibilidad con código viejo
+function _peToggleTimer() { toggleSectionFields(); }
 
 /* Vista previa de imagen en el editor de producto */
 function pePreviewImg() {
@@ -5754,7 +5777,14 @@ function saveProductFromEditor() {
     prox:       document.getElementById('peProx').value === '1',
     img:        document.getElementById('peImg').value.trim(),
     gallery,    desc: document.getElementById('peDesc').value.trim(),
-    timerHours: parseInt(document.getElementById('peTimerHours').value) || null
+    timerHours: parseInt(document.getElementById('peTimerHours').value) || null,
+    // Campos de ropa
+    talles:     document.getElementById('peTalles').value.split(',').map(s=>s.trim()).filter(Boolean),
+    colores:    document.getElementById('peColores').value.split(',').map(s=>s.trim()).filter(Boolean),
+    material:   document.getElementById('peMaterial').value.trim(),
+    genero:     document.getElementById('peGenero').value,
+    // Campo de oportunidad
+    oportunidadMotivo: document.getElementById('peOportMotivo').value.trim()
   };
 
   const prods = dbGetProducts();
