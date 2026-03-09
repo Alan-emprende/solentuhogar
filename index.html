@@ -816,7 +816,7 @@ footer{background:var(--ink);color:rgba(255,255,255,.45);padding:5rem 2.5rem 2re
 /* Modal auth (login/registro) */
 .auth-overlay{position:fixed;inset:0;background:rgba(26,18,9,.6);z-index:600;display:flex;align-items:center;justify-content:center;padding:1rem;opacity:0;pointer-events:none;transition:opacity .3s}
 .auth-overlay.open{opacity:1;pointer-events:all}
-.auth-modal{background:#fff;border-radius:14px;width:100%;max-width:460px;box-shadow:0 32px 80px rgba(0,0,0,.28);transform:translateY(16px);transition:transform .35s cubic-bezier(.4,0,.2,1);overflow:hidden}
+.auth-modal{background:#fff;border-radius:14px;width:100%;max-width:460px;box-shadow:0 32px 80px rgba(0,0,0,.28);transform:translateY(16px);transition:transform .35s cubic-bezier(.4,0,.2,1);overflow-y:auto;max-height:90dvh}
 .auth-overlay.open .auth-modal{transform:translateY(0)}
 
 .auth-header{padding:1.6rem 1.8rem 0;text-align:center;position:relative}
@@ -1179,7 +1179,7 @@ footer{background:var(--ink);color:rgba(255,255,255,.45);padding:5rem 2.5rem 2re
     <div class="verify-title">Verificá tu email</div>
     <p class="verify-sub" id="verifySubText">
       Te enviamos un código de 6 dígitos a<br>
-      <strong id="verifyEmailLabel"><a href="/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="344041745159555d581a575b59">[email&#160;protected]</a></strong>.<br>
+      <strong id="verifyEmailLabel">tu email</strong>.<br>
       Ingresalo para confirmar tu cuenta.
     </p>
     <input class="verify-input" id="verifyCodeInput" type="text" inputmode="numeric"
@@ -2612,7 +2612,7 @@ footer{background:var(--ink);color:rgba(255,255,255,.45);padding:5rem 2.5rem 2re
 </div>
 
 
-<script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
 <script>
 /* ══════════════════════════════════════════════════════
@@ -2670,16 +2670,31 @@ footer{background:var(--ink);color:rgba(255,255,255,.45);padding:5rem 2.5rem 2re
 const SUPABASE_URL = 'https://exfwttpxvgprkwtulegh.supabase.co';
 const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImV4Znd0dHB4dmdwcmt3dHVsZWdoIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzI3NDQzMTcsImV4cCI6MjA4ODMyMDMxN30.D99lsUJMyNOH1IGzP_T7j77YL_rAZEvugDETidzzDpY';
 
-// Detectar si Supabase está configurado
 const SUPABASE_ACTIVE = true;
 let dbClient = null;
-try {
-  if (typeof window !== 'undefined' && window.supabase && window.supabase.createClient) {
-    dbClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
-    console.log('✅ Supabase conectado');
+
+function initSupabase() {
+  try {
+    // Supabase UMD v2 expone el objeto global como "supabase" (minúscula)
+    const lib = window.supabase || window.Supabase;
+    if (lib && lib.createClient) {
+      dbClient = lib.createClient(SUPABASE_URL, SUPABASE_KEY);
+      console.log('✅ Supabase conectado correctamente');
+      return true;
+    } else {
+      console.warn('⚠️ Supabase library no encontrada en window.supabase');
+      return false;
+    }
+  } catch(e) {
+    console.error('❌ Error iniciando Supabase:', e);
+    return false;
   }
-} catch(e) {
-  console.warn('Supabase no disponible, usando localStorage:', e);
+}
+
+// Intentar inicializar ahora
+if (!initSupabase()) {
+  // Reintentar cuando el DOM esté listo
+  document.addEventListener('DOMContentLoaded', initSupabase);
 }
 const ENVIO_GRATIS_DESDE = 30000;
 const CUOTAS_SIN_INTERES = 6;
@@ -2706,7 +2721,9 @@ function dbSaveUsers(users) {
 }
 // Guardar un usuario específico en Supabase
 async function dbUpsertUser(u) {
-  if (!SUPABASE_ACTIVE || !dbClient) return;
+  if (!SUPABASE_ACTIVE) return;
+  if (!dbClient) initSupabase();
+  if (!dbClient) { console.warn('⚠️ Supabase no disponible, usuario guardado solo en localStorage'); return; }
   try {
     const { error } = await dbClient.from('users').upsert({
       id: u.id, nombre: u.nombre, apellido: u.apellido,
@@ -2714,7 +2731,8 @@ async function dbUpsertUser(u) {
       direccion: u.direccion || '', password: u.password,
       creado: u.creado || '', tipo: u.tipo || 'cliente'
     }, { onConflict: 'id' });
-    if (error) console.error('❌ Supabase users error:', error.message);
+    if (error) console.error('❌ Supabase users error:', error.message, error);
+    else console.log('✅ Usuario guardado en Supabase:', u.email);
   } catch(e) { console.error('❌ Supabase users exception:', e); }
 }
 function dbGetOrders() {
@@ -2723,15 +2741,17 @@ function dbGetOrders() {
 function dbSaveOrders(orders) {
   localStorage.setItem('sol_orders', JSON.stringify(orders));
 }
-// Guardar un pedido específico en Supabase
 async function dbUpsertOrder(o) {
-  if (!SUPABASE_ACTIVE || !dbClient) return;
+  if (!SUPABASE_ACTIVE) return;
+  if (!dbClient) initSupabase();
+  if (!dbClient) { console.warn('⚠️ Supabase no disponible, pedido guardado solo en localStorage'); return; }
   try {
     const { error } = await dbClient.from('orders').upsert({
       id: o.id, user_id: o.userId, items: o.items,
       total: o.total, estado: o.estado, fecha: o.fecha, metodo: o.metodo || ''
     }, { onConflict: 'id' });
-    if (error) console.error('❌ Supabase orders error:', error.message);
+    if (error) console.error('❌ Supabase orders error:', error.message, error);
+    else console.log('✅ Pedido guardado en Supabase:', o.id);
   } catch(e) { console.error('❌ Supabase orders exception:', e); }
 }
 function dbGetSession() {
@@ -2746,21 +2766,25 @@ function dbClearSession() {
 
 // Cargar usuarios desde Supabase al iniciar (si está activo)
 async function syncFromSupabase() {
-  if (!SUPABASE_ACTIVE || !dbClient) return;
+  if (!SUPABASE_ACTIVE) return;
+  if (!dbClient) initSupabase();
+  if (!dbClient) { console.warn('⚠️ syncFromSupabase: Supabase no disponible'); return; }
   try {
-    const { data: users } = await dbClient.from('users').select('*');
-    const { data: orders } = await dbClient.from('orders').select('*');
-    if (users && users.length > 0) localStorage.setItem('sol_users', JSON.stringify(users));
+    console.log('🔄 Sincronizando desde Supabase...');
+    const { data: users, error: eu } = await dbClient.from('users').select('*');
+    const { data: orders, error: eo } = await dbClient.from('orders').select('*');
+    if (eu) console.error('❌ Error leyendo users:', eu.message);
+    if (eo) console.error('❌ Error leyendo orders:', eo.message);
+    if (users && users.length > 0) { localStorage.setItem('sol_users', JSON.stringify(users)); console.log('✅ Users sincronizados:', users.length); }
     if (orders && orders.length > 0) {
       const mapped = orders.map(o => ({ ...o, userId: o.user_id }));
-      localStorage.setItem('sol_orders', JSON.stringify(mapped));
+      localStorage.setItem('sol_orders', JSON.stringify(mapped)); console.log('✅ Orders sincronizados:', orders.length);
     }
-    // Refrescar sesión activa con datos frescos
     if (currentUser) {
       const fresh = (users || []).find(u => u.id === currentUser.id);
       if (fresh) { currentUser = fresh; dbSaveSession(fresh); updateNavAccount(); }
     }
-  } catch(e) { /* Supabase no disponible, usar localStorage */ }
+  } catch(e) { console.error('❌ syncFromSupabase error:', e); }
 }
 
 
@@ -3073,14 +3097,21 @@ async function sendResetCode(isResend = false) {
   sessionStorage.setItem('_resetCode', code);
   sessionStorage.setItem('_resetEmail', email);
 
-  // Sin EmailJS → mostrar código directo (modo desarrollo)
-  if (typeof emailjs === 'undefined' || EMAILJS_PUBLIC_KEY === 'TU_PUBLIC_KEY') {
-    btn.disabled = false; btn.textContent = '📧 Enviar código';
+  function goToStep2(fallbackMsg) {
     document.getElementById('resetEmailLabel').textContent = email;
     document.getElementById('resetCodeInput').value = '';
-    document.getElementById('resetMsg2').textContent = '';
+    const msg2 = document.getElementById('resetMsg2');
+    msg2.style.color = fallbackMsg ? 'var(--clay)' : '';
+    msg2.textContent = fallbackMsg || '';
     document.querySelectorAll('.reset-step').forEach(s => s.classList.remove('active'));
     document.getElementById('resetStep2').classList.add('active');
+    if (isResend) showToast('📧 Código reenviado');
+    btn.disabled = false; btn.textContent = '📧 Enviar código';
+  }
+
+  // Sin EmailJS → mostrar código directo en pantalla
+  if (typeof emailjs === 'undefined' || EMAILJS_PUBLIC_KEY === 'TU_PUBLIC_KEY') {
+    goToStep2(`⚠️ EmailJS no configurado. Tu código de prueba es: ${code}`);
     return;
   }
 
@@ -3090,16 +3121,11 @@ async function sendResetCode(isResend = false) {
       verify_code:    code,
       tienda:         'Sol en tu Hogar'
     });
-    btn.disabled = false; btn.textContent = '📧 Enviar código';
-    document.getElementById('resetEmailLabel').textContent = email;
-    document.getElementById('resetCodeInput').value = '';
-    document.getElementById('resetMsg2').textContent = '';
-    document.querySelectorAll('.reset-step').forEach(s => s.classList.remove('active'));
-    document.getElementById('resetStep2').classList.add('active');
-    if (isResend) showToast('📧 Código reenviado');
+    goToStep2('');
   } catch(err) {
-    btn.disabled = false; btn.textContent = '📧 Enviar código';
-    msgEl.textContent = 'No se pudo enviar el email. Intentá de nuevo.';
+    console.error('EmailJS error en reset:', err);
+    // Si falla el envío, mostrar código en pantalla como fallback
+    goToStep2(`No se pudo enviar el email. Tu código es: ${code}`);
   }
 }
 
