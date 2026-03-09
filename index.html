@@ -1323,6 +1323,12 @@ footer{background:var(--ink);color:rgba(255,255,255,.45);padding:5rem 2.5rem 2re
         </div>
       </div>
       <div id="adminDashboard" style="display:none">
+        <!-- Diagnóstico Supabase -->
+        <div id="supabaseDiagBox" style="background:rgba(255,255,255,.06);border-radius:8px;padding:.8rem 1rem;margin-bottom:1rem;font-size:.72rem;display:flex;align-items:center;gap:.8rem;flex-wrap:wrap">
+          <span id="supabaseStatus" style="color:rgba(255,255,255,.5)">⏳ Verificando Supabase...</span>
+          <button onclick="testSupabaseConnection()" style="background:var(--clay);border:none;color:#fff;padding:.3rem .8rem;border-radius:4px;cursor:pointer;font-size:.68rem;font-family:var(--sans)">🔌 Probar conexión</button>
+          <button onclick="testSupabaseWrite()" style="background:var(--leaf);border:none;color:#fff;padding:.3rem .8rem;border-radius:4px;cursor:pointer;font-size:.68rem;font-family:var(--sans)">💾 Probar escritura</button>
+        </div>
         <!-- Stats con filtros de fecha -->
         <div class="admin-filters">
           <span style="font-size:.65rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:rgba(255,255,255,.3)">Período:</span>
@@ -2675,27 +2681,39 @@ let dbClient = null;
 
 function initSupabase() {
   try {
-    // Supabase UMD v2 expone el objeto global como "supabase" (minúscula)
-    const lib = window.supabase || window.Supabase;
+    const lib = window.supabase || window.Supabase || window.supabaseJs;
     if (lib && lib.createClient) {
       dbClient = lib.createClient(SUPABASE_URL, SUPABASE_KEY);
-      console.log('✅ Supabase conectado correctamente');
+      console.log('✅ Supabase conectado. dbClient:', !!dbClient);
       return true;
-    } else {
-      console.warn('⚠️ Supabase library no encontrada en window.supabase');
-      return false;
     }
+    // Buscar en todas las propiedades del window por si el nombre es diferente
+    for (const key of Object.keys(window)) {
+      if (window[key] && typeof window[key].createClient === 'function') {
+        dbClient = window[key].createClient(SUPABASE_URL, SUPABASE_KEY);
+        console.log('✅ Supabase encontrado en window.' + key);
+        return true;
+      }
+    }
+    console.warn('⚠️ Supabase no encontrado en window. Scripts cargados:', 
+      document.querySelectorAll('script[src]').length);
+    return false;
   } catch(e) {
     console.error('❌ Error iniciando Supabase:', e);
     return false;
   }
 }
 
-// Intentar inicializar ahora
-if (!initSupabase()) {
-  // Reintentar cuando el DOM esté listo
-  document.addEventListener('DOMContentLoaded', initSupabase);
-}
+// Inicializar cuando TODOS los scripts terminen de cargar
+window.addEventListener('load', function() {
+  if (!dbClient) {
+    initSupabase();
+    if (dbClient) syncFromSupabase();
+  }
+});
+
+// Intentar también ahora (por si los scripts ya cargaron)
+initSupabase();
 const ENVIO_GRATIS_DESDE = 30000;
 const CUOTAS_SIN_INTERES = 6;
 
@@ -3395,6 +3413,8 @@ function verifyAdmin() {
     document.getElementById('adminLoginSection').style.display = 'none';
     document.getElementById('adminDashboard').style.display = '';
     renderAdminDashboard();
+    // Auto-verificar estado de Supabase al abrir
+    setTimeout(testSupabaseConnection, 400);
   } else {
     document.getElementById('adminPassInput').style.borderColor = '#e53935';
     document.getElementById('adminPassInput').value = '';
@@ -3408,6 +3428,60 @@ function verifyAdmin() {
 
 // Cache de datos del admin para filtrado
 let _adminUsers = [], _adminOrders = [];
+
+async function testSupabaseConnection() {
+  const el = document.getElementById('supabaseStatus');
+  el.textContent = '⏳ Probando conexión...';
+  el.style.color = 'rgba(255,255,255,.5)';
+  if (!dbClient) {
+    const ok = initSupabase();
+    if (!ok) {
+      el.textContent = '❌ dbClient es null — Supabase no cargó. Revisá F12 > Console';
+      el.style.color = '#ef5350';
+      return;
+    }
+  }
+  try {
+    const { data, error } = await dbClient.from('users').select('id').limit(1);
+    if (error) {
+      el.textContent = '❌ Conectado pero error al leer: ' + error.message;
+      el.style.color = '#ef5350';
+    } else {
+      el.textContent = '✅ Supabase OK — tabla users accesible. Registros leídos: ' + (data?.length || 0);
+      el.style.color = '#66bb6a';
+    }
+  } catch(e) {
+    el.textContent = '❌ Error: ' + e.message;
+    el.style.color = '#ef5350';
+  }
+}
+
+async function testSupabaseWrite() {
+  const el = document.getElementById('supabaseStatus');
+  el.textContent = '⏳ Probando escritura...';
+  if (!dbClient) { initSupabase(); }
+  if (!dbClient) { el.textContent = '❌ Sin conexión'; el.style.color = '#ef5350'; return; }
+  try {
+    const testId = 'test_' + Date.now();
+    const { error: we } = await dbClient.from('users').insert({
+      id: testId, nombre: 'TEST', apellido: 'TEST',
+      email: 'test_' + testId + '@test.com',
+      password: '', creado: new Date().toLocaleDateString('es-AR'), tipo: 'test'
+    });
+    if (we) {
+      el.textContent = '❌ Error al escribir: ' + we.message + ' (code: ' + we.code + ')';
+      el.style.color = '#ef5350';
+    } else {
+      // Limpiar el registro de prueba
+      await dbClient.from('users').delete().eq('id', testId);
+      el.textContent = '✅ Escritura OK — los datos SÍ llegan a Supabase';
+      el.style.color = '#66bb6a';
+    }
+  } catch(e) {
+    el.textContent = '❌ Exception: ' + e.message;
+    el.style.color = '#ef5350';
+  }
+}
 
 function renderAdminDashboard() {
   _adminUsers = dbGetUsers();
