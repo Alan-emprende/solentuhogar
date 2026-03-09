@@ -1328,6 +1328,7 @@ footer{background:var(--ink);color:rgba(255,255,255,.45);padding:5rem 2.5rem 2re
           <span id="supabaseStatus" style="color:rgba(255,255,255,.5)">⏳ Verificando Supabase...</span>
           <button onclick="testSupabaseConnection()" style="background:var(--clay);border:none;color:#fff;padding:.3rem .8rem;border-radius:4px;cursor:pointer;font-size:.68rem;font-family:var(--sans)">🔌 Probar conexión</button>
           <button onclick="testSupabaseWrite()" style="background:var(--leaf);border:none;color:#fff;padding:.3rem .8rem;border-radius:4px;cursor:pointer;font-size:.68rem;font-family:var(--sans)">💾 Probar escritura</button>
+          <button onclick="forceSyncToSupabase()" style="background:#1565c0;border:none;color:#fff;padding:.3rem .8rem;border-radius:4px;cursor:pointer;font-size:.68rem;font-family:var(--sans)">📤 Forzar sincronización</button>
         </div>
         <!-- Stats con filtros de fecha -->
         <div class="admin-filters">
@@ -2678,42 +2679,41 @@ const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZ
 
 const SUPABASE_ACTIVE = true;
 let dbClient = null;
+let _supabaseReady = false;
 
+// Intenta crear el cliente Supabase (retorna true si lo logra)
 function initSupabase() {
+  if (_supabaseReady) return true;
   try {
-    const lib = window.supabase || window.Supabase || window.supabaseJs;
+    const lib = window.supabase || window.Supabase;
     if (lib && lib.createClient) {
       dbClient = lib.createClient(SUPABASE_URL, SUPABASE_KEY);
-      console.log('✅ Supabase conectado. dbClient:', !!dbClient);
+      _supabaseReady = true;
+      console.log('✅ Supabase conectado');
       return true;
     }
-    // Buscar en todas las propiedades del window por si el nombre es diferente
-    for (const key of Object.keys(window)) {
-      if (window[key] && typeof window[key].createClient === 'function') {
-        dbClient = window[key].createClient(SUPABASE_URL, SUPABASE_KEY);
-        console.log('✅ Supabase encontrado en window.' + key);
-        return true;
-      }
-    }
-    console.warn('⚠️ Supabase no encontrado en window. Scripts cargados:', 
-      document.querySelectorAll('script[src]').length);
-    return false;
-  } catch(e) {
-    console.error('❌ Error iniciando Supabase:', e);
-    return false;
-  }
+  } catch(e) { console.error('❌ Supabase init error:', e); }
+  return false;
 }
 
-// Inicializar cuando TODOS los scripts terminen de cargar
-window.addEventListener('load', function() {
-  if (!dbClient) {
-    initSupabase();
-    if (dbClient) syncFromSupabase();
-  }
-});
-
-// Intentar también ahora (por si los scripts ya cargaron)
-initSupabase();
+// Espera a que el SDK CDN esté disponible (polling con backoff)
+// Devuelve una Promise que resuelve cuando dbClient esté listo (o timeout)
+function waitForSupabase(timeoutMs = 8000) {
+  return new Promise(resolve => {
+    if (initSupabase()) { resolve(true); return; }
+    const start = Date.now();
+    const check = setInterval(() => {
+      if (initSupabase()) {
+        clearInterval(check);
+        resolve(true);
+      } else if (Date.now() - start > timeoutMs) {
+        clearInterval(check);
+        console.warn('⚠️ Supabase SDK no disponible después de ' + timeoutMs + 'ms. Usando localStorage.');
+        resolve(false);
+      }
+    }, 200);
+  });
+}
 const ENVIO_GRATIS_DESDE = 30000;
 const CUOTAS_SIN_INTERES = 6;
 
@@ -2736,6 +2736,19 @@ function dbGetUsers() {
 }
 function dbSaveUsers(users) {
   localStorage.setItem('sol_users', JSON.stringify(users));
+  // También subir a Supabase (no bloqueante)
+  if (SUPABASE_ACTIVE && dbClient) {
+    users.forEach(u => {
+      dbClient.from('users').upsert({
+        id: u.id, nombre: u.nombre, apellido: u.apellido,
+        email: u.email, tel: u.tel || '', dni: u.dni || '',
+        direccion: u.direccion || '', password: u.password,
+        creado: u.creado || '', tipo: u.tipo || 'cliente'
+      }, { onConflict: 'id' }).then(({ error }) => {
+        if (error) console.error('❌ dbSaveUsers Supabase error:', error.message);
+      });
+    });
+  }
 }
 // Guardar un usuario específico en Supabase
 async function dbUpsertUser(u) {
@@ -2758,6 +2771,22 @@ function dbGetOrders() {
 }
 function dbSaveOrders(orders) {
   localStorage.setItem('sol_orders', JSON.stringify(orders));
+  // También subir a Supabase (no bloqueante)
+  if (SUPABASE_ACTIVE && dbClient) {
+    orders.forEach(o => {
+      dbClient.from('orders').upsert({
+        id: o.id,
+        user_id: o.userId,
+        items: JSON.parse(JSON.stringify(o.items || [])),
+        total: parseInt(o.total) || 0,
+        estado: o.estado || 'Pendiente',
+        fecha: o.fecha || '',
+        metodo: o.metodo || ''
+      }, { onConflict: 'id' }).then(({ error }) => {
+        if (error) console.error('❌ dbSaveOrders Supabase error:', error.message, 'order:', o.id);
+      });
+    });
+  }
 }
 async function dbUpsertOrder(o) {
   if (!SUPABASE_ACTIVE) return;
@@ -3433,10 +3462,13 @@ async function testSupabaseConnection() {
   const el = document.getElementById('supabaseStatus');
   el.textContent = '⏳ Probando conexión...';
   el.style.color = 'rgba(255,255,255,.5)';
-  if (!dbClient) {
-    const ok = initSupabase();
+
+  // Intentar inicializar si no está listo
+  if (!_supabaseReady) {
+    el.textContent = '⏳ SDK no listo, reintentando...';
+    const ok = await waitForSupabase(4000);
     if (!ok) {
-      el.textContent = '❌ dbClient es null — Supabase no cargó. Revisá F12 > Console';
+      el.textContent = '❌ SDK de Supabase no cargó — revisá tu conexión a internet o F12 > Console';
       el.style.color = '#ef5350';
       return;
     }
@@ -3444,10 +3476,10 @@ async function testSupabaseConnection() {
   try {
     const { data, error } = await dbClient.from('users').select('id').limit(1);
     if (error) {
-      el.textContent = '❌ Conectado pero error al leer: ' + error.message;
+      el.textContent = '❌ Conectado pero error al leer: ' + error.message + ' — revisá las policies RLS en Supabase';
       el.style.color = '#ef5350';
     } else {
-      el.textContent = '✅ Supabase OK — tabla users accesible. Registros leídos: ' + (data?.length || 0);
+      el.textContent = '✅ Supabase OK — tabla users accesible. Registros: ' + (data?.length || 0);
       el.style.color = '#66bb6a';
     }
   } catch(e) {
@@ -3459,8 +3491,9 @@ async function testSupabaseConnection() {
 async function testSupabaseWrite() {
   const el = document.getElementById('supabaseStatus');
   el.textContent = '⏳ Probando escritura...';
-  if (!dbClient) { initSupabase(); }
-  if (!dbClient) { el.textContent = '❌ Sin conexión'; el.style.color = '#ef5350'; return; }
+  el.style.color = 'rgba(255,255,255,.5)';
+  if (!_supabaseReady) await waitForSupabase(4000);
+  if (!dbClient) { el.textContent = '❌ Sin conexión a Supabase'; el.style.color = '#ef5350'; return; }
   try {
     const testId = 'test_' + Date.now();
     const { error: we } = await dbClient.from('users').insert({
@@ -3472,7 +3505,6 @@ async function testSupabaseWrite() {
       el.textContent = '❌ Error al escribir: ' + we.message + ' (code: ' + we.code + ')';
       el.style.color = '#ef5350';
     } else {
-      // Limpiar el registro de prueba
       await dbClient.from('users').delete().eq('id', testId);
       el.textContent = '✅ Escritura OK — los datos SÍ llegan a Supabase';
       el.style.color = '#66bb6a';
@@ -3480,6 +3512,57 @@ async function testSupabaseWrite() {
   } catch(e) {
     el.textContent = '❌ Exception: ' + e.message;
     el.style.color = '#ef5350';
+  }
+}
+
+// Sube TODOS los datos del localStorage a Supabase (para recuperar datos previos)
+async function forceSyncToSupabase() {
+  const el = document.getElementById('supabaseStatus');
+  el.style.color = 'rgba(255,255,255,.6)';
+  if (!_supabaseReady) {
+    el.textContent = '⏳ Conectando a Supabase...';
+    const ok = await waitForSupabase(4000);
+    if (!ok) { el.textContent = '❌ No se pudo conectar'; el.style.color = '#ef5350'; return; }
+  }
+  try {
+    const users = dbGetUsers();
+    const orders = dbGetOrders();
+    let errores = 0;
+
+    el.textContent = `⏳ Subiendo ${users.length} usuarios...`;
+    for (const u of users) {
+      const { error } = await dbClient.from('users').upsert({
+        id: u.id, nombre: u.nombre, apellido: u.apellido,
+        email: u.email, tel: u.tel || '', dni: u.dni || '',
+        direccion: u.direccion || '', password: u.password,
+        creado: u.creado || '', tipo: u.tipo || 'cliente'
+      }, { onConflict: 'id' });
+      if (error) { console.error('❌ User sync error:', u.email, error.message); errores++; }
+    }
+
+    el.textContent = `⏳ Subiendo ${orders.length} pedidos...`;
+    for (const o of orders) {
+      const { error } = await dbClient.from('orders').upsert({
+        id: o.id, user_id: o.userId,
+        items: JSON.parse(JSON.stringify(o.items || [])),
+        total: parseInt(o.total) || 0,
+        estado: o.estado || 'Pendiente',
+        fecha: o.fecha || '', metodo: o.metodo || ''
+      }, { onConflict: 'id' });
+      if (error) { console.error('❌ Order sync error:', o.id, error.message); errores++; }
+    }
+
+    if (errores === 0) {
+      el.textContent = `✅ Sincronización completa — ${users.length} usuarios y ${orders.length} pedidos subidos`;
+      el.style.color = '#66bb6a';
+    } else {
+      el.textContent = `⚠️ Sincronización con ${errores} errores — revisá F12 > Console`;
+      el.style.color = '#ffb74d';
+    }
+  } catch(e) {
+    el.textContent = '❌ Error en sincronización: ' + e.message;
+    el.style.color = '#ef5350';
+    console.error('forceSyncToSupabase error:', e);
   }
 }
 
@@ -3596,7 +3679,7 @@ function deleteAdminUser(userId) {
   // Sincronizar con Supabase si está disponible
   if (dbClient) {
     dbClient.from('users').delete().eq('id', userId).then(() => {});
-    dbClient.from('orders').delete().eq('userId', userId).then(() => {});
+    dbClient.from('orders').delete().eq('user_id', userId).then(() => {});
   }
 
   showToast(`✅ Usuario ${user.nombre} ${user.apellido} eliminado correctamente`);
@@ -5775,6 +5858,8 @@ document.addEventListener('keydown', e => {
   initTimers();
   updateCart();
   updateNavAccount();
+  // Esperar a que el SDK de Supabase esté disponible antes de sincronizar
+  await waitForSupabase();
   await syncFromSupabase();
   initEmailJS();
   renderProductGrid('hogar');
