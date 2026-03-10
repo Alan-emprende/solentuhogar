@@ -1441,7 +1441,11 @@ footer{background:var(--ink);color:rgba(255,255,255,.45);padding:5rem 2.5rem 2re
         </div>
         <div class="admin-coupon-new">
           <input class="admin-ci" id="newCouponCode" type="text" placeholder="Código (ej: VERANO20)" maxlength="20">
-          <input class="admin-ci" id="newCouponDiscount" type="number" min="1" max="100" placeholder="% descuento" style="width:110px;text-transform:none">
+          <select class="admin-ci" id="newCouponType" style="width:80px;text-transform:none">
+            <option value="pct">%</option>
+            <option value="fixed">$ fijo</option>
+          </select>
+          <input class="admin-ci" id="newCouponDiscount" type="number" min="1" placeholder="Valor" style="width:100px;text-transform:none">
           <input class="admin-ci" id="newCouponUses" type="number" min="1" placeholder="Usos máx." style="width:100px;text-transform:none">
           <input class="admin-ci" id="newCouponExpiry" type="date" title="Vencimiento (opcional)" style="width:150px;text-transform:none;color:rgba(255,255,255,.6)">
           <button class="admin-filter-btn" onclick="adminCreateCoupon()">+ Crear cupón</button>
@@ -3685,12 +3689,16 @@ function addToCart(btn) {
 }
 
 function addToCartByName(name, price) {
+  // Validar stock antes de agregar
+  const prod = dbGetProducts ? dbGetProducts().find(p => p.name === name) : null;
+  if (prod && prod.stock === 0) { showToast('Este producto no tiene stock 😕'); return; }
   const existing = cartItems.find(i => i.name === name);
   if (existing) { existing.qty++; } else {
     // Buscar imagen en la grilla
     const card = Array.from(document.querySelectorAll('.pcard')).find(c => c.dataset.name === name);
     const imgEl = card ? card.querySelector('.pcard-img img') : null;
-    cartItems.push({ name, price, qty: 1, bg: '#C45C2A', imgSrc: imgEl ? imgEl.src : null });
+    const imgSrc = prod?.img || (imgEl ? imgEl.src : null);
+    cartItems.push({ name, price, qty: 1, bg: '#C45C2A', imgSrc });
   }
   updateCart();
   toggleCart();
@@ -3950,7 +3958,11 @@ function confirmarPago() {
     // Calcular total con descuento si hay cupón
     let finalTotal = cartTotal;
     if (activeCoupon) {
-      finalTotal = Math.round(cartTotal * (1 - activeCoupon.discount / 100));
+      const isFixed = activeCoupon.type === 'fixed';
+      const discount = isFixed
+        ? Math.min(activeCoupon.discount, cartTotal)
+        : Math.round(cartTotal * (1 - activeCoupon.discount / 100));
+      finalTotal = isFixed ? cartTotal - discount : cartTotal - discount;
       // Registrar uso del cupón
       const coupons = dbGetCoupons();
       const ci = coupons.findIndex(c => c.code === activeCoupon.code);
@@ -4037,17 +4049,30 @@ function initTimers() {
   timers.forEach(timer => {
     const hoursStr = timer.dataset.end;
     const hours = parseInt(hoursStr);
-    let remaining = hours * 3600 + Math.floor(Math.random() * 1800); // Variación de hasta 30min
+    const prodId = timer.closest('[data-prod-id]')?.dataset.prodId || hoursStr;
+    const storageKey = 'sol_timer_' + prodId;
+
+    // Recuperar o crear el timestamp de fin
+    let endTime = parseInt(localStorage.getItem(storageKey) || '0');
+    const now = Date.now();
+    if (!endTime || endTime <= now) {
+      endTime = now + hours * 3600 * 1000;
+      localStorage.setItem(storageKey, String(endTime));
+    }
 
     function update() {
-      if (remaining <= 0) { timer.innerHTML = '<span style="color:var(--stone)">Expirada</span>'; return; }
+      const remaining = Math.max(0, Math.floor((endTime - Date.now()) / 1000));
+      if (remaining <= 0) {
+        timer.innerHTML = '<span style="color:var(--stone)">Expirada</span>';
+        localStorage.removeItem(storageKey);
+        return;
+      }
       const h = Math.floor(remaining / 3600);
       const m = Math.floor((remaining % 3600) / 60);
       const s = remaining % 60;
       timer.querySelector('.t-h').textContent = String(h).padStart(2,'0');
       timer.querySelector('.t-m').textContent = String(m).padStart(2,'0');
       timer.querySelector('.t-s').textContent = String(s).padStart(2,'0');
-      remaining--;
     }
     update();
     setInterval(update, 1000);
@@ -4276,6 +4301,7 @@ document.addEventListener('keydown', e => {
 let _pdCard = null; // Card activa
 let _pdQty = 1;
 let _pdSelectedColor = null;
+let _pdSelectedTalle = null;
 let _pdPrice = 0;
 let _pdStock = 0;
 
@@ -4283,6 +4309,7 @@ function openProduct(card) {
   _pdCard = card;
   _pdQty = 1;
   _pdSelectedColor = null;
+  _pdSelectedTalle = null;
   _pdPrice = parseInt(card.dataset.price || 0);
   _pdStock = parseInt(card.dataset.stock || 0);
 
@@ -4342,48 +4369,124 @@ function openProduct(card) {
     `<span class="pdModal-feat">✓ ${f}</span>`
   ).join('');
 
-  // Opciones del card (colores, tamaños)
-  const optsEl = card.querySelector('.pcard-options');
+  // Opciones del card — Ropa: talles y colores desde data attributes
   const optsContainer = document.getElementById('pdModalOpts');
   optsContainer.innerHTML = '';
-  if (optsEl) {
-    optsEl.querySelectorAll('.opt-row').forEach(row => {
-      const lbl = row.querySelector('.opt-lbl')?.textContent || '';
-      const swatches = row.querySelectorAll('.color-swatch');
-      if (!swatches.length) return;
-      const div = document.createElement('div');
-      div.innerHTML = `<div class="pdModal-opt-lbl">${lbl} <span id="pdOptSelected_${lbl.replace(/\s/g,'')}" style="color:var(--clay);font-style:italic;text-transform:none;font-weight:400"></span></div>`;
-      const swatchRow = document.createElement('div');
-      swatchRow.className = 'pdModal-swatches';
-      swatches.forEach(sw => {
-        const isText = sw.style.borderRadius && sw.style.borderRadius.includes('4px');
-        const title = sw.title;
-        const el = document.createElement(isText ? 'div' : 'div');
-        if (isText) {
-          el.className = 'pdModal-swatch-lbl' + (sw.classList.contains('selected') ? ' selected' : '');
-          el.textContent = sw.textContent;
-        } else {
-          el.className = 'pdModal-swatch' + (sw.classList.contains('selected') ? ' selected' : '');
-          el.style.background = sw.style.background;
-          el.style.border = sw.style.border || '';
-          el.title = title;
-        }
-        el.onclick = () => {
-          swatchRow.querySelectorAll('.pdModal-swatch,.pdModal-swatch-lbl').forEach(s => s.classList.remove('selected'));
-          el.classList.add('selected');
-          _pdSelectedColor = title;
-          const selLabel = document.getElementById('pdOptSelected_' + lbl.replace(/\s/g,''));
-          if (selLabel) selLabel.textContent = title ? `— ${title}` : '';
+
+  const isRopa = card.dataset.section === 'ropa';
+  if (isRopa) {
+    const talles  = (card.dataset.talles  || '').split(',').map(s=>s.trim()).filter(Boolean);
+    const colores = (card.dataset.colores || '').split(',').map(s=>s.trim()).filter(Boolean);
+    const material = card.dataset.material || '';
+    const genero   = card.dataset.genero  || '';
+
+    // Mostrar material y género si existen
+    if (material || genero) {
+      const metaDiv = document.createElement('div');
+      metaDiv.style.cssText = 'font-size:.72rem;color:var(--stone);display:flex;gap:1rem;flex-wrap:wrap;margin-bottom:.2rem';
+      if (genero)   metaDiv.innerHTML += `<span>👤 ${genero}</span>`;
+      if (material) metaDiv.innerHTML += `<span>🧵 ${material}</span>`;
+      optsContainer.appendChild(metaDiv);
+    }
+
+    // Chips de talle
+    if (talles.length) {
+      const talleDiv = document.createElement('div');
+      talleDiv.innerHTML = `<div class="pdModal-opt-lbl">Talle <span id="pdTalleSelected" style="color:var(--clay);font-style:italic;text-transform:none;font-weight:400"></span></div>`;
+      const chipRow = document.createElement('div');
+      chipRow.style.cssText = 'display:flex;gap:.4rem;flex-wrap:wrap;margin-top:.4rem';
+      talles.forEach(t => {
+        const chip = document.createElement('button');
+        chip.type = 'button';
+        chip.textContent = t;
+        chip.style.cssText = 'border:1.5px solid var(--sand-deep);background:var(--white);padding:.35rem .75rem;border-radius:4px;font-size:.75rem;font-weight:600;cursor:pointer;transition:all .18s;font-family:var(--sans)';
+        chip.onclick = () => {
+          chipRow.querySelectorAll('button').forEach(b => {
+            b.style.background = 'var(--white)';
+            b.style.borderColor = 'var(--sand-deep)';
+            b.style.color = 'var(--ink)';
+          });
+          chip.style.background = 'var(--clay)';
+          chip.style.borderColor = 'var(--clay)';
+          chip.style.color = '#fff';
+          _pdSelectedTalle = t;
+          const lbl = document.getElementById('pdTalleSelected');
+          if (lbl) lbl.textContent = `— ${t}`;
         };
-        // Auto-seleccionar el primero
-        if (sw.classList.contains('selected')) {
-          _pdSelectedColor = title;
-        }
-        swatchRow.appendChild(el);
+        chipRow.appendChild(chip);
       });
-      div.appendChild(swatchRow);
-      optsContainer.appendChild(div);
-    });
+      talleDiv.appendChild(chipRow);
+      optsContainer.appendChild(talleDiv);
+    }
+
+    // Chips de color
+    if (colores.length) {
+      const colorDiv = document.createElement('div');
+      colorDiv.innerHTML = `<div class="pdModal-opt-lbl">Color <span id="pdColorSelected" style="color:var(--clay);font-style:italic;text-transform:none;font-weight:400"></span></div>`;
+      const chipRow = document.createElement('div');
+      chipRow.style.cssText = 'display:flex;gap:.4rem;flex-wrap:wrap;margin-top:.4rem';
+      colores.forEach(c => {
+        const chip = document.createElement('button');
+        chip.type = 'button';
+        chip.textContent = c;
+        chip.style.cssText = 'border:1.5px solid var(--sand-deep);background:var(--white);padding:.35rem .75rem;border-radius:4px;font-size:.75rem;font-weight:600;cursor:pointer;transition:all .18s;font-family:var(--sans)';
+        chip.onclick = () => {
+          chipRow.querySelectorAll('button').forEach(b => {
+            b.style.background = 'var(--white)';
+            b.style.borderColor = 'var(--sand-deep)';
+            b.style.color = 'var(--ink)';
+          });
+          chip.style.background = 'var(--ink)';
+          chip.style.borderColor = 'var(--ink)';
+          chip.style.color = '#fff';
+          _pdSelectedColor = c;
+          const lbl = document.getElementById('pdColorSelected');
+          if (lbl) lbl.textContent = `— ${c}`;
+        };
+        chipRow.appendChild(chip);
+      });
+      colorDiv.appendChild(chipRow);
+      optsContainer.appendChild(colorDiv);
+    }
+  } else {
+    // Hogar: leer colores del pcard-options (comportamiento original)
+    const optsEl = card.querySelector('.pcard-options');
+    if (optsEl) {
+      optsEl.querySelectorAll('.opt-row').forEach(row => {
+        const lbl = row.querySelector('.opt-lbl')?.textContent || '';
+        const swatches = row.querySelectorAll('.color-swatch');
+        if (!swatches.length) return;
+        const div = document.createElement('div');
+        div.innerHTML = `<div class="pdModal-opt-lbl">${lbl} <span id="pdOptSelected_${lbl.replace(/\s/g,'')}" style="color:var(--clay);font-style:italic;text-transform:none;font-weight:400"></span></div>`;
+        const swatchRow = document.createElement('div');
+        swatchRow.className = 'pdModal-swatches';
+        swatches.forEach(sw => {
+          const isText = sw.style.borderRadius && sw.style.borderRadius.includes('4px');
+          const title = sw.title;
+          const el = document.createElement('div');
+          if (isText) {
+            el.className = 'pdModal-swatch-lbl' + (sw.classList.contains('selected') ? ' selected' : '');
+            el.textContent = sw.textContent;
+          } else {
+            el.className = 'pdModal-swatch' + (sw.classList.contains('selected') ? ' selected' : '');
+            el.style.background = sw.style.background;
+            el.style.border = sw.style.border || '';
+            el.title = title;
+          }
+          el.onclick = () => {
+            swatchRow.querySelectorAll('.pdModal-swatch,.pdModal-swatch-lbl').forEach(s => s.classList.remove('selected'));
+            el.classList.add('selected');
+            _pdSelectedColor = title;
+            const selLabel = document.getElementById('pdOptSelected_' + lbl.replace(/\s/g,''));
+            if (selLabel) selLabel.textContent = title ? `— ${title}` : '';
+          };
+          if (sw.classList.contains('selected')) { _pdSelectedColor = title; }
+          swatchRow.appendChild(el);
+        });
+        div.appendChild(swatchRow);
+        optsContainer.appendChild(div);
+      });
+    }
   }
 
   // Cantidad reset
@@ -4419,7 +4522,21 @@ function pdAddToCart() {
   if (!_pdCard) return;
   const name = _pdCard.dataset.name;
   const price = parseInt(_pdCard.dataset.price);
-  const displayName = _pdSelectedColor ? `${name} (${_pdSelectedColor})` : name;
+  const isRopa = _pdCard.dataset.section === 'ropa';
+  const talles = (_pdCard.dataset.talles || '').split(',').filter(Boolean);
+
+  // Si es ropa y tiene talles definidos, forzar selección
+  if (isRopa && talles.length && !_pdSelectedTalle) {
+    showToast('⚠️ Seleccioná un talle antes de agregar');
+    return;
+  }
+
+  let displayName = name;
+  const extras = [];
+  if (_pdSelectedTalle) extras.push(_pdSelectedTalle);
+  if (_pdSelectedColor) extras.push(_pdSelectedColor);
+  if (extras.length) displayName = `${name} (${extras.join(' · ')})`;
+
   const imgEl = _pdCard.querySelector('.pcard-img img');
   const imgSrc = imgEl ? imgEl.src : null;
   const existing = cartItems.find(i => i.name === displayName);
@@ -4850,7 +4967,10 @@ function refreshCheckoutTotal() {
   const cuotasEl    = document.getElementById('payCuotas');
 
   if (activeCoupon) {
-    const discount = Math.round(total * activeCoupon.discount / 100);
+    const isFixed = activeCoupon.type === 'fixed';
+    const discount = isFixed
+      ? Math.min(activeCoupon.discount, total)
+      : Math.round(total * activeCoupon.discount / 100);
     total = total - discount;
     if (discountRow) discountRow.style.display = 'flex';
     if (discountAmt) discountAmt.textContent = '-' + formatPrice(discount);
@@ -5504,6 +5624,9 @@ function renderProductCard(p) {
   const ctaBtn   = p.prox ? '' : `<button class="pcard-cta" onclick="event.stopPropagation();openProduct(this.closest('.pcard'))">Ver producto</button>`;
   const safeDesc = (p.desc||'').replace(/"/g,'&quot;').replace(/\n/g,' ');
   const safeName = p.name.replace(/"/g,'&quot;');
+  const ropaAttrs = p.section === 'ropa'
+    ? ` data-talles="${(p.talles||[]).join(',')}" data-colores="${(p.colores||[]).join(',')}" data-material="${(p.material||'').replace(/"/g,'&quot;')}" data-genero="${p.genero||''}" data-section="ropa"`
+    : `data-section="${p.section||'hogar'}"`;
   // Badge stock bajo (≤5 unidades activas)
   const stockBadge = (!p.prox && p.stock > 0 && p.stock <= 5)
     ? `<div class="pcard-stock-alert">⚡ ¡Quedan ${p.stock}!</div>` : '';
@@ -5512,7 +5635,7 @@ function renderProductCard(p) {
   const wishClass = isWished ? ' on' : '';
   const wishChar  = isWished ? '♥' : '♡';
 
-  return `<div class="pcard" ${clickAttr} data-id="${p.id}" data-name="${safeName}" data-price="${p.price}" data-stock="${p.stock}" ${gAttr} ${proxAttr} data-desc="${safeDesc}">
+  return `<div class="pcard" ${clickAttr} data-id="${p.id}" data-name="${safeName}" data-price="${p.price}" data-stock="${p.stock}" ${gAttr} ${proxAttr} data-desc="${safeDesc}" ${ropaAttrs}>
   <div class="pcard-img">
     ${imgHtml}${tagHtml}
     <button class="pcard-wish${wishClass}" onclick="event.stopPropagation();toggleWish(this)" style="${isWished?'opacity:1':''}">${wishChar}</button>
@@ -5572,7 +5695,7 @@ function renderOcard(p, idx) {
     : imgHtml;
 
   const timerHtml = p.timerHours
-    ? `<div class="ocard-timer">
+    ? `<div class="ocard-timer" data-prod-id="${p.id}">
         <span class="timer-lbl">Termina en</span>
         <div class="timer-display" data-end="${p.timerHours}h">
           <span class="t-h">${String(p.timerHours).padStart(2,'0')}</span><span class="timer-sep">:</span><span class="t-m">00</span><span class="timer-sep">:</span><span class="t-s">00</span>
@@ -5978,19 +6101,21 @@ function applyRopaFilters() {
 /* ══════════════════════════════════════════════════════
    FEATURE 4 — CUPONES CON FECHA DE VENCIMIENTO
    ══════════════════════════════════════════════════════ */
-// Parchamos adminCreateCoupon para leer el campo de vencimiento
-const _origAdminCreateCoupon = adminCreateCoupon;
 function adminCreateCoupon() {
   const code     = (document.getElementById('newCouponCode')?.value || '').trim().toUpperCase();
-  const discount = parseInt(document.getElementById('newCouponDiscount')?.value || 0);
+  const type     = document.getElementById('newCouponType')?.value || 'pct';
+  const discount = parseFloat(document.getElementById('newCouponDiscount')?.value || 0);
   const uses     = parseInt(document.getElementById('newCouponUses')?.value || 0) || null;
   const expiry   = document.getElementById('newCouponExpiry')?.value || '';
-  if (!code || !discount || discount < 1 || discount > 100) {
-    showToast('Completá código y % de descuento'); return;
+  if (!code || !discount || discount <= 0) {
+    showToast('Completá código y valor de descuento'); return;
+  }
+  if (type === 'pct' && discount > 100) {
+    showToast('El porcentaje no puede superar 100%'); return;
   }
   const coupons = dbGetCoupons();
   if (coupons.find(c => c.code === code)) { showToast('Ese código ya existe'); return; }
-  coupons.push({ code, discount, uses, usedCount: 0, expiry, creado: new Date().toLocaleDateString('es-AR') });
+  coupons.push({ code, type, discount, uses, usedCount: 0, expiry, creado: new Date().toLocaleDateString('es-AR') });
   dbSaveCoupons(coupons);
   ['newCouponCode','newCouponDiscount','newCouponUses','newCouponExpiry'].forEach(id => {
     const el = document.getElementById(id); if (el) el.value = '';
@@ -5999,8 +6124,6 @@ function adminCreateCoupon() {
   showToast(`Cupón ${code} creado ✓`);
 }
 
-// Parchamos applyCoupon para validar vencimiento
-const _origApplyCoupon = applyCoupon;
 function applyCoupon() {
   const code  = (document.getElementById('couponInput')?.value || '').trim().toUpperCase();
   const msgEl = document.getElementById('couponMsg');
@@ -6023,12 +6146,13 @@ function applyCoupon() {
   }
   activeCoupon = coupon;
   inp.className = 'coupon-input ok'; msgEl.className = 'coupon-msg ok';
-  msgEl.textContent = `✅ ¡${coupon.discount}% de descuento aplicado!`;
+  const isFixed = coupon.type === 'fixed';
+  msgEl.textContent = isFixed
+    ? `✅ ¡Descuento de ${formatPrice(coupon.discount)} aplicado!`
+    : `✅ ¡${coupon.discount}% de descuento aplicado!`;
   refreshCheckoutTotal();
 }
 
-// Parchamos renderAdminCoupons para mostrar vencimiento
-const _origRenderAdminCoupons = renderAdminCoupons;
 function renderAdminCoupons() {
   const coupons = dbGetCoupons();
   const grid    = document.getElementById('adminCouponsGrid');
@@ -6043,7 +6167,7 @@ function renderAdminCoupons() {
     return `<div class="admin-coupon-card" style="${expired ? 'opacity:.45' : ''}">
       <div class="admin-coupon-code">${c.code}${expired ? ' <span style="font-size:.55rem;color:#e53935">VENCIDO</span>' : ''}</div>
       <div class="admin-coupon-detail">
-        ${c.discount}% descuento<br>
+        ${c.type === 'fixed' ? formatPrice(c.discount) + ' de descuento fijo' : c.discount + '% de descuento'}<br>
         ${c.uses ? `${c.usedCount||0}/${c.uses} usos` : 'Usos ilimitados'}<br>
         ${expiryStr}<br>
         Creado: ${c.creado||'—'}
