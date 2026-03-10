@@ -1509,6 +1509,10 @@ footer{background:var(--ink);color:rgba(255,255,255,.45);padding:5rem 2.5rem 2re
         <span>Descuento aplicado 🎉</span>
         <span id="payDiscountAmt">-$0</span>
       </div>
+      <div class="pay-discount-row" id="payShippingRow" style="display:none">
+        <span id="payShippingLabel">🚚 Envío</span>
+        <span id="payShippingAmt">$0</span>
+      </div>
       <div class="pay-total-row">
         <div>
           <div class="pay-total-lbl">Total a pagar</div>
@@ -1569,7 +1573,7 @@ footer{background:var(--ink);color:rgba(255,255,255,.45);padding:5rem 2.5rem 2re
           </div>
           <div class="form-group">
             <label class="form-label">Código postal<span class="req">*</span></label>
-            <input class="form-input" type="text" placeholder="1043" id="payCP">
+            <input class="form-input" type="text" placeholder="1043" id="payCP" oninput="calcularEnvio()" maxlength="8">
           </div>
         </div>
         <div class="form-row cols-2">
@@ -1614,6 +1618,14 @@ footer{background:var(--ink);color:rgba(255,255,255,.45);padding:5rem 2.5rem 2re
             <input class="form-input" type="text" placeholder="Timbre 2 veces, dejar con portero..." id="payInstruc">
           </div>
         </div>
+
+        <!-- ── Calculadora de envío Correo Argentino ── -->
+        <div id="shippingCalcBox" style="background:var(--sand);border-radius:8px;padding:1rem 1.2rem;margin-top:.8rem;border:1px solid var(--sand-deep)">
+          <div style="font-size:.7rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--stone);margin-bottom:.6rem">🚚 Costo de envío — Correo Argentino</div>
+          <div id="shippingResult" style="font-size:.82rem;color:var(--stone);min-height:1.5rem">Completá el código postal para calcular el envío →</div>
+          <div id="shippingOptions" style="display:none;margin-top:.8rem;display:flex;flex-direction:column;gap:.4rem"></div>
+        </div>
+
         <div class="pay-actions">
           <button class="pay-btn-back" onclick="goStep(1)">← Volver</button>
           <button class="pay-btn-next" onclick="goStep(3)">Continuar →</button>
@@ -2590,6 +2602,8 @@ let cartItems = [];
 let cartTotal = 0;
 let selectedPayMethod = 'card';
 let selectedCuota = 1;
+let shippingCost = 0;
+let selectedShipping = 'estandar';
 let currentStep = 1;
 let orderCount = parseInt(localStorage.getItem('sol_orderCount') || '100');
 
@@ -3754,6 +3768,10 @@ function openCheckout() {
 
   // Reset cupón
   activeCoupon = null;
+  shippingCost = 0;
+  selectedShipping = 'estandar';
+  const shippingRow = document.getElementById('payShippingRow');
+  if (shippingRow) shippingRow.style.display = 'none';
   const ci = document.getElementById('couponInput');
   const cm = document.getElementById('couponMsg');
   const dr = document.getElementById('payDiscountRow');
@@ -3817,6 +3835,8 @@ function goStep(n, silent) {
     }
   }
   if (!silent) document.querySelector('.pay-modal').scrollTop = 0;
+  // Calcular envío cuando se entra al paso 2
+  if (n === 2) setTimeout(calcularEnvio, 50);
 }
 
 function validateStep(step) {
@@ -3941,11 +3961,24 @@ function confirmarPago() {
       document.getElementById('couponMsg').textContent = '';
     }
 
+    // Sumar costo de envío
+    finalTotal += shippingCost;
+    const shippingInfo = {
+      costo: shippingCost,
+      tipo: selectedShipping === 'express' ? 'Express ⚡' : selectedShipping === 'gratis' ? 'Gratis' : 'Estándar',
+      zona: cpAZona(document.getElementById('payCP')?.value || '')
+    };
+
     // Recoger datos del cliente para el email
     const contactData = {
-      nombre:   document.getElementById('payNombre')?.value || '',
-      apellido: document.getElementById('payApellido')?.value || '',
-      email:    document.getElementById('payEmail')?.value || ''
+      nombre:    document.getElementById('payNombre')?.value || '',
+      apellido:  document.getElementById('payApellido')?.value || '',
+      email:     document.getElementById('payEmail')?.value || '',
+      tel:       document.getElementById('payTel')?.value || '',
+      calle:     document.getElementById('payCalle')?.value || '',
+      ciudad:    document.getElementById('payCiudad')?.value || '',
+      provincia: document.getElementById('payProv')?.value || '',
+      cp:        document.getElementById('payCP')?.value || ''
     };
 
     // Guardar pedido en la base de datos
@@ -3957,7 +3990,8 @@ function confirmarPago() {
       total: finalTotal,
       estado: 'Pendiente',
       fecha: new Date().toLocaleDateString('es-AR'),
-      metodo: selectedPayMethod
+      metodo: selectedPayMethod,
+      envio: shippingInfo
     };
     orders.push(newOrder);
     dbSaveOrders(orders);
@@ -3978,7 +4012,9 @@ function confirmarPago() {
 
     goStep(4);
     sendAdminPushNotification(newOrder); // 🔔 Push al admin
+    notificarAdminWhatsApp(newOrder, contactData, shippingInfo); // 💬 WhatsApp al admin
     fillSuccessSugeridos(newOrder.items.map(i => i.name)); // 💡 Sugeridos
+    descontarStock(newOrder.items); // 📦 Stock real-time
     cartItems = [];
     cartTotal = 0;
     updateCart();
@@ -4807,17 +4843,40 @@ function refreshCheckoutTotal() {
   let total = cartTotal;
   const discountRow = document.getElementById('payDiscountRow');
   const discountAmt = document.getElementById('payDiscountAmt');
-  const totalEl = document.getElementById('payTotalAmt');
-  const cuotasEl = document.getElementById('payCuotas');
+  const shippingRow = document.getElementById('payShippingRow');
+  const shippingAmt = document.getElementById('payShippingAmt');
+  const shippingLbl = document.getElementById('payShippingLabel');
+  const totalEl     = document.getElementById('payTotalAmt');
+  const cuotasEl    = document.getElementById('payCuotas');
 
   if (activeCoupon) {
     const discount = Math.round(total * activeCoupon.discount / 100);
     total = total - discount;
-    discountRow.style.display = 'flex';
-    discountAmt.textContent = '-' + formatPrice(discount);
+    if (discountRow) discountRow.style.display = 'flex';
+    if (discountAmt) discountAmt.textContent = '-' + formatPrice(discount);
   } else {
-    discountRow.style.display = 'none';
+    if (discountRow) discountRow.style.display = 'none';
   }
+
+  // Envío
+  if (shippingCost > 0) {
+    total += shippingCost;
+    if (shippingRow) shippingRow.style.display = 'flex';
+    if (shippingAmt) shippingAmt.textContent = formatPrice(shippingCost);
+    if (shippingLbl) shippingLbl.textContent = selectedShipping === 'express' ? '🚚 Envío Express ⚡' : '🚚 Envío Estándar';
+  } else {
+    if (shippingRow) {
+      if (selectedShipping === 'gratis') {
+        shippingRow.style.display = 'flex';
+        if (shippingAmt) shippingAmt.textContent = 'GRATIS';
+        if (shippingAmt) shippingAmt.style.color = 'var(--leaf)';
+        if (shippingLbl) shippingLbl.textContent = '🚚 Envío';
+      } else {
+        shippingRow.style.display = 'none';
+      }
+    }
+  }
+
   if (totalEl) totalEl.textContent = formatPrice(total);
   if (cuotasEl) cuotasEl.textContent =
     `Hasta ${CUOTAS_SIN_INTERES} cuotas sin interés · ${formatPrice(Math.ceil(total/CUOTAS_SIN_INTERES))}/cuota`;
@@ -6114,6 +6173,191 @@ function changeQty(btn, delta) {
   let qty = parseInt(numEl.textContent) + delta;
   qty = Math.max(1, Math.min(qty, stock));
   numEl.textContent = qty;
+}
+
+/* ══════════════════════════════════════════════════════
+   SISTEMA DE ENVÍO — Correo Argentino por zona de CP
+   Tarifas aproximadas actualizadas 2025 (ajustables en TARIFAS_ENVIO)
+   ══════════════════════════════════════════════════════ */
+const TARIFAS_ENVIO = {
+  // zona: { label, precio_estandar, precio_express, dias_estandar, dias_express }
+  caba:      { label: 'CABA',                  estandar: 1800,  express: 3200,  diasE: '1–2',  diasX: '24hs' },
+  gba1:      { label: 'GBA 1er cordón',        estandar: 2200,  express: 3800,  diasE: '2–3',  diasX: '24hs' },
+  gba2:      { label: 'GBA 2do cordón',        estandar: 2600,  express: 4500,  diasE: '3–4',  diasX: '48hs' },
+  bonaerense:{ label: 'Prov. Buenos Aires',    estandar: 3200,  express: 5500,  diasE: '3–5',  diasX: '48hs' },
+  litoral:   { label: 'Litoral / Córdoba',     estandar: 3800,  express: 6200,  diasE: '4–6',  diasX: '72hs' },
+  noa:       { label: 'NOA / NEA',             estandar: 4500,  express: 7200,  diasE: '5–7',  diasX: '72hs' },
+  cuyo:      { label: 'Cuyo / San Luis',       estandar: 4200,  express: 6800,  diasE: '5–7',  diasX: '72hs' },
+  patagonia: { label: 'Patagonia',             estandar: 5500,  express: 8500,  diasE: '6–8',  diasX: '96hs' },
+};
+
+// Rangos de CP → zona
+function cpAZona(cp) {
+  const n = parseInt((cp || '').replace(/\D/g, ''));
+  if (isNaN(n)) return null;
+  // CABA: 1000–1499
+  if (n >= 1000 && n <= 1499) return 'caba';
+  // GBA 1er: 1600-1749, 1800-1949
+  if ((n >= 1600 && n <= 1749) || (n >= 1800 && n <= 1949)) return 'gba1';
+  // GBA 2do: 1500-1599, 1750-1799, 1950-1999
+  if ((n >= 1500 && n <= 1599) || (n >= 1750 && n <= 1799) || (n >= 1950 && n <= 1999)) return 'gba2';
+  // Prov BA: 2000-2999, 6000-8399
+  if ((n >= 2000 && n <= 2999) || (n >= 6000 && n <= 8399)) return 'bonaerense';
+  // Litoral / Córdoba / Santa Fe: 3000-5999
+  if (n >= 3000 && n <= 5999) return 'litoral';
+  // NOA / NEA: 4000-4999 ya incluido en litoral, mapa más específico:
+  if ((n >= 4000 && n <= 4999) || (n >= 3600 && n <= 3799)) return 'noa';
+  // Cuyo: 5400-5999
+  if (n >= 5400 && n <= 5999) return 'cuyo';
+  // Patagonia: 8400-9999
+  if (n >= 8400 && n <= 9999) return 'patagonia';
+  // Fallback según provincias conocidas
+  return 'bonaerense';
+}
+
+
+function calcularEnvio() {
+  const cp   = (document.getElementById('payCP')?.value || '').trim();
+  const resEl = document.getElementById('shippingResult');
+  const optsEl = document.getElementById('shippingOptions');
+  if (!resEl) return;
+
+  if (cp.length < 4) {
+    resEl.textContent = 'Completá el código postal para calcular el envío →';
+    if (optsEl) optsEl.style.display = 'none';
+    shippingCost = 0; refreshCheckoutTotal(); return;
+  }
+
+  // Envío gratis si supera el mínimo
+  if (cartTotal >= ENVIO_GRATIS_DESDE) {
+    resEl.innerHTML = `<span style="color:var(--leaf);font-weight:700">✅ ¡Envío gratis! (compras desde ${formatPrice(ENVIO_GRATIS_DESDE)})</span>`;
+    if (optsEl) optsEl.style.display = 'none';
+    shippingCost = 0; selectedShipping = 'gratis';
+    refreshCheckoutTotal(); return;
+  }
+
+  const zona = cpAZona(cp);
+  if (!zona) {
+    resEl.textContent = '⚠️ CP no reconocido. Ingresá solo el número (ej: 1043).';
+    if (optsEl) optsEl.style.display = 'none';
+    shippingCost = 0; refreshCheckoutTotal(); return;
+  }
+
+  const t = TARIFAS_ENVIO[zona];
+  resEl.innerHTML = `Zona: <strong>${t.label}</strong> · Correo Argentino`;
+  if (optsEl) {
+    optsEl.style.display = 'flex';
+    optsEl.innerHTML = `
+      <label style="display:flex;align-items:center;gap:.6rem;cursor:pointer;padding:.5rem .7rem;border-radius:6px;border:1.5px solid var(--sand-deep);background:var(--white);font-size:.8rem" id="shpOptE">
+        <input type="radio" name="shpOpt" value="estandar" checked onchange="selectShipping('estandar',${t.estandar})">
+        <span><strong>Estándar</strong> · ${t.diasE} días hábiles · <strong>${formatPrice(t.estandar)}</strong></span>
+      </label>
+      <label style="display:flex;align-items:center;gap:.6rem;cursor:pointer;padding:.5rem .7rem;border-radius:6px;border:1.5px solid var(--sand-deep);background:var(--white);font-size:.8rem" id="shpOptX">
+        <input type="radio" name="shpOpt" value="express" onchange="selectShipping('express',${t.express})">
+        <span><strong>Express ⚡</strong> · ${t.diasX} · <strong>${formatPrice(t.express)}</strong></span>
+      </label>
+      <div style="font-size:.65rem;color:var(--stone);margin-top:.2rem">💡 Envío gratis en compras desde ${formatPrice(ENVIO_GRATIS_DESDE)}</div>
+    `;
+    // Default: estándar selected
+    selectShipping('estandar', t.estandar);
+  }
+}
+
+function selectShipping(tipo, costo) {
+  selectedShipping = tipo;
+  shippingCost = costo;
+  refreshCheckoutTotal();
+}
+
+/* ══════════════════════════════════════════════════════
+   STOCK EN TIEMPO REAL
+   Descuenta stock en Supabase y localStorage cuando se confirma un pedido
+   ══════════════════════════════════════════════════════ */
+async function descontarStock(items) {
+  const prods = dbGetProducts();
+  let changed = false;
+
+  for (const item of items) {
+    // Buscar producto por nombre (sin variante de color entre paréntesis)
+    const baseName = item.name.replace(/\s*\([^)]+\)\s*$/, '').trim();
+    const idx = prods.findIndex(p => p.name === baseName || p.name === item.name);
+    if (idx < 0) continue;
+
+    const prev = prods[idx].stock;
+    prods[idx].stock = Math.max(0, prev - item.qty);
+    changed = true;
+
+    // Actualizar en Supabase si está disponible
+    if (dbClient) {
+      try {
+        await dbClient.from('products')
+          .update({ stock: prods[idx].stock })
+          .eq('id', prods[idx].id);
+      } catch(e) {
+        console.warn('⚠️ No se pudo actualizar stock en Supabase:', e.message);
+      }
+    }
+
+    // Actualizar el DOM de la card si está visible
+    const card = document.querySelector(`.pcard[data-id="${prods[idx].id}"]`);
+    if (card) {
+      card.dataset.stock = prods[idx].stock;
+      // Actualizar badge de stock bajo
+      const existingBadge = card.querySelector('.pcard-stock-alert');
+      if (existingBadge) existingBadge.remove();
+      if (prods[idx].stock > 0 && prods[idx].stock <= 5) {
+        const badge = document.createElement('div');
+        badge.className = 'pcard-stock-alert';
+        badge.textContent = `⚡ ¡Quedan ${prods[idx].stock}!`;
+        card.querySelector('.pcard-body')?.insertBefore(badge, card.querySelector('.pcard-foot'));
+      }
+      if (prods[idx].stock === 0) {
+        // Marcar como agotado visualmente
+        const cta = card.querySelector('.pcard-cta');
+        if (cta) { cta.textContent = 'Sin stock'; cta.disabled = true; cta.style.opacity = '.5'; }
+      }
+    }
+  }
+
+  if (changed) {
+    dbSaveProducts(prods);
+    console.log('✅ Stock actualizado para', items.length, 'producto(s)');
+  }
+}
+
+/* ══════════════════════════════════════════════════════
+   WHATSAPP AL ADMIN — notificación automática de pedido
+   Se envía al número del admin cuando se confirma la compra
+   ══════════════════════════════════════════════════════ */
+function notificarAdminWhatsApp(order, contactData, shippingInfo) {
+  const lineas = order.items.map(i => `• ${i.name} ×${i.qty} — ${formatPrice(i.price * i.qty)}`).join('\n');
+  const envioTexto = shippingInfo.costo > 0
+    ? `🚚 Envío (${shippingInfo.tipo}): ${formatPrice(shippingInfo.costo)}`
+    : '🚚 Envío: GRATIS';
+
+  const msg = encodeURIComponent(
+`🛒 *NUEVO PEDIDO — Sol en tu Hogar*
+📋 Pedido: ${order.id}
+📅 Fecha: ${order.fecha}
+
+👤 *Cliente:*
+Nombre: ${contactData.nombre} ${contactData.apellido}
+Email: ${contactData.email}
+Tel: ${contactData.tel || '—'}
+
+📦 *Productos:*
+${lineas}
+
+${envioTexto}
+💰 *TOTAL: ${formatPrice(order.total)}*
+💳 Método: ${order.metodo === 'card' ? 'Tarjeta' : order.metodo === 'transfer' ? 'Transferencia' : 'Efectivo'}
+
+📍 *Envío a:*
+${contactData.calle || '—'}, ${contactData.ciudad || '—'}, ${contactData.provincia || '—'} (CP: ${contactData.cp || '—'})`
+  );
+
+  // Abrir WhatsApp en nueva pestaña (funciona como popup post-interacción del usuario)
+  window.open(`https://wa.me/5491131496246?text=${msg}`, '_blank', 'noopener');
 }
 
 // Arranque
