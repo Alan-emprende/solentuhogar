@@ -3,12 +3,15 @@
 <head>
 <meta charset="UTF-8"/>
 <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-<title>Sol en tu Hogar — Artículos del Hogar y Ropa Online</title>
+<title>Sol en tu Hogar — Artículos del Hogar y Ropa Online | Morón, Buenos Aires</title>
 
 <!-- ══ SEO ══ -->
-<meta name="description" content="Tienda online argentina de artículos para el hogar y ropa. Licuadoras, botellas Stanley, organizadores y más. Envío a todo el país, 12 cuotas sin interés y devoluciones gratis."/>
-<meta name="keywords" content="artículos del hogar, ropa online argentina, botella stanley, licuadora portátil, organizadores, tienda online, envío argentina"/>
+<meta name="description" content="Tienda online argentina de artículos para el hogar y ropa. Botellas Stanley, licuadoras portátiles, organizadores y más. Envío a todo el país. Retiro en Morón y San Justo. 12 cuotas sin interés."/>
+<meta name="keywords" content="artículos del hogar, ropa online argentina, botella stanley, licuadora portátil, organizadores, tienda online moron, envío argentina, san justo, comprar online argentina"/>
 <meta name="robots" content="index, follow"/>
+<meta name="author" content="Sol en tu Hogar"/>
+<meta name="geo.region" content="AR-B"/>
+<meta name="geo.placename" content="Morón, Buenos Aires"/>
 <link rel="canonical" href="https://alan-emprende.github.io/solentuhogar/"/>
 
 <!-- ══ Open Graph (WhatsApp, Facebook, Instagram) ══ -->
@@ -1085,8 +1088,56 @@ footer{background:var(--ink);color:rgba(255,255,255,.45);padding:5rem 2.5rem 2re
 
 
 /* ══════════════════════════════════════════════════════
-   MEJORAS MOBILE
+   DASHBOARD — gráficos y gestión de pedidos
    ══════════════════════════════════════════════════════ */
+.dash-charts{display:grid;grid-template-columns:2fr 1fr;gap:1rem;margin-top:1.2rem;margin-bottom:1.5rem}
+.dash-card{background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.08);border-radius:10px;padding:1rem 1.2rem}
+.dash-card-title{font-size:.62rem;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:rgba(255,255,255,.35);margin-bottom:.9rem}
+.dash-chart-wrap{position:relative;height:160px}
+.dash-chart-wrap canvas{width:100%!important;height:160px!important}
+.dash-bar-chart{display:flex;align-items:flex-end;gap:4px;height:130px;padding-bottom:20px;position:relative}
+.dash-bar-wrap{display:flex;flex-direction:column;align-items:center;flex:1;height:100%;justify-content:flex-end;gap:2px}
+.dash-bar{background:linear-gradient(180deg,var(--gold),var(--clay));border-radius:3px 3px 0 0;min-height:3px;transition:height .4s cubic-bezier(.4,0,.2,1);cursor:pointer;width:100%}
+.dash-bar:hover{opacity:.8}
+.dash-bar-lbl{font-size:.52rem;color:rgba(255,255,255,.35);white-space:nowrap;transform:rotate(-35deg);transform-origin:top right;margin-top:3px}
+.dash-bar-val{font-size:.52rem;color:rgba(255,255,255,.5);text-align:center}
+.dash-top-list{display:flex;flex-direction:column;gap:.5rem}
+.dash-top-item{display:flex;align-items:center;gap:.7rem}
+.dash-top-rank{font-size:.68rem;font-weight:800;color:var(--gold);width:16px;flex-shrink:0;text-align:center}
+.dash-top-bar-wrap{flex:1;background:rgba(255,255,255,.06);border-radius:3px;height:6px;overflow:hidden}
+.dash-top-bar-fill{height:100%;background:linear-gradient(90deg,var(--clay),var(--gold));border-radius:3px;transition:width .5s ease}
+.dash-top-name{font-size:.7rem;color:rgba(255,255,255,.6);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:90px}
+.dash-top-qty{font-size:.65rem;color:var(--gold);font-weight:700;white-space:nowrap}
+.dash-pay-pie{display:flex;flex-direction:column;gap:.5rem;margin-top:.3rem}
+.dash-pay-row{display:flex;align-items:center;gap:.6rem;font-size:.72rem}
+.dash-pay-dot{width:10px;height:10px;border-radius:50%;flex-shrink:0}
+.dash-pay-label{flex:1;color:rgba(255,255,255,.6)}
+.dash-pay-pct{color:rgba(255,255,255,.8);font-weight:700}
+/* Estado pedido badges */
+.order-badge{display:inline-block;font-size:.6rem;font-weight:700;padding:.18rem .6rem;border-radius:10px;letter-spacing:.05em;text-transform:uppercase}
+.ob-pendiente{background:rgba(245,127,23,.15);color:#ffb300}
+.ob-preparacion{background:rgba(21,101,192,.15);color:#64b5f6}
+.ob-enviado{background:rgba(0,150,136,.15);color:#4db6ac}
+.ob-entregado{background:rgba(61,107,74,.2);color:#81c784}
+.ob-cancelado{background:rgba(198,40,40,.15);color:#ef9a9a}
+/* Panel gestión pedido */
+.order-mgmt-row{background:rgba(255,255,255,.03);border:1px solid rgba(255,255,255,.07);border-radius:8px;margin-bottom:.6rem;overflow:hidden}
+.order-mgmt-head{display:grid;grid-template-columns:90px 1fr 100px 90px 140px;align-items:center;gap:.5rem;padding:.65rem .9rem;cursor:pointer;transition:background .15s}
+.order-mgmt-head:hover{background:rgba(255,255,255,.04)}
+.order-mgmt-detail{display:none;border-top:1px solid rgba(255,255,255,.06);padding:.9rem 1rem;background:rgba(0,0,0,.15);animation:apFadeIn .15s ease}
+.order-mgmt-row.expanded .order-mgmt-detail{display:block}
+.order-mgmt-items{font-size:.75rem;color:rgba(255,255,255,.6);margin-bottom:.8rem;line-height:1.8}
+.order-mgmt-actions{display:flex;align-items:center;gap:.6rem;flex-wrap:wrap}
+.omg-state-select{background:rgba(255,255,255,.07);border:1px solid rgba(255,255,255,.12);border-radius:6px;color:#fff;font-family:var(--sans);font-size:.75rem;padding:.4rem .7rem;cursor:pointer;outline:none}
+.omg-state-select option{background:#1a1a2e}
+.omg-note-input{flex:1;min-width:140px;background:rgba(255,255,255,.07);border:1px solid rgba(255,255,255,.1);border-radius:6px;color:#fff;font-family:var(--sans);font-size:.75rem;padding:.4rem .7rem;outline:none}
+.omg-note-input::placeholder{color:rgba(255,255,255,.3)}
+.omg-save-btn{background:var(--gold);color:var(--ink);border:none;border-radius:6px;font-family:var(--sans);font-size:.72rem;font-weight:700;padding:.4rem .9rem;cursor:pointer;transition:opacity .15s;white-space:nowrap}
+.omg-save-btn:hover{opacity:.85}
+.omg-wa-btn{display:inline-flex;align-items:center;gap:.35rem;background:#25D366;color:#fff;border:none;border-radius:6px;font-family:var(--sans);font-size:.72rem;font-weight:700;padding:.4rem .9rem;cursor:pointer;text-decoration:none;white-space:nowrap}
+.omg-export-btn{background:rgba(255,255,255,.08);color:rgba(255,255,255,.6);border:1px solid rgba(255,255,255,.1);border-radius:6px;font-family:var(--sans);font-size:.72rem;padding:.4rem .9rem;cursor:pointer;transition:background .15s;white-space:nowrap}
+.omg-export-btn:hover{background:rgba(255,255,255,.13)}
+@media(max-width:860px){.dash-charts{grid-template-columns:1fr}.order-mgmt-head{grid-template-columns:80px 1fr 80px}}
 
 /* Tap targets mínimos 44px en mobile */
 @media(max-width:860px){
@@ -1147,6 +1198,73 @@ footer{background:var(--ink);color:rgba(255,255,255,.45);padding:5rem 2.5rem 2re
 
 }
 </style>
+
+<!-- ══ Preconnect ══ -->
+<link rel="preconnect" href="https://fonts.googleapis.com"/>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+<link rel="preconnect" href="https://api.emailjs.com"/>
+
+<!-- ══ JSON-LD — LocalBusiness ══ -->
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "OnlineStore",
+  "name": "Sol en tu Hogar",
+  "description": "Tienda online argentina de artículos para el hogar y ropa. Envío a todo el país, 12 cuotas sin interés.",
+  "url": "https://alan-emprende.github.io/solentuhogar/",
+  "logo": "https://alan-emprende.github.io/solentuhogar/caja-carrito.jpeg",
+  "image": "https://alan-emprende.github.io/solentuhogar/caja-carrito.jpeg",
+  "telephone": "+5491131496246",
+  "email": "solentuhogar.soporte@gmail.com",
+  "address": {
+    "@type": "PostalAddress",
+    "addressLocality": "Morón",
+    "addressRegion": "Buenos Aires",
+    "addressCountry": "AR"
+  },
+  "areaServed": {
+    "@type": "Country",
+    "name": "Argentina"
+  },
+  "priceRange": "$$",
+  "currenciesAccepted": "ARS",
+  "paymentAccepted": "Tarjeta de crédito, Transferencia bancaria, Efectivo",
+  "sameAs": [
+    "https://wa.me/5491131496246"
+  ],
+  "hasOfferCatalog": {
+    "@type": "OfferCatalog",
+    "name": "Artículos del hogar y ropa",
+    "itemListElement": [
+      {
+        "@type": "Offer",
+        "itemOffered": { "@type": "Product", "name": "Licuadora Portátil USB", "category": "Electrodomésticos" }
+      },
+      {
+        "@type": "Offer",
+        "itemOffered": { "@type": "Product", "name": "Botella Stanley 700ml", "category": "Hogar" }
+      },
+      {
+        "@type": "Offer",
+        "itemOffered": { "@type": "Product", "name": "Caja Organizadora con Ruedas", "category": "Organización" }
+      }
+    ]
+  }
+}
+</script>
+
+<!-- ══ JSON-LD — BreadcrumbList ══ -->
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  "itemListElement": [
+    { "@type": "ListItem", "position": 1, "name": "Inicio", "item": "https://alan-emprende.github.io/solentuhogar/" },
+    { "@type": "ListItem", "position": 2, "name": "Hogar", "item": "https://alan-emprende.github.io/solentuhogar/#hogar" },
+    { "@type": "ListItem", "position": 3, "name": "Ropa", "item": "https://alan-emprende.github.io/solentuhogar/#ropa" }
+  ]
+}
+</script>
 </head>
 <body>
 
@@ -1474,6 +1592,28 @@ footer{background:var(--ink);color:rgba(255,255,255,.45);padding:5rem 2.5rem 2re
         <div class="admin-stat-row" id="adminStats"></div>
         <div class="admin-stats-detail" id="adminStatsDetail"></div>
 
+        <!-- ═ Gráficos dashboard ═ -->
+        <div class="dash-charts">
+          <div class="dash-card">
+            <div class="dash-card-title">📈 Ventas por día (últimos 14 días)</div>
+            <div class="dash-bar-chart" id="dashBarChart"></div>
+          </div>
+          <div class="dash-card">
+            <div class="dash-card-title">🏆 Productos más vendidos</div>
+            <div class="dash-top-list" id="dashTopProducts"></div>
+          </div>
+        </div>
+        <div class="dash-charts" style="grid-template-columns:1fr 1fr;margin-top:0">
+          <div class="dash-card">
+            <div class="dash-card-title">💳 Métodos de pago</div>
+            <div class="dash-pay-pie" id="dashPayMethods"></div>
+          </div>
+          <div class="dash-card">
+            <div class="dash-card-title">📦 Estados de pedidos</div>
+            <div class="dash-pay-pie" id="dashOrderStates"></div>
+          </div>
+        </div>
+
         <!-- ═══ PRODUCTOS ═══ -->
         <div class="admin-filters" style="margin-top:0;margin-bottom:.8rem">
           <span class="admin-section-lbl" style="margin:0">Gestión de productos</span>
@@ -1500,17 +1640,20 @@ footer{background:var(--ink);color:rgba(255,255,255,.45);padding:5rem 2.5rem 2re
 
         <!-- Pedidos con filtros -->
         <div class="admin-filters" style="margin-top:1.5rem;margin-bottom:.8rem">
-          <span class="admin-section-lbl" style="margin:0">Todos los pedidos</span>
+          <span class="admin-section-lbl" style="margin:0">📦 Gestión de pedidos</span>
           <input class="admin-filter-input" id="adminOrderSearch" type="text" placeholder="🔍 Buscar pedido o cliente..." oninput="filterAdminOrders()" style="flex:1;min-width:160px">
           <select class="admin-filter-select" id="adminOrderStatus" onchange="filterAdminOrders()">
             <option value="">Todos los estados</option>
             <option value="Pendiente">Pendiente</option>
+            <option value="En preparación">En preparación</option>
             <option value="Enviado">Enviado</option>
             <option value="Entregado">Entregado</option>
+            <option value="Cancelado">Cancelado</option>
           </select>
+          <button class="omg-export-btn" onclick="exportOrdersCSV()">⬇️ Exportar CSV</button>
           <button class="admin-filter-btn secondary" onclick="document.getElementById('adminOrderSearch').value='';document.getElementById('adminOrderStatus').value='';filterAdminOrders()">✕ Limpiar</button>
         </div>
-        <table class="admin-table"><thead><tr><th>Nº Pedido</th><th>Cliente</th><th>Productos</th><th>Total</th><th>Estado</th><th>Fecha</th><th>Acción</th></tr></thead><tbody id="adminOrdersBody"></tbody></table>
+        <div id="adminOrdersList"></div>
 
         <!-- Cupones -->
         <div class="admin-filters" style="margin-top:1.5rem;margin-bottom:.8rem">
@@ -3568,19 +3711,16 @@ async function forceSyncToSupabase() {
 }
 
 function renderAdminDashboard() {
-  _adminUsers = dbGetUsers();
+  _adminUsers  = dbGetUsers();
   _adminOrders = dbGetOrders();
 
-  const period = document.getElementById('adminStatPeriod')?.value || 'all';
+  const period   = document.getElementById('adminStatPeriod')?.value || 'all';
   const dateFrom = document.getElementById('adminDateFrom')?.value;
-  const dateTo = document.getElementById('adminDateTo')?.value;
+  const dateTo   = document.getElementById('adminDateTo')?.value;
 
-  // Mostrar/ocultar campos de fecha personalizada
-  const showCustom = period === 'custom';
-  document.getElementById('adminDateFrom').style.display = showCustom ? '' : 'none';
-  document.getElementById('adminDateTo').style.display = showCustom ? '' : 'none';
+  document.getElementById('adminDateFrom').style.display = period === 'custom' ? '' : 'none';
+  document.getElementById('adminDateTo').style.display   = period === 'custom' ? '' : 'none';
 
-  // Filtrar pedidos según período
   const now = new Date();
   const filteredOrders = _adminOrders.filter(o => {
     if (period === 'all') return true;
@@ -3588,41 +3728,115 @@ function renderAdminDashboard() {
     if (parts.length < 3) return true;
     const d = new Date(parts[2], parts[1]-1, parts[0]);
     if (period === 'today') return d.toDateString() === now.toDateString();
-    if (period === 'week') { const w = new Date(now); w.setDate(now.getDate()-7); return d >= w; }
+    if (period === 'week')  { const w = new Date(now); w.setDate(now.getDate()-7); return d >= w; }
     if (period === 'month') return d.getMonth() === now.getMonth() && d.getFullYear() === now.getFullYear();
     if (period === 'custom' && dateFrom) {
       const from = new Date(dateFrom);
-      const to = dateTo ? new Date(dateTo) : now;
+      const to   = dateTo ? new Date(dateTo) : now;
       to.setHours(23,59,59);
       return d >= from && d <= to;
     }
     return true;
   });
 
-  const totalVentas = filteredOrders.reduce((s, o) => s + (o.total || 0), 0);
+  const totalVentas       = filteredOrders.reduce((s, o) => s + (o.total || 0), 0);
   const pedidosPendientes = filteredOrders.filter(o => o.estado === 'Pendiente').length;
   const pedidosEntregados = filteredOrders.filter(o => o.estado === 'Entregado').length;
-  const ticketPromedio = filteredOrders.length ? Math.round(totalVentas / filteredOrders.length) : 0;
+  const ticketPromedio    = filteredOrders.length ? Math.round(totalVentas / filteredOrders.length) : 0;
 
-  // Stats principales
   document.getElementById('adminStats').innerHTML = `
     <div class="admin-stat"><div class="admin-stat-n">${_adminUsers.length}</div><div class="admin-stat-l">Clientes totales</div></div>
     <div class="admin-stat"><div class="admin-stat-n">${filteredOrders.length}</div><div class="admin-stat-l">Pedidos en período</div></div>
     <div class="admin-stat"><div class="admin-stat-n">${formatPrice(totalVentas)}</div><div class="admin-stat-l">Ventas en período</div></div>
   `;
-  // Stats secundarias
   document.getElementById('adminStatsDetail').innerHTML = `
     <div class="admin-stat-mini"><div class="admin-stat-mini-n">${pedidosPendientes}</div><div class="admin-stat-mini-l">Pendientes</div></div>
     <div class="admin-stat-mini"><div class="admin-stat-mini-n">${pedidosEntregados}</div><div class="admin-stat-mini-l">Entregados</div></div>
     <div class="admin-stat-mini"><div class="admin-stat-mini-n">${formatPrice(ticketPromedio)}</div><div class="admin-stat-mini-l">Ticket promedio</div></div>
   `;
 
-  // Renderizar tablas (sin filtro de búsqueda aún)
+  // ── Gráfico de barras: ventas por día últimos 14 días ──
+  _renderSalesChart(_adminOrders);
+  // ── Top productos ──
+  _renderTopProducts(_adminOrders);
+  // ── Métodos de pago + estados ──
+  _renderPayMethods(_adminOrders);
+  _renderOrderStates(_adminOrders);
+
   renderAdminUsersTable(_adminUsers, _adminOrders);
-  renderAdminOrdersTable(filteredOrders, _adminUsers);
+  renderAdminOrdersList(filteredOrders, _adminUsers);
   renderAdminCoupons();
   renderAdminReviews();
   renderAdminProducts();
+}
+
+function _renderSalesChart(orders) {
+  const el = document.getElementById('dashBarChart');
+  if (!el) return;
+  // Build last 14 days buckets
+  const days = [];
+  for (let i = 13; i >= 0; i--) {
+    const d = new Date(); d.setDate(d.getDate() - i);
+    days.push({ date: d.toLocaleDateString('es-AR'), label: d.getDate() + '/' + (d.getMonth()+1), total: 0 });
+  }
+  orders.forEach(o => {
+    const idx = days.findIndex(d => d.date === o.fecha);
+    if (idx >= 0) days[idx].total += (o.total || 0);
+  });
+  const max = Math.max(...days.map(d => d.total), 1);
+  el.innerHTML = days.map(d => {
+    const pct = Math.round((d.total / max) * 100);
+    const tip = d.total > 0 ? formatPrice(d.total) : '';
+    return `<div class="dash-bar-wrap" title="${d.date}: ${tip || 'Sin ventas'}">
+      ${tip ? `<div class="dash-bar-val">${formatPrice(d.total).replace('$','$').replace(/\.000/,'k')}</div>` : ''}
+      <div class="dash-bar" style="height:${Math.max(pct,2)}%"></div>
+      <div class="dash-bar-lbl">${d.label}</div>
+    </div>`;
+  }).join('');
+}
+
+function _renderTopProducts(orders) {
+  const el = document.getElementById('dashTopProducts');
+  if (!el) return;
+  const counts = {};
+  orders.forEach(o => (o.items||[]).forEach(i => {
+    counts[i.name] = (counts[i.name] || 0) + (i.qty || 1);
+  }));
+  const sorted = Object.entries(counts).sort((a,b) => b[1]-a[1]).slice(0,5);
+  const maxQ = sorted[0]?.[1] || 1;
+  if (!sorted.length) { el.innerHTML = '<div style="font-size:.72rem;color:rgba(255,255,255,.3)">Sin ventas aún</div>'; return; }
+  el.innerHTML = sorted.map(([name, qty], i) => `
+    <div class="dash-top-item">
+      <div class="dash-top-rank">${['🥇','🥈','🥉','4','5'][i]}</div>
+      <div style="flex:1;min-width:0">
+        <div class="dash-top-name" title="${name}">${name}</div>
+        <div class="dash-top-bar-wrap"><div class="dash-top-bar-fill" style="width:${Math.round(qty/maxQ*100)}%"></div></div>
+      </div>
+      <div class="dash-top-qty">${qty} ud.</div>
+    </div>`).join('');
+}
+
+function _renderPayMethods(orders) {
+  const el = document.getElementById('dashPayMethods');
+  if (!el) return;
+  const map = { card: {label:'💳 Tarjeta', color:'#64b5f6', n:0}, transfer: {label:'🏦 Transferencia', color:'#81c784', n:0}, cash: {label:'💵 Efectivo', color:'#ffb300', n:0} };
+  orders.forEach(o => { if (map[o.metodo]) map[o.metodo].n++; });
+  const total = orders.length || 1;
+  el.innerHTML = Object.values(map).map(m =>
+    `<div class="dash-pay-row"><div class="dash-pay-dot" style="background:${m.color}"></div><div class="dash-pay-label">${m.label}</div><div class="dash-pay-pct">${m.n} (${Math.round(m.n/total*100)}%)</div></div>`
+  ).join('');
+}
+
+function _renderOrderStates(orders) {
+  const el = document.getElementById('dashOrderStates');
+  if (!el) return;
+  const states = ['Pendiente','En preparación','Enviado','Entregado','Cancelado'];
+  const colors = ['#ffb300','#64b5f6','#4db6ac','#81c784','#ef9a9a'];
+  const total = orders.length || 1;
+  el.innerHTML = states.map((s,i) => {
+    const n = orders.filter(o => o.estado === s).length;
+    return `<div class="dash-pay-row"><div class="dash-pay-dot" style="background:${colors[i]}"></div><div class="dash-pay-label">${s}</div><div class="dash-pay-pct">${n} (${Math.round(n/total*100)}%)</div></div>`;
+  }).join('');
 }
 
 function renderAdminUsersTable(users, orders) {
@@ -3687,32 +3901,132 @@ function deleteAdminUser(userId) {
   renderAdminDashboard();
 }
 
-function renderAdminOrdersTable(orders, users) {
-  const body = document.getElementById('adminOrdersBody');
+function renderAdminOrdersList(orders, users) {
+  const el = document.getElementById('adminOrdersList');
+  if (!el) return;
   if (!orders.length) {
-    body.innerHTML = '<tr><td colspan="7" class="admin-empty">No hay pedidos en este período</td></tr>';
+    el.innerHTML = '<div style="text-align:center;padding:2rem;color:rgba(255,255,255,.3);font-size:.82rem">No hay pedidos en este período</div>';
     return;
   }
-  const statColors = { Entregado:'#3D6B4A', Enviado:'#1565c0', Pendiente:'#f57f17' };
-  body.innerHTML = orders.slice().reverse().map(o => {
-    const user = (users || _adminUsers).find(u => u.id === o.userId);
-    return `<tr>
-      <td style="font-weight:700;color:var(--gold)">${o.id}</td>
-      <td>${user ? user.nombre + ' ' + user.apellido : 'Invitado'}</td>
-      <td style="font-size:.72rem;max-width:180px">${o.items.map(i => i.name + '×' + i.qty).join(', ')}</td>
-      <td style="font-weight:700">${formatPrice(o.total)}</td>
-      <td><span style="color:${statColors[o.estado]||'#aaa'};font-weight:700;font-size:.72rem">${o.estado}</span></td>
-      <td>${o.fecha}</td>
-      <td>
-        <select onchange="cambiarEstadoPedido('${o.id}', this.value)" style="background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.1);border-radius:4px;color:#fff;font-size:.68rem;padding:.2rem .4rem;cursor:pointer">
-          <option ${o.estado==='Pendiente'?'selected':''}>Pendiente</option>
-          <option ${o.estado==='Enviado'?'selected':''}>Enviado</option>
-          <option ${o.estado==='Entregado'?'selected':''}>Entregado</option>
-        </select>
-      </td>
-    </tr>`;
+  const badgeClass = { 'Pendiente':'ob-pendiente', 'En preparación':'ob-preparacion', 'Enviado':'ob-enviado', 'Entregado':'ob-entregado', 'Cancelado':'ob-cancelado' };
+  el.innerHTML = orders.slice().reverse().map(o => {
+    const user   = (users || _adminUsers).find(u => u.id === o.userId);
+    const nombre = user ? user.nombre + ' ' + user.apellido : 'Invitado';
+    const email  = user?.email || o.contactEmail || '—';
+    const tel    = user?.tel || '—';
+    const badge  = badgeClass[o.estado] || 'ob-pendiente';
+    const itemsText = (o.items||[]).map(i => `${i.name} ×${i.qty} — ${formatPrice(i.price*i.qty)}`).join('<br>');
+    const envioText = o.envio ? `${o.envio.tipo}${o.envio.costo > 0 ? ' ('+formatPrice(o.envio.costo)+')' : ' (GRATIS)'}` : '—';
+    const waMsg = encodeURIComponent(`Hola ${user?.nombre||''}! Te escribimos de Sol en tu Hogar 🌟\nTu pedido *${o.id}* está *${o.estado}*. Ante cualquier duda estamos a disposición 😊`);
+    return `
+    <div class="order-mgmt-row" id="omr-${o.id}">
+      <div class="order-mgmt-head" onclick="toggleOrderMgmt('${o.id}')">
+        <div style="font-size:.78rem;font-weight:700;color:var(--gold)">${o.id}</div>
+        <div>
+          <div style="font-size:.78rem;color:#fff;font-weight:600">${nombre}</div>
+          <div style="font-size:.65rem;color:rgba(255,255,255,.4)">${o.fecha}</div>
+        </div>
+        <div style="font-size:.82rem;font-weight:700;color:var(--gold)">${formatPrice(o.total)}</div>
+        <span class="order-badge ${badge}">${o.estado}</span>
+        <div style="font-size:.68rem;color:rgba(255,255,255,.35);text-align:right">${(o.items||[]).length} producto(s) ▾</div>
+      </div>
+      <div class="order-mgmt-detail">
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:1rem;margin-bottom:.9rem">
+          <div>
+            <div style="font-size:.6rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:rgba(255,255,255,.3);margin-bottom:.3rem">Cliente</div>
+            <div style="font-size:.78rem;color:rgba(255,255,255,.75);line-height:1.7">${nombre}<br>${email}<br>📞 ${tel}</div>
+          </div>
+          <div>
+            <div style="font-size:.6rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:rgba(255,255,255,.3);margin-bottom:.3rem">Entrega</div>
+            <div style="font-size:.78rem;color:rgba(255,255,255,.75);line-height:1.7">${envioText}<br>${o.envio?.zona||'—'}</div>
+          </div>
+        </div>
+        <div style="font-size:.6rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:rgba(255,255,255,.3);margin-bottom:.4rem">Productos</div>
+        <div class="order-mgmt-items">${itemsText}</div>
+        <div class="order-mgmt-actions">
+          <select class="omg-state-select" id="omg-sel-${o.id}">
+            ${['Pendiente','En preparación','Enviado','Entregado','Cancelado'].map(s=>`<option${o.estado===s?' selected':''}>${s}</option>`).join('')}
+          </select>
+          <input class="omg-note-input" id="omg-note-${o.id}" placeholder="Nota interna (nro. seguimiento, etc.)" value="${o.nota||''}">
+          <button class="omg-save-btn" onclick="guardarEstadoPedido('${o.id}')">💾 Guardar</button>
+          <a class="omg-wa-btn" href="https://wa.me/${tel.replace(/\D/g,'')||'5491131496246'}?text=${waMsg}" target="_blank" rel="noopener">💬 WA</a>
+        </div>
+      </div>
+    </div>`;
   }).join('');
 }
+
+function toggleOrderMgmt(id) {
+  const el = document.getElementById('omr-' + id);
+  if (el) el.classList.toggle('expanded');
+}
+
+function guardarEstadoPedido(orderId) {
+  const orders    = dbGetOrders();
+  const idx       = orders.findIndex(o => o.id === orderId);
+  if (idx < 0) return;
+  const newState  = document.getElementById('omg-sel-' + orderId)?.value;
+  const newNote   = document.getElementById('omg-note-' + orderId)?.value || '';
+  orders[idx].estado = newState;
+  orders[idx].nota   = newNote;
+  dbSaveOrders(orders);
+  dbUpsertOrder(orders[idx]);
+  _adminOrders = orders;
+  showToast(`✅ Pedido ${orderId} → ${newState}`);
+  // Actualizar badge sin re-renderizar todo
+  const badgeClass = { 'Pendiente':'ob-pendiente', 'En preparación':'ob-preparacion', 'Enviado':'ob-enviado', 'Entregado':'ob-entregado', 'Cancelado':'ob-cancelado' };
+  const row = document.getElementById('omr-' + orderId);
+  if (row) {
+    const badge = row.querySelector('.order-badge');
+    if (badge) { badge.className = 'order-badge ' + (badgeClass[newState]||'ob-pendiente'); badge.textContent = newState; }
+  }
+  // También actualizar en historial del cliente si está abierto
+  const userOrder = document.querySelector(`.ap-order[data-id="${orderId}"]`);
+  if (userOrder) {
+    const st = userOrder.querySelector('.ap-order-status');
+    if (st) st.textContent = newState;
+  }
+}
+
+function exportOrdersCSV() {
+  const orders = dbGetOrders();
+  const users  = dbGetUsers();
+  const rows   = [['Pedido','Fecha','Cliente','Email','Tel','Productos','Total','Método','Envío','Estado','Nota']];
+  orders.forEach(o => {
+    const u = users.find(u => u.id === o.userId);
+    rows.push([
+      o.id, o.fecha,
+      u ? u.nombre+' '+u.apellido : 'Invitado',
+      u?.email || '', u?.tel || '',
+      (o.items||[]).map(i => i.name+'×'+i.qty).join(' | '),
+      o.total, o.metodo,
+      o.envio?.tipo || '', o.estado, o.nota||''
+    ]);
+  });
+  const csv = rows.map(r => r.map(v => `"${String(v).replace(/"/g,'""')}"`).join(',')).join('\n');
+  const a   = document.createElement('a');
+  a.href    = 'data:text/csv;charset=utf-8,\uFEFF' + encodeURIComponent(csv);
+  a.download = `pedidos-sol-${new Date().toISOString().split('T')[0]}.csv`;
+  a.click();
+  showToast('✅ CSV exportado');
+}
+
+function filterAdminOrders() {
+  const q      = document.getElementById('adminOrderSearch').value.trim().toLowerCase();
+  const status = document.getElementById('adminOrderStatus').value;
+  let filtered = _adminOrders;
+  if (q) filtered = filtered.filter(o =>
+    o.id.toLowerCase().includes(q) ||
+    (o.items||[]).some(i => i.name.toLowerCase().includes(q)) ||
+    (_adminUsers.find(u => u.id === o.userId)?.nombre || '').toLowerCase().includes(q) ||
+    (_adminUsers.find(u => u.id === o.userId)?.email || '').toLowerCase().includes(q)
+  );
+  if (status) filtered = filtered.filter(o => o.estado === status);
+  renderAdminOrdersList(filtered, _adminUsers);
+}
+
+// Mantener compatibilidad con llamadas antiguas
+function renderAdminOrdersTable(orders, users) { renderAdminOrdersList(orders, users); }
 
 function filterAdminUsers() {
   const q = document.getElementById('adminUserSearch').value.trim().toLowerCase();
@@ -3724,26 +4038,13 @@ function filterAdminUsers() {
   renderAdminUsersTable(filtered, _adminOrders);
 }
 
-function filterAdminOrders() {
-  const q = document.getElementById('adminOrderSearch').value.trim().toLowerCase();
-  const status = document.getElementById('adminOrderStatus').value;
-  let filtered = _adminOrders;
-  if (q) filtered = filtered.filter(o =>
-    o.id.toLowerCase().includes(q) ||
-    o.items.some(i => i.name.toLowerCase().includes(q)) ||
-    (_adminUsers.find(u => u.id === o.userId)?.nombre || '').toLowerCase().includes(q)
-  );
-  if (status) filtered = filtered.filter(o => o.estado === status);
-  renderAdminOrdersTable(filtered, _adminUsers);
-}
-
 function cambiarEstadoPedido(orderId, nuevoEstado) {
   const orders = dbGetOrders();
-  const idx = orders.findIndex(o => o.id === orderId);
+  const idx    = orders.findIndex(o => o.id === orderId);
   if (idx >= 0) {
     orders[idx].estado = nuevoEstado;
     dbSaveOrders(orders);
-    dbUpsertOrder(orders[idx]); // sincronizar con Supabase
+    dbUpsertOrder(orders[idx]);
     _adminOrders = orders;
     showToast(`Pedido ${orderId} → ${nuevoEstado} ✓`);
   }
