@@ -109,6 +109,33 @@ body.dark-mode .midband{background:#1A1208}
 body.dark-mode .pe-input,.dark-mode .pe-select,.dark-mode .pe-textarea{background:#2A1E10;border-color:#3C2E1A;color:#EDE0CC}
 body.dark-mode .prod-editor-box{background:#1A1208;border-color:#2C2010}
 .dark-toggle-btn{background:none;border:none;cursor:pointer;width:40px;height:40px;border-radius:var(--radius);display:flex;align-items:center;justify-content:center;font-size:1.05rem;transition:background var(--trans);color:var(--stone);flex-shrink:0}
+/* ── Tooltip del botón de tema ── */
+.dark-toggle-wrap{position:relative;flex-shrink:0}
+.dark-tip{position:absolute;top:calc(100% + 10px);right:0;background:var(--ink);color:#fff;font-size:.7rem;font-weight:600;padding:.45rem .9rem;border-radius:8px;white-space:nowrap;pointer-events:none;box-shadow:0 4px 18px rgba(0,0,0,.22);opacity:0;transform:translateY(-6px) scale(.95);transition:opacity .35s,transform .35s;z-index:300;letter-spacing:.01em}
+.dark-tip::after{content:'';position:absolute;bottom:100%;right:14px;border:6px solid transparent;border-bottom-color:var(--ink)}
+.dark-tip.visible{opacity:1;transform:translateY(0) scale(1)}
+body.dark-mode .dark-tip{background:#ede0cc;color:var(--ink)}
+body.dark-mode .dark-tip::after{border-bottom-color:#ede0cc}
+/* ── Editor de variantes (talle/color + stock) ── */
+.pe-variants-wrap{background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.1);border-radius:8px;padding:.85rem 1rem;margin-top:.35rem}
+.pe-variants-head{display:flex;align-items:center;justify-content:space-between;margin-bottom:.6rem}
+.pe-variants-title{font-size:.62rem;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:rgba(255,255,255,.4)}
+.pe-variants-add{background:var(--clay);border:none;color:#fff;padding:.28rem .7rem;border-radius:4px;font-size:.67rem;font-weight:700;cursor:pointer;font-family:var(--sans);transition:opacity .15s}
+.pe-variants-add:hover{opacity:.82}
+.pe-variant-cols{display:grid;gap:.45rem;font-size:.58rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:rgba(255,255,255,.25);margin-bottom:.28rem;padding:0 .1rem}
+.pe-variant-cols.ropa{grid-template-columns:1fr 1fr 74px 26px}
+.pe-variant-cols.hogar{grid-template-columns:1fr 74px 26px}
+.pe-variant-row{display:grid;gap:.45rem;align-items:center;margin-bottom:.38rem}
+.pe-variant-row.ropa{grid-template-columns:1fr 1fr 74px 26px}
+.pe-variant-row.hogar{grid-template-columns:1fr 74px 26px}
+.pe-variant-input{background:rgba(255,255,255,.07);border:1px solid rgba(255,255,255,.12);border-radius:5px;padding:.32rem .55rem;color:#fff;font-family:var(--sans);font-size:.74rem;outline:none;width:100%;box-sizing:border-box}
+.pe-variant-input:focus{border-color:var(--gold)}
+.pe-variant-input::placeholder{color:rgba(255,255,255,.22)}
+.pe-variant-del{background:none;border:none;color:rgba(255,255,255,.22);cursor:pointer;font-size:.82rem;width:26px;height:26px;border-radius:4px;display:flex;align-items:center;justify-content:center;transition:color .15s,background .15s;flex-shrink:0}
+.pe-variant-del:hover{color:#ef5350;background:rgba(239,83,80,.12)}
+.pe-variants-total{font-size:.7rem;color:rgba(255,255,255,.38);margin-top:.5rem;text-align:right}
+.pe-variants-total strong{color:var(--gold)}
+@media(max-width:500px){.pe-variant-cols.ropa,.pe-variant-row.ropa{grid-template-columns:1fr 1fr 60px 24px}.pe-variant-cols.hogar,.pe-variant-row.hogar{grid-template-columns:1fr 60px 24px}}
 .dark-toggle-btn:hover{background:var(--sand)}
 html{scroll-behavior:smooth;font-size:16px}
 body{background:var(--white);color:var(--ink);font-family:var(--sans);font-weight:400;overflow-x:hidden;-webkit-font-smoothing:antialiased;transition:background .3s,color .3s}
@@ -248,6 +275,21 @@ nav.raised{box-shadow:0 4px 24px rgba(26,18,9,.08)}
 .pdModal-body{flex:1;overflow-y:auto;padding:2rem 2rem 1.5rem;display:flex;flex-direction:column;gap:1rem}
 .pdModal-close{position:absolute;top:.8rem;right:.8rem;z-index:10;background:rgba(255,255,255,.9);border:none;width:32px;height:32px;border-radius:50%;cursor:pointer;font-size:.85rem;color:var(--stone);transition:background .2s;box-shadow:0 2px 8px rgba(0,0,0,.15)}
 .pdModal-close:hover{background:#fff}
+/* ── Botón compartir producto ── */
+.pdModal-share-btn{position:absolute;top:.8rem;right:2.8rem;z-index:10;background:rgba(255,255,255,.9);border:none;width:32px;height:32px;border-radius:50%;cursor:pointer;font-size:.82rem;color:var(--stone);transition:background .2s,transform .18s;box-shadow:0 2px 8px rgba(0,0,0,.15);display:flex;align-items:center;justify-content:center}
+.pdModal-share-btn:hover{background:#fff;transform:scale(1.1)}
+.pdModal-share-btn.copied{background:var(--leaf-pale,#edf7ee);color:var(--leaf,#2e7d32)}
+/* ── Editor de galería múltiple en el admin ── */
+.pe-gallery-mgr{display:flex;flex-direction:column;gap:.6rem}
+.pe-gallery-thumbs{display:flex;flex-wrap:wrap;gap:.5rem;min-height:0}
+.pe-gallery-thumb{position:relative;width:64px;height:64px;flex-shrink:0}
+.pe-gallery-thumb img{width:100%;height:100%;object-fit:cover;border-radius:6px;border:2px solid rgba(255,255,255,.12);display:block}
+.pe-gallery-thumb-del{position:absolute;top:-6px;right:-6px;width:18px;height:18px;background:#ef5350;border:none;border-radius:50%;color:#fff;font-size:.6rem;cursor:pointer;display:flex;align-items:center;justify-content:center;line-height:1;font-weight:700;transition:transform .15s}
+.pe-gallery-thumb-del:hover{transform:scale(1.2)}
+.pe-gallery-thumb-idx{position:absolute;bottom:2px;left:2px;background:rgba(0,0,0,.55);color:#fff;font-size:.52rem;font-weight:700;padding:1px 4px;border-radius:3px}
+.pe-gallery-add-btn{display:flex;align-items:center;gap:.4rem;background:rgba(255,255,255,.07);border:1.5px dashed rgba(255,255,255,.18);border-radius:8px;color:rgba(255,255,255,.45);font-family:var(--sans);font-size:.72rem;font-weight:600;padding:.55rem .9rem;cursor:pointer;transition:background .15s,border-color .15s;white-space:nowrap}
+.pe-gallery-add-btn:hover{background:rgba(255,255,255,.11);border-color:var(--gold);color:var(--gold)}
+.pe-gallery-empty{font-size:.7rem;color:rgba(255,255,255,.25);font-style:italic}
 .pdModal-cat{font-size:.65rem;font-weight:700;letter-spacing:.15em;text-transform:uppercase;color:var(--stone-light)}
 .pdModal-name{font-family:var(--serif);font-size:1.6rem;font-weight:700;color:var(--ink);line-height:1.2}
 .pdModal-stars{display:flex;align-items:center;gap:.4rem;font-size:.82rem;color:var(--gold)}
@@ -1274,6 +1316,7 @@ footer{background:var(--ink);color:rgba(255,255,255,.45);padding:5rem 2.5rem 2re
 <div class="pdModal-overlay" id="pdModalOverlay" onclick="closePdModalBg(event)">
   <div class="pdModal" id="pdModal">
     <button class="pdModal-close" onclick="closePdModal()">✕</button>
+    <button class="pdModal-share-btn" id="pdShareBtn" onclick="shareProduct()" title="Compartir producto">🔗</button>
 
     <!-- Imagen -->
     <div class="pdModal-img" id="pdModalImg" onclick="openImgZoom(event)">
@@ -2211,7 +2254,10 @@ footer{background:var(--ink);color:rgba(255,255,255,.45);padding:5rem 2.5rem 2re
       <button class="nav-btn" title="Buscar" onclick="openSearch()">
         <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
       </button>
-      <button class="dark-toggle-btn" id="darkToggleBtn" title="Cambiar tema" onclick="toggleDarkMode()">🌙</button>
+      <div class="dark-toggle-wrap" id="darkToggleWrap">
+        <button class="dark-toggle-btn" id="darkToggleBtn" title="Cambiar tema" onclick="toggleDarkMode()">🌙</button>
+        <div class="dark-tip" id="darkTip">🌙 Cambiá el tema de la tienda</div>
+      </div>
       <!-- Botón Mi Cuenta / Login -->
       <button class="nav-account-btn" id="navAccountBtn" onclick="handleAccountClick()">
         <div class="nav-account-avatar" id="navAccountAvatar">👤</div>
@@ -2620,18 +2666,6 @@ footer{background:var(--ink);color:rgba(255,255,255,.45);padding:5rem 2.5rem 2re
         <div class="pe-section-badge">👗 Datos de Ropa</div>
         <div class="pe-row cols-2">
           <div class="pe-group">
-            <label class="pe-label">Talles disponibles</label>
-            <input class="pe-input" id="peTalles" placeholder="XS, S, M, L, XL, XXL">
-            <p class="pe-hint">Separados por coma · Chips clickeables en la tarjeta</p>
-          </div>
-          <div class="pe-group">
-            <label class="pe-label">Colores disponibles</label>
-            <input class="pe-input" id="peColores" placeholder="Negro, Blanco, Azul marino">
-            <p class="pe-hint">Separados por coma</p>
-          </div>
-        </div>
-        <div class="pe-row cols-2">
-          <div class="pe-group">
             <label class="pe-label">Material / Composición</label>
             <input class="pe-input" id="peMaterial" placeholder="Ej: 100% algodón · Tela fresca">
           </div>
@@ -2645,6 +2679,36 @@ footer{background:var(--ink);color:rgba(255,255,255,.45);padding:5rem 2.5rem 2re
               <option value="Niños">Niños</option>
             </select>
           </div>
+        </div>
+        <div class="pe-group">
+          <label class="pe-label">Variantes — Talle / Color / Stock <span style="font-size:.6rem;text-transform:none;letter-spacing:0;opacity:.5">(cada fila = una combinación)</span></label>
+          <div class="pe-variants-wrap">
+            <div class="pe-variants-head">
+              <span class="pe-variants-title">Variantes de Ropa</span>
+              <button type="button" class="pe-variants-add" onclick="addVariantRow('ropa')">+ Agregar variante</button>
+            </div>
+            <div class="pe-variant-cols ropa"><span>Talle</span><span>Color</span><span>Stock</span><span></span></div>
+            <div id="peRopaVariantRows"></div>
+            <p class="pe-variants-total">Stock total: <strong id="peRopaTotalStock">0</strong> unidades</p>
+          </div>
+          <p class="pe-hint">Si no agregás variantes, el stock general de abajo se usa como total.</p>
+        </div>
+      </div>
+
+      <!-- ── Variantes de color — Hogar / Oportunidades ── -->
+      <div id="peHogarColorWrap" style="display:none">
+        <div class="pe-group">
+          <label class="pe-label">Colores disponibles <span style="font-size:.6rem;text-transform:none;letter-spacing:0;opacity:.5">(stock por color — opcional)</span></label>
+          <div class="pe-variants-wrap">
+            <div class="pe-variants-head">
+              <span class="pe-variants-title">Variantes de Color</span>
+              <button type="button" class="pe-variants-add" onclick="addVariantRow('hogar')">+ Agregar color</button>
+            </div>
+            <div class="pe-variant-cols hogar"><span>Color</span><span>Stock</span><span></span></div>
+            <div id="peHogarVariantRows"></div>
+            <p class="pe-variants-total">Stock total: <strong id="peHogarTotalStock">0</strong> unidades</p>
+          </div>
+          <p class="pe-hint">Si no agregás colores, usá el campo Stock general de abajo.</p>
         </div>
       </div>
 
@@ -2719,9 +2783,16 @@ footer{background:var(--ink);color:rgba(255,255,255,.45);padding:5rem 2.5rem 2re
           <div id="peImgPreview" style="display:none;margin-top:.4rem"><img id="peImgThumb" style="width:72px;height:72px;object-fit:cover;border-radius:6px;border:2px solid var(--sand-deep)" alt=""></div>
         </div>
         <div class="pe-group">
-          <label class="pe-label">Galería extra</label>
-          <input class="pe-input" id="peGallery" placeholder="foto2.jpg, foto3.jpg">
-          <p class="pe-hint">Separadas por coma · Carrusel con flechas</p>
+          <label class="pe-label">Fotos adicionales <span style="font-size:.6rem;text-transform:none;letter-spacing:0;opacity:.5">(carrusel con flechas)</span></label>
+          <div class="pe-gallery-mgr">
+            <div class="pe-gallery-thumbs" id="peGalleryThumbs">
+              <span class="pe-gallery-empty" id="peGalleryEmpty">Sin fotos extra aún</span>
+            </div>
+            <button type="button" class="pe-gallery-add-btn" onclick="galleryAddPhoto()">
+              📷 Agregar foto
+            </button>
+          </div>
+          <p class="pe-hint">Cada foto se suma al carrusel del producto.</p>
         </div>
       </div>
 
@@ -2863,6 +2934,16 @@ const ADMIN_PASS = 'admin123';
 
 let cartItems = [];
 let cartTotal = 0;
+
+function saveCartToStorage() {
+  try { localStorage.setItem('sol_cart', JSON.stringify(cartItems)); } catch(e) {}
+}
+function loadCartFromStorage() {
+  try {
+    const saved = JSON.parse(localStorage.getItem('sol_cart') || '[]');
+    if (Array.isArray(saved)) cartItems = saved;
+  } catch(e) {}
+}
 let selectedPayMethod = 'card';
 let selectedCuota = 1;
 let shippingCost = 0;
@@ -4123,6 +4204,7 @@ function removeFromCart(idx) {
 }
 
 function updateCart() {
+  saveCartToStorage();
   cartTotal = cartItems.reduce((s, i) => s + i.price * i.qty, 0);
   const count = cartItems.reduce((s, i) => s + i.qty, 0);
 
@@ -4445,6 +4527,7 @@ function confirmarPago() {
     descontarStock(newOrder.items); // 📦 Stock real-time
     cartItems = [];
     cartTotal = 0;
+    localStorage.removeItem('sol_cart');
     updateCart();
   }, 2500);
 }
@@ -6144,6 +6227,73 @@ function deleteAdminProduct(id) {
 }
 
 /* ══ EDITOR: abrir ══ */
+/* ══ EDITOR: variantes talle/color + stock ══ */
+function addVariantRow(type, talle, color, stock) {
+  const tVal = talle ?? '', cVal = color ?? '', sVal = stock !== undefined ? stock : '';
+  const cId  = type === 'ropa' ? 'peRopaVariantRows' : 'peHogarVariantRows';
+  const cont = document.getElementById(cId);
+  if (!cont) return;
+  const row = document.createElement('div');
+  row.className = 'pe-variant-row ' + type;
+  if (type === 'ropa') {
+    row.innerHTML = `
+      <input class="pe-variant-input" type="text" placeholder="M" value="${tVal}" oninput="recalcVariantTotal('ropa')">
+      <input class="pe-variant-input" type="text" placeholder="Negro" value="${cVal}" oninput="recalcVariantTotal('ropa')">
+      <input class="pe-variant-input" type="number" min="0" placeholder="0" value="${sVal}" oninput="recalcVariantTotal('ropa')">
+      <button type="button" class="pe-variant-del" onclick="this.parentElement.remove();recalcVariantTotal('ropa')" title="Eliminar">✕</button>`;
+  } else {
+    row.innerHTML = `
+      <input class="pe-variant-input" type="text" placeholder="Negro" value="${cVal}" oninput="recalcVariantTotal('hogar')">
+      <input class="pe-variant-input" type="number" min="0" placeholder="0" value="${sVal}" oninput="recalcVariantTotal('hogar')">
+      <button type="button" class="pe-variant-del" onclick="this.parentElement.remove();recalcVariantTotal('hogar')" title="Eliminar">✕</button>`;
+  }
+  cont.appendChild(row);
+  recalcVariantTotal(type);
+  row.querySelector('input')?.focus();
+}
+
+function recalcVariantTotal(type) {
+  const cId  = type === 'ropa' ? 'peRopaVariantRows' : 'peHogarVariantRows';
+  const tId  = type === 'ropa' ? 'peRopaTotalStock'  : 'peHogarTotalStock';
+  const cont = document.getElementById(cId);
+  const tot  = document.getElementById(tId);
+  if (!cont) return;
+  let total = 0;
+  cont.querySelectorAll('input[type="number"]').forEach(i => { total += parseInt(i.value || 0); });
+  if (tot) tot.textContent = total;
+  if (cont.querySelectorAll('.pe-variant-row').length > 0) {
+    const peStock = document.getElementById('peStock');
+    if (peStock) peStock.value = total;
+  }
+}
+
+function getVariantsFromEditor(type) {
+  const cId  = type === 'ropa' ? 'peRopaVariantRows' : 'peHogarVariantRows';
+  const cont = document.getElementById(cId);
+  if (!cont) return [];
+  const out = [];
+  cont.querySelectorAll('.pe-variant-row').forEach(row => {
+    const inp = row.querySelectorAll('input');
+    if (type === 'ropa') {
+      const t = inp[0]?.value.trim(), c = inp[1]?.value.trim(), s = parseInt(inp[2]?.value || 0);
+      if (t || c) out.push({ talle: t, color: c, stock: s });
+    } else {
+      const c = inp[0]?.value.trim(), s = parseInt(inp[1]?.value || 0);
+      if (c) out.push({ color: c, stock: s });
+    }
+  });
+  return out;
+}
+
+function loadVariantsToEditor(type, variants) {
+  const cId  = type === 'ropa' ? 'peRopaVariantRows' : 'peHogarVariantRows';
+  const cont = document.getElementById(cId);
+  if (!cont) return;
+  cont.innerHTML = '';
+  (variants || []).forEach(v => addVariantRow(type, v.talle || '', v.color || '', v.stock ?? ''));
+  if (!(variants || []).length) recalcVariantTotal(type);
+}
+
 function openProductEditor(id) {
   const prods = dbGetProducts();
   const p     = id ? prods.find(x => x.id === id) : null;
@@ -6159,19 +6309,18 @@ function openProductEditor(id) {
   document.getElementById('peStock').value     = p?.stock ?? '';
   document.getElementById('peDesc').value      = p?.desc || '';
   document.getElementById('peImg').value       = p?.img || '';
-  document.getElementById('peGallery').value   = (p?.gallery||[]).join(', ');
+  galleryLoadFromProduct(p); // Cargar galería visual
   document.getElementById('peProx').value      = p?.prox ? '1' : '0';
   document.getElementById('peStars').value     = p?.stars || 5;
   document.getElementById('peTimerHours').value = p?.timerHours || '';
   // Campos de ropa
-  ['peTalles','peColores','peMaterial'].forEach(fid => {
-    const el = document.getElementById(fid); if (el) el.value = '';
-  });
-  if (document.getElementById('peTalles'))  document.getElementById('peTalles').value  = (p?.talles||[]).join(', ');
-  if (document.getElementById('peColores')) document.getElementById('peColores').value = (p?.colores||[]).join(', ');
-  if (document.getElementById('peMaterial'))document.getElementById('peMaterial').value= p?.material||'';
-  if (document.getElementById('peGenero'))  document.getElementById('peGenero').value  = p?.genero||'';
-  if (document.getElementById('peOportMotivo')) document.getElementById('peOportMotivo').value = p?.oportunidadMotivo||'';
+  ['peMaterial'].forEach(fid => { const el = document.getElementById(fid); if (el) el.value = ''; });
+  if (document.getElementById('peMaterial')) document.getElementById('peMaterial').value = p?.material || '';
+  if (document.getElementById('peGenero'))   document.getElementById('peGenero').value   = p?.genero || '';
+  if (document.getElementById('peOportMotivo')) document.getElementById('peOportMotivo').value = p?.oportunidadMotivo || '';
+  // Cargar variantes
+  loadVariantsToEditor('ropa',  (p?.variants || []).filter(v => v.talle !== undefined));
+  loadVariantsToEditor('hogar', (p?.variants || []).filter(v => v.talle === undefined));
 
   // Seleccionar tag
   const tagSel = document.getElementById('peTag');
@@ -6245,8 +6394,7 @@ function saveProductFromEditor() {
     finalTagText = pct > 0 ? `−${pct}%` : 'Oferta';
   }
 
-  const galleryRaw = document.getElementById('peGallery').value.trim();
-  const gallery    = galleryRaw ? galleryRaw.split(',').map(s=>s.trim()).filter(Boolean) : [];
+  const gallery = galleryGetList(); // Leer de la galería visual
 
   const prod = {
     id:         document.getElementById('peId').value || ('p_' + Date.now()),
@@ -6261,12 +6409,24 @@ function saveProductFromEditor() {
     img:        document.getElementById('peImg').value.trim(),
     gallery,    desc: document.getElementById('peDesc').value.trim(),
     timerHours: parseInt(document.getElementById('peTimerHours').value) || null,
-    talles:  (document.getElementById('peTalles')?.value||'').split(',').map(s=>s.trim()).filter(Boolean),
-    colores: (document.getElementById('peColores')?.value||'').split(',').map(s=>s.trim()).filter(Boolean),
-    material: document.getElementById('peMaterial')?.value.trim()||'',
-    genero:   document.getElementById('peGenero')?.value||'',
-    oportunidadMotivo: document.getElementById('peOportMotivo')?.value.trim()||''
+    material: document.getElementById('peMaterial')?.value.trim() || '',
+    genero:   document.getElementById('peGenero')?.value || '',
+    oportunidadMotivo: document.getElementById('peOportMotivo')?.value.trim() || ''
   };
+
+  // Guardar variantes y derivar talles/colores automáticamente
+  if (prod.section === 'ropa') {
+    const rv = getVariantsFromEditor('ropa');
+    prod.variants = rv;
+    prod.talles   = [...new Set(rv.map(v => v.talle).filter(Boolean))];
+    prod.colores  = [...new Set(rv.map(v => v.color).filter(Boolean))];
+    if (rv.length) prod.stock = rv.reduce((s, v) => s + (v.stock || 0), 0);
+  } else {
+    const hv = getVariantsFromEditor('hogar');
+    prod.variants = hv;
+    prod.colores  = [...new Set(hv.map(v => v.color).filter(Boolean))];
+    if (hv.length) prod.stock = hv.reduce((s, v) => s + (v.stock || 0), 0);
+  }
 
   const prods = dbGetProducts();
   const idx   = prods.findIndex(p => p.id === prod.id);
@@ -6608,11 +6768,13 @@ function pePreviewImg() {
    ══════════════════════════════════════════════════════ */
 // toggleSectionFields: muestra campos correctos en editor de producto
 function toggleSectionFields() {
-  const sec = document.getElementById('peSection')?.value;
+  const sec    = document.getElementById('peSection')?.value;
   const ropaF  = document.getElementById('peRopaFields');
   const oportF = document.getElementById('peOportFields');
+  const hogarC = document.getElementById('peHogarColorWrap');
   if (ropaF)  ropaF.style.display  = sec === 'ropa'          ? '' : 'none';
   if (oportF) oportF.style.display = sec === 'oportunidades' ? '' : 'none';
+  if (hogarC) hogarC.style.display = sec !== 'ropa'          ? '' : 'none';
 }
 function _peToggleTimer() { toggleSectionFields(); }
 
@@ -6886,6 +7048,125 @@ ${metodo}
 /* ══════════════════════════════════════════════════════
    ZOOM DE IMAGEN
    ══════════════════════════════════════════════════════ */
+/* ══ COMPARTIR PRODUCTO ══ */
+function shareProduct() {
+  const card = _pdCard;
+  if (!card) return;
+  const id   = card.dataset.id || '';
+  const name = card.dataset.name || document.getElementById('pdModalName')?.textContent || 'Producto';
+  const base = window.location.href.split('#')[0].split('?')[0];
+  const url  = id ? `${base}?producto=${id}` : base;
+  const btn  = document.getElementById('pdShareBtn');
+
+  if (navigator.share) {
+    // Mobile: usa el Share nativo del SO
+    navigator.share({ title: name + ' — Sol en tu Hogar', text: `¡Mirá este producto! ${name}`, url })
+      .catch(() => {});
+  } else {
+    // Desktop: copia el link al portapapeles
+    navigator.clipboard.writeText(url).then(() => {
+      if (btn) { btn.textContent = '✅'; btn.classList.add('copied'); }
+      showToast('🔗 Link copiado al portapapeles');
+      setTimeout(() => { if (btn) { btn.textContent = '🔗'; btn.classList.remove('copied'); } }, 2200);
+    }).catch(() => {
+      showToast('⚠️ No se pudo copiar el link');
+    });
+  }
+}
+
+// Deep link: si la URL tiene ?producto=ID al cargar, abrir ese producto automáticamente
+function checkProductDeepLink() {
+  const params = new URLSearchParams(window.location.search);
+  const prodId = params.get('producto');
+  if (!prodId) return;
+  // Esperar a que los productos estén renderizados
+  setTimeout(() => {
+    const card = document.querySelector(`.pcard[data-id="${prodId}"]`);
+    if (card) {
+      card.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      setTimeout(() => openProduct(card), 350);
+    }
+  }, 600);
+}
+
+/* ══ GALERÍA MÚLTIPLE EN ADMIN ══ */
+let _peGalleryList = []; // Array de URLs de la galería actual
+
+function galleryRenderThumbs() {
+  const wrap  = document.getElementById('peGalleryThumbs');
+  const empty = document.getElementById('peGalleryEmpty');
+  if (!wrap) return;
+  // Limpiar thumbs actuales (mantener el mensaje de vacío)
+  wrap.querySelectorAll('.pe-gallery-thumb').forEach(el => el.remove());
+  if (empty) empty.style.display = _peGalleryList.length ? 'none' : '';
+  _peGalleryList.forEach((src, i) => {
+    const div = document.createElement('div');
+    div.className = 'pe-gallery-thumb';
+    div.innerHTML = `
+      <img src="${src}" alt="Foto ${i+1}" onerror="this.src='data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 width=%2264%22 height=%2264%22><rect fill=%22%23444%22 width=%2264%22 height=%2264%22/><text x=%2250%%22 y=%2255%%22 font-size=%2222%22 text-anchor=%22middle%22 fill=%22%23888%22>📷</text></svg>'">
+      <button type="button" class="pe-gallery-thumb-del" onclick="galleryRemovePhoto(${i})" title="Eliminar esta foto">✕</button>
+      <span class="pe-gallery-thumb-idx">${i+1}</span>`;
+    wrap.insertBefore(div, empty);
+  });
+}
+
+function galleryRemovePhoto(idx) {
+  _peGalleryList.splice(idx, 1);
+  galleryRenderThumbs();
+}
+
+function galleryAddPhoto() {
+  if (CLOUDINARY_CLOUD_NAME === 'TU_CLOUD_NAME') {
+    // Sin Cloudinary: input de archivo → base64
+    const input = document.createElement('input');
+    input.type = 'file'; input.accept = 'image/*'; input.multiple = true;
+    input.onchange = () => {
+      Array.from(input.files).forEach(file => {
+        const reader = new FileReader();
+        reader.onload = e => { _peGalleryList.push(e.target.result); galleryRenderThumbs(); };
+        reader.readAsDataURL(file);
+      });
+    };
+    input.click();
+    return;
+  }
+  // Con Cloudinary: múltiples archivos
+  const input = document.createElement('input');
+  input.type = 'file'; input.accept = 'image/*'; input.multiple = true;
+  input.onchange = async () => {
+    const files = Array.from(input.files);
+    if (!files.length) return;
+    if (files.length > 6) { showToast('⚠️ Máximo 6 fotos a la vez'); return; }
+    showToast(`⏳ Subiendo ${files.length} foto${files.length>1?'s':''}...`);
+    let ok = 0;
+    for (const file of files) {
+      if (file.size > 8 * 1024 * 1024) { showToast(`❌ ${file.name} es demasiado grande (máx 8MB)`); continue; }
+      try {
+        const fd = new FormData();
+        fd.append('file', file);
+        fd.append('upload_preset', CLOUDINARY_UPLOAD_PRESET);
+        fd.append('folder', 'solentuhogar');
+        const res  = await fetch(`https://api.cloudinary.com/v1_1/${CLOUDINARY_CLOUD_NAME}/image/upload`, { method:'POST', body: fd });
+        const data = await res.json();
+        if (data.secure_url) { _peGalleryList.push(data.secure_url); ok++; }
+        else showToast('❌ Error: ' + (data.error?.message || 'desconocido'));
+      } catch(e) { showToast('❌ Error de red al subir'); }
+    }
+    galleryRenderThumbs();
+    if (ok > 0) showToast(`✅ ${ok} foto${ok>1?'s':''} agregada${ok>1?'s':''} a la galería`);
+  };
+  input.click();
+}
+
+function galleryLoadFromProduct(p) {
+  _peGalleryList = p?.gallery ? [...p.gallery] : [];
+  galleryRenderThumbs();
+}
+
+function galleryGetList() {
+  return [..._peGalleryList];
+}
+
 function openImgZoom(e) {
   // No disparar si se hace clic en flechas/dots del carrusel
   if (e.target.closest('.pdg-arrow') || e.target.closest('.pdg-dots')) return;
@@ -6913,21 +7194,52 @@ document.addEventListener('keydown', e => {
 
 // Arranque
 (async function initApp() {
+  loadCartFromStorage(); // 🛒 Restaurar carrito guardado
   initTimers();
   updateCart();
   updateNavAccount();
-  // Esperar a que el SDK de Supabase esté disponible antes de sincronizar
   await waitForSupabase();
   await syncFromSupabase();
   initEmailJS();
   renderProductGrid('hogar');
   renderProductGrid('ropa');
   renderOportunidadesGrid();
-  buildRopaFilterChips(); // Construir chips de filtro ropa
+  buildRopaFilterChips();
   initGridCounts();
   populateReviewProductSelect();
   await renderReviews();
   await loadWishlist();
+
+  checkProductDeepLink(); // 🔗 Abrir producto si la URL tiene ?producto=ID
+
+  // ── Tooltip "Cambiar tema" — aparece 1.2s después de cargar, desaparece sola ──
+  // Solo se muestra una vez por sesión
+  if (!sessionStorage.getItem('_darkTipSeen')) {
+    setTimeout(() => {
+      const tip = document.getElementById('darkTip');
+      if (tip) {
+        tip.classList.add('visible');
+        setTimeout(() => tip.classList.remove('visible'), 4000);
+        sessionStorage.setItem('_darkTipSeen', '1');
+      }
+    }, 1200);
+  }
+
+  // ── Swipe hacia abajo para cerrar modales en mobile ──
+  [
+    { id: 'pdModalOverlay', fn: () => { if (typeof closePdModal === 'function') closePdModal(); } },
+    { id: 'searchOverlay',  fn: () => { if (typeof closeSearch  === 'function') closeSearch();  } },
+  ].forEach(({ id, fn }) => {
+    const el = document.getElementById(id);
+    if (!el) return;
+    let startY = 0, startX = 0;
+    el.addEventListener('touchstart', e => { startY = e.touches[0].clientY; startX = e.touches[0].clientX; }, { passive: true });
+    el.addEventListener('touchend', e => {
+      const dy = e.changedTouches[0].clientY - startY;
+      const dx = Math.abs(e.changedTouches[0].clientX - startX);
+      if (dy > 80 && dx < 60) fn();
+    }, { passive: true });
+  });
 })();
 
 </script>
