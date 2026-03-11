@@ -4684,7 +4684,7 @@ const ADMIN_EMAIL         = 'solentuhogar.soporte@gmail.com';
    Paso 3: Pegá ambos datos abajo ↓                              */
 // Token dividido para evitar detección automática de secretos en repos públicos
 const TELEGRAM_BOT_TOKEN = ['8625494','087:A','AEito1V0','dijmSOX728','qbmqzV2e63MF7xeQ'].join('');
-const TELEGRAM_CHAT_ID   = '1282726402';
+const TELEGRAM_CHAT_ID   = ['1282726402', '8670817121']; // Alan + Ale
 
 function initEmailJS() {
   try {
@@ -6344,7 +6344,8 @@ async function descontarStock(items) {
 async function notificarAdminTelegram(order, contactData, shippingInfo) {
   try {
     if (!TELEGRAM_BOT_TOKEN || TELEGRAM_BOT_TOKEN === 'TU_BOT_TOKEN') return;
-    if (!TELEGRAM_CHAT_ID   || TELEGRAM_CHAT_ID   === 'TU_CHAT_ID')   return;
+    const ids = Array.isArray(TELEGRAM_CHAT_ID) ? TELEGRAM_CHAT_ID : [TELEGRAM_CHAT_ID];
+    if (!ids.length) return;
 
     const lineas = order.items
       .map(i => `  • ${i.name} ×${i.qty} — ${formatPrice(i.price * i.qty)}`)
@@ -6386,24 +6387,26 @@ ${envioTexto}
 ${metodo}
 💰 *TOTAL: ${formatPrice(order.total)}*`;
 
-    const res = await fetch(
-      `https://api.telegram.org/bot${TELEGRAM_BOT_TOKEN}/sendMessage`,
-      {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          chat_id:    TELEGRAM_CHAT_ID,
-          text:       texto,
-          parse_mode: 'Markdown'
-        })
+    // Enviar a todos los destinatarios
+    for (const chatId of ids) {
+      const res = await fetch(
+        `https://api.telegram.org/bot${TELEGRAM_BOT_TOKEN}/sendMessage`,
+        {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            chat_id:    chatId,
+            text:       texto,
+            parse_mode: 'Markdown'
+          })
+        }
+      );
+      const data = await res.json();
+      if (data.ok) {
+        console.log(`✅ Notificación Telegram enviada a ${chatId}`);
+      } else {
+        console.warn('⚠️ Telegram error:', data.description);
       }
-    );
-
-    const data = await res.json();
-    if (data.ok) {
-      console.log('✅ Notificación Telegram enviada al admin');
-    } else {
-      console.warn('⚠️ Telegram error:', data.description);
     }
   } catch(e) {
     console.warn('notificarAdminTelegram error:', e);
