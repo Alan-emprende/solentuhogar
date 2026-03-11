@@ -1069,6 +1069,83 @@ footer{background:var(--ink);color:rgba(255,255,255,.45);padding:5rem 2.5rem 2re
   .admin-stat-row{grid-template-columns:1fr 1fr}
   .admin-modal{max-width:100%}
 }
+
+/* ══════════════════════════════════════════════════════
+   ZOOM DE IMAGEN — modal producto
+   ══════════════════════════════════════════════════════ */
+.pdModal-img{cursor:zoom-in}
+.pdModal-img.zoomed{cursor:zoom-out}
+.img-zoom-overlay{position:fixed;inset:0;background:rgba(10,6,2,.92);z-index:1200;display:flex;align-items:center;justify-content:center;opacity:0;pointer-events:none;transition:opacity .25s}
+.img-zoom-overlay.open{opacity:1;pointer-events:all}
+.img-zoom-overlay img{max-width:96vw;max-height:92vh;object-fit:contain;border-radius:6px;box-shadow:0 8px 60px rgba(0,0,0,.5);transform:scale(.94);transition:transform .28s cubic-bezier(.4,0,.2,1)}
+.img-zoom-overlay.open img{transform:scale(1)}
+.img-zoom-close{position:absolute;top:1.2rem;right:1.4rem;background:rgba(255,255,255,.12);border:none;color:#fff;font-size:1.3rem;width:40px;height:40px;border-radius:50%;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:background .15s}
+.img-zoom-close:hover{background:rgba(255,255,255,.25)}
+.img-zoom-hint{position:absolute;bottom:1.4rem;left:50%;transform:translateX(-50%);color:rgba(255,255,255,.5);font-size:.72rem;font-family:var(--sans);letter-spacing:.08em;pointer-events:none}
+
+
+/* ══════════════════════════════════════════════════════
+   MEJORAS MOBILE
+   ══════════════════════════════════════════════════════ */
+
+/* Tap targets mínimos 44px en mobile */
+@media(max-width:860px){
+  .pcard-cta,.nav-account-btn,.nav-cart-btn,.qty-btn,.pdModal-qty-btn,
+  .pay-btn-next,.pay-btn-back,.gf-btn{min-height:44px}
+  .pcard-wish{width:38px;height:38px;font-size:1.1rem}
+
+  /* Filtros horizontalmente scrolleables */
+  .grid-filters{flex-wrap:nowrap;overflow-x:auto;-webkit-overflow-scrolling:touch;scrollbar-width:none;padding-bottom:.6rem}
+  .grid-filters::-webkit-scrollbar{display:none}
+  .gf-count{display:none}
+
+  /* Modal producto más cómodo */
+  .pdModal{flex-direction:column;border-radius:16px 16px 0 0;max-height:96dvh;margin-top:auto}
+  .pdModal-overlay{align-items:flex-end;padding:0}
+  .pdModal-img{width:100%;height:260px;border-radius:16px 16px 0 0}
+  .pdModal-body{overflow-y:auto;padding:1.2rem 1.2rem 2rem;-webkit-overflow-scrolling:touch}
+  .pdModal-name{font-size:1.1rem}
+  .pdModal-price{font-size:1.4rem}
+  .pdModal-add-btn{padding:.85rem 1rem;font-size:.82rem;min-height:50px}
+
+  /* Checkout más cómodo */
+  .pay-summary{max-height:160px}
+  .pay-step-title{font-size:1rem}
+  .form-input,.form-select{font-size:16px!important} /* evita zoom en iOS */
+  .pay-btn-next,.pay-btn-back{font-size:.82rem;padding:.75rem 1rem}
+
+  /* Carrito */
+  .cart-item-img{width:58px;height:58px}
+  .cart-footer{padding:1rem}
+  .cart-checkout-btn{min-height:50px;font-size:.9rem}
+}
+
+@media(max-width:480px){
+  /* Tarjetas productos — imagen más alta */
+  .pcard-img{height:185px}
+  .pcard-name{font-size:.8rem}
+  .pcard-price{font-size:.95rem}
+
+  /* Anuncio más compacto */
+  .announce{font-size:.6rem;padding:.4rem .6rem}
+
+  /* Hero */
+  .hero-wrap{padding:2rem .8rem 1.5rem}
+  .hero-title{font-size:clamp(1.7rem,7.5vw,2.3rem)}
+  .hero-btns{flex-direction:column;gap:.6rem}
+  .hero-btns a,.hero-btns button{width:100%;text-align:center;justify-content:center}
+
+  /* Secciones */
+  .section{padding:2rem .8rem}
+  .sec-title{font-size:1.3rem}
+
+  /* Footer más compacto */
+  footer{padding:2.5rem .8rem 1.5rem}
+
+  /* Modal detalle imagen más alta en teléfonos chicos */
+  .pdModal-img{height:230px}
+
+}
 </style>
 </head>
 <body>
@@ -1081,7 +1158,7 @@ footer{background:var(--ink);color:rgba(255,255,255,.45);padding:5rem 2.5rem 2re
     <button class="pdModal-close" onclick="closePdModal()">✕</button>
 
     <!-- Imagen -->
-    <div class="pdModal-img" id="pdModalImg">
+    <div class="pdModal-img" id="pdModalImg" onclick="openImgZoom(event)">
       <div class="pdModal-img-placeholder" id="pdModalImgPh">🛍</div>
       <span class="pdModal-badge" id="pdModalBadge"></span>
       <!-- Carrusel: flechas + dots -->
@@ -1559,7 +1636,8 @@ footer{background:var(--ink);color:rgba(255,255,255,.45);padding:5rem 2.5rem 2re
 
       <!-- PASO 2: Datos de envío -->
       <div class="pay-step" id="step2">
-        <div class="pay-step-title">Dirección de envío</div>
+        <div class="pay-step-title">Entrega</div>
+        <div id="payAddrFields">
         <div class="form-row">
           <div class="form-group">
             <label class="form-label">Calle y número<span class="req">*</span></label>
@@ -1618,12 +1696,38 @@ footer{background:var(--ink);color:rgba(255,255,255,.45);padding:5rem 2.5rem 2re
             <input class="form-input" type="text" placeholder="Timbre 2 veces, dejar con portero..." id="payInstruc">
           </div>
         </div>
+        </div><!-- fin payAddrFields -->
 
-        <!-- ── Calculadora de envío Correo Argentino ── -->
+        <!-- ── Calculadora de envío ── -->
         <div id="shippingCalcBox" style="background:var(--sand);border-radius:8px;padding:1rem 1.2rem;margin-top:.8rem;border:1px solid var(--sand-deep)">
-          <div style="font-size:.7rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--stone);margin-bottom:.6rem">🚚 Costo de envío — Correo Argentino</div>
-          <div id="shippingResult" style="font-size:.82rem;color:var(--stone);min-height:1.5rem">Completá el código postal para calcular el envío →</div>
-          <div id="shippingOptions" style="display:none;margin-top:.8rem;display:flex;flex-direction:column;gap:.4rem"></div>
+          <div style="font-size:.7rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--stone);margin-bottom:.8rem">🚚 Modalidad de entrega</div>
+
+          <!-- Retiro en persona -->
+          <label id="shpRetiroOpt" style="display:flex;align-items:flex-start;gap:.7rem;cursor:pointer;padding:.7rem .9rem;border-radius:8px;border:1.5px solid var(--sand-deep);background:#fff;margin-bottom:.5rem;transition:border-color .2s" onclick="selectShipping('retiro',0)">
+            <input type="radio" name="shpOpt" value="retiro" style="margin-top:.2rem;accent-color:var(--clay)">
+            <div>
+              <div style="font-size:.82rem;font-weight:700;color:var(--ink)">🏠 Retiro en persona — <span style="color:var(--leaf)">GRATIS</span></div>
+              <div style="font-size:.7rem;color:var(--stone);margin-top:.25rem;line-height:1.5">
+                📍 <strong>Morón</strong> o <strong>San Justo</strong> — coordinamos día y horario por WhatsApp
+              </div>
+              <div style="font-size:.68rem;color:var(--clay);font-weight:700;margin-top:.3rem;background:#fdf0ea;display:inline-block;padding:.15rem .5rem;border-radius:4px">
+                💵 + 5% OFF pagando en efectivo
+              </div>
+            </div>
+          </label>
+
+          <!-- Envío a domicilio -->
+          <label id="shpEnvioOpt" style="display:flex;align-items:flex-start;gap:.7rem;cursor:pointer;padding:.7rem .9rem;border-radius:8px;border:1.5px solid var(--sand-deep);background:#fff;transition:border-color .2s" onclick="selectShipping('estandar',0);calcularEnvio()">
+            <input type="radio" name="shpOpt" value="envio" style="margin-top:.2rem;accent-color:var(--clay)" checked>
+            <div style="flex:1">
+              <div style="font-size:.82rem;font-weight:700;color:var(--ink)">📦 Envío a domicilio — Correo Argentino</div>
+              <div style="font-size:.7rem;color:var(--stone);margin-top:.2rem">Ingresá tu código postal para ver el costo</div>
+            </div>
+          </label>
+
+          <!-- Resultado cálculo envío domicilio -->
+          <div id="shippingResult" style="font-size:.82rem;color:var(--stone);min-height:1rem;margin-top:.5rem;padding-left:.3rem"></div>
+          <div id="shippingOptions" style="display:none;margin-top:.5rem;flex-direction:column;gap:.4rem"></div>
         </div>
 
         <div class="pay-actions">
@@ -1666,7 +1770,7 @@ footer{background:var(--ink);color:rgba(255,255,255,.45);padding:5rem 2.5rem 2re
             <span class="pay-method-icon">💵</span>
             <div class="pay-method-info">
               <div class="pay-method-name">Pago en efectivo</div>
-              <div class="pay-method-desc">PagoFácil · Rapipago · Provincia Pagos</div>
+              <div class="pay-method-desc" id="cashMethodDesc">PagoFácil · Rapipago · Provincia Pagos</div>
             </div>
             <div class="pay-method-badges">
               <span class="pay-badge pb-cash">EFECTIVO</span>
@@ -1743,6 +1847,13 @@ footer{background:var(--ink);color:rgba(255,255,255,.45);padding:5rem 2.5rem 2re
 
         <!-- Pago en efectivo -->
         <div id="formCash" style="display:none">
+          <!-- Aviso descuento retiro + efectivo -->
+          <div id="cashRetiroNotice" style="display:none;background:#edf7ee;border-radius:8px;padding:.8rem 1rem;font-size:.78rem;color:#3D6B4A;font-weight:600;margin-bottom:.8rem;line-height:1.5">
+            🎉 <strong>¡5% de descuento aplicado!</strong> Por combinar retiro en persona + pago en efectivo.
+          </div>
+          <div id="cashNormalNotice" style="background:#fff8e1;border-radius:6px;padding:.7rem 1rem;font-size:.73rem;color:#7a5f00;margin-bottom:.8rem;line-height:1.5">
+            💡 <strong>Tip:</strong> Si elegís retiro en persona + efectivo obtenés un <strong>5% de descuento</strong>.
+          </div>
           <div class="cash-options">
             <label class="cash-opt sel">
               <input type="radio" name="cashopt" checked>
@@ -1872,6 +1983,15 @@ footer{background:var(--ink);color:rgba(255,255,255,.45);padding:5rem 2.5rem 2re
       </div>
     </div>
   </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════════
+     ZOOM DE IMAGEN
+     ═══════════════════════════════════════════════════════════ -->
+<div class="img-zoom-overlay" id="imgZoomOverlay" onclick="closeImgZoom()">
+  <button class="img-zoom-close" onclick="closeImgZoom()">✕</button>
+  <img id="imgZoomImg" src="" alt="Zoom">
+  <div class="img-zoom-hint">Tocá en cualquier lugar para cerrar</div>
 </div>
 
 <!-- ═══════════════════════════════════════════════════════════
@@ -3861,6 +3981,8 @@ function validateStep(step) {
   }
 
   if (step === 2) {
+    // Si es retiro en persona, no se necesita dirección
+    if (selectedShipping === 'retiro') return true;
     const calle   = document.getElementById('payCalle');
     const cp      = document.getElementById('payCP');
     const ciudad  = document.getElementById('payCiudad');
@@ -3894,6 +4016,8 @@ function selectPayMethod(method) {
   document.getElementById('formCard').style.display = method === 'card' ? '' : 'none';
   document.getElementById('formTransfer').style.display = method === 'transfer' ? '' : 'none';
   document.getElementById('formCash').style.display = method === 'cash' ? '' : 'none';
+  _updateCashNotice();
+  refreshCheckoutTotal();
 }
 
 function buildCuotas() {
@@ -3959,14 +4083,17 @@ function confirmarPago() {
       document.getElementById('couponInput').value = '';
       document.getElementById('couponInput').className = 'coupon-input';
       document.getElementById('couponMsg').textContent = '';
+    } else if (selectedShipping === 'retiro' && selectedPayMethod === 'cash') {
+      // 5% descuento retiro en persona + efectivo
+      finalTotal = Math.round(cartTotal * 0.95);
     }
 
     // Sumar costo de envío
     finalTotal += shippingCost;
     const shippingInfo = {
       costo: shippingCost,
-      tipo: selectedShipping === 'express' ? 'Express ⚡' : selectedShipping === 'gratis' ? 'Gratis' : 'Estándar',
-      zona: cpAZona(document.getElementById('payCP')?.value || '')
+      tipo: selectedShipping === 'retiro' ? 'Retiro en persona' : selectedShipping === 'express' ? 'Express ⚡' : selectedShipping === 'gratis' ? 'Gratis' : 'Estándar',
+      zona: selectedShipping === 'retiro' ? 'Morón / San Justo' : cpAZona(document.getElementById('payCP')?.value || '')
     };
 
     // Recoger datos del cliente para el email
@@ -4861,32 +4988,45 @@ function refreshCheckoutTotal() {
   const totalEl     = document.getElementById('payTotalAmt');
   const cuotasEl    = document.getElementById('payCuotas');
 
+  // Cupón de descuento
   if (activeCoupon) {
     const discount = Math.round(total * activeCoupon.discount / 100);
     total = total - discount;
     if (discountRow) discountRow.style.display = 'flex';
     if (discountAmt) discountAmt.textContent = '-' + formatPrice(discount);
+  } else if (selectedShipping === 'retiro' && selectedPayMethod === 'cash') {
+    // 5% descuento retiro en persona + efectivo
+    const discount = Math.round(total * 0.05);
+    total = total - discount;
+    if (discountRow) discountRow.style.display = 'flex';
+    if (discountAmt) discountAmt.textContent = '-' + formatPrice(discount);
+    const discLbl = discountRow?.querySelector('span');
+    if (discLbl) discLbl.textContent = '💵 Descuento retiro + efectivo (5%)';
   } else {
     if (discountRow) discountRow.style.display = 'none';
+    // Restaurar label por si acaso
+    const discLbl = discountRow?.querySelector('span');
+    if (discLbl) discLbl.textContent = 'Descuento aplicado 🎉';
   }
 
   // Envío
-  if (shippingCost > 0) {
+  if (selectedShipping === 'retiro') {
+    if (shippingRow) {
+      shippingRow.style.display = 'flex';
+      if (shippingAmt) { shippingAmt.textContent = 'GRATIS'; shippingAmt.style.color = 'var(--leaf)'; }
+      if (shippingLbl) shippingLbl.textContent = '🏠 Retiro en persona';
+    }
+  } else if (shippingCost > 0) {
     total += shippingCost;
     if (shippingRow) shippingRow.style.display = 'flex';
-    if (shippingAmt) shippingAmt.textContent = formatPrice(shippingCost);
+    if (shippingAmt) { shippingAmt.textContent = formatPrice(shippingCost); shippingAmt.style.color = ''; }
     if (shippingLbl) shippingLbl.textContent = selectedShipping === 'express' ? '🚚 Envío Express ⚡' : '🚚 Envío Estándar';
+  } else if (selectedShipping === 'gratis') {
+    if (shippingRow) shippingRow.style.display = 'flex';
+    if (shippingAmt) { shippingAmt.textContent = 'GRATIS'; shippingAmt.style.color = 'var(--leaf)'; }
+    if (shippingLbl) shippingLbl.textContent = '🚚 Envío';
   } else {
-    if (shippingRow) {
-      if (selectedShipping === 'gratis') {
-        shippingRow.style.display = 'flex';
-        if (shippingAmt) shippingAmt.textContent = 'GRATIS';
-        if (shippingAmt) shippingAmt.style.color = 'var(--leaf)';
-        if (shippingLbl) shippingLbl.textContent = '🚚 Envío';
-      } else {
-        shippingRow.style.display = 'none';
-      }
-    }
+    if (shippingRow) shippingRow.style.display = 'none';
   }
 
   if (totalEl) totalEl.textContent = formatPrice(total);
@@ -6278,7 +6418,36 @@ function calcularEnvio() {
 function selectShipping(tipo, costo) {
   selectedShipping = tipo;
   shippingCost = costo;
+
+  // Destacar opción seleccionada visualmente
+  const retiroOpt = document.getElementById('shpRetiroOpt');
+  const envioOpt  = document.getElementById('shpEnvioOpt');
+  if (retiroOpt) retiroOpt.style.borderColor = tipo === 'retiro' ? 'var(--clay)' : 'var(--sand-deep)';
+  if (envioOpt)  envioOpt.style.borderColor  = tipo !== 'retiro' ? 'var(--clay)' : 'var(--sand-deep)';
+
+  // Mostrar/ocultar caja de dirección según si es retiro
+  const addrFields = document.getElementById('payAddrFields');
+  if (addrFields) addrFields.style.display = tipo === 'retiro' ? 'none' : '';
+
+  // Actualizar descripción del método efectivo
+  _updateCashNotice();
   refreshCheckoutTotal();
+}
+
+function _updateCashNotice() {
+  const retiroNotice = document.getElementById('cashRetiroNotice');
+  const normalNotice = document.getElementById('cashNormalNotice');
+  const cashDesc     = document.getElementById('cashMethodDesc');
+  const isRetiro     = selectedShipping === 'retiro';
+  const isCash       = selectedPayMethod === 'cash';
+
+  if (retiroNotice) retiroNotice.style.display = (isRetiro && isCash) ? 'block' : 'none';
+  if (normalNotice) normalNotice.style.display = (isRetiro && !isCash) ? 'block' : 'none';
+  if (cashDesc) {
+    cashDesc.textContent = isRetiro
+      ? '5% de descuento al retirar en persona 🎉'
+      : 'PagoFácil · Rapipago · Provincia Pagos';
+  }
 }
 
 /* ══════════════════════════════════════════════════════
@@ -6412,6 +6581,34 @@ ${metodo}
     console.warn('notificarAdminTelegram error:', e);
   }
 }
+
+/* ══════════════════════════════════════════════════════
+   ZOOM DE IMAGEN
+   ══════════════════════════════════════════════════════ */
+function openImgZoom(e) {
+  // No disparar si se hace clic en flechas/dots del carrusel
+  if (e.target.closest('.pdg-arrow') || e.target.closest('.pdg-dots')) return;
+
+  const imgEl = document.querySelector('#pdModalImg img');
+  if (!imgEl) return;
+
+  const overlay = document.getElementById('imgZoomOverlay');
+  const zoomImg = document.getElementById('imgZoomImg');
+  zoomImg.src = imgEl.src;
+  zoomImg.alt = imgEl.alt || '';
+  overlay.classList.add('open');
+  document.body.style.overflow = 'hidden';
+}
+
+function closeImgZoom() {
+  document.getElementById('imgZoomOverlay').classList.remove('open');
+  document.body.style.overflow = '';
+}
+
+// Cerrar zoom con Escape
+document.addEventListener('keydown', e => {
+  if (e.key === 'Escape') closeImgZoom();
+});
 
 // Arranque
 (async function initApp() {
