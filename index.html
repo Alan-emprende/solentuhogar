@@ -4028,7 +4028,8 @@ function renderAdminOrdersList(orders, users) {
           <select class="omg-state-select" id="omg-sel-${o.id}">
             ${['Pendiente','En preparación','Enviado','Entregado','Cancelado'].map(s=>`<option${o.estado===s?' selected':''}>${s}</option>`).join('')}
           </select>
-          <input class="omg-note-input" id="omg-note-${o.id}" placeholder="Nota interna (nro. seguimiento, etc.)" value="${o.nota||''}">
+          <input class="omg-note-input" id="omg-track-${o.id}" placeholder="📦 Nro. seguimiento (ej: CA123456789AR)" value="${o.tracking||''}" style="flex:1.2">
+          <input class="omg-note-input" id="omg-note-${o.id}" placeholder="Nota interna" value="${o.nota||''}" style="flex:1">
           <button class="omg-save-btn" onclick="guardarEstadoPedido('${o.id}')">💾 Guardar</button>
           <a class="omg-wa-btn" href="https://wa.me/${tel.replace(/\D/g,'')||'5491131496246'}?text=${waMsg}" target="_blank" rel="noopener">💬 WA</a>
         </div>
@@ -4046,14 +4047,32 @@ function guardarEstadoPedido(orderId) {
   const orders    = dbGetOrders();
   const idx       = orders.findIndex(o => o.id === orderId);
   if (idx < 0) return;
-  const newState  = document.getElementById('omg-sel-' + orderId)?.value;
-  const newNote   = document.getElementById('omg-note-' + orderId)?.value || '';
-  orders[idx].estado = newState;
-  orders[idx].nota   = newNote;
+
+  const newState   = document.getElementById('omg-sel-' + orderId)?.value;
+  const newTracking = (document.getElementById('omg-track-' + orderId)?.value || '').trim();
+  const newNote    = document.getElementById('omg-note-' + orderId)?.value || '';
+
+  const prevState  = orders[idx].estado;
+  orders[idx].estado   = newState;
+  orders[idx].tracking = newTracking;
+  orders[idx].nota     = newNote;
+
   dbSaveOrders(orders);
   dbUpsertOrder(orders[idx]);
   _adminOrders = orders;
-  showToast(`✅ Pedido ${orderId} → ${newState}`);
+
+  // Enviar email de seguimiento si cambió a "Enviado" y hay número de tracking
+  const acabaDeEnviar = newState === 'Enviado' && prevState !== 'Enviado';
+  if (acabaDeEnviar && newTracking) {
+    sendTrackingEmail(orders[idx]);
+  } else if (acabaDeEnviar && !newTracking) {
+    showToast(`✅ Pedido ${orderId} → Enviado (sin nro. de seguimiento)`);
+  }
+
+  if (!acabaDeEnviar || newTracking) {
+    showToast(`✅ Pedido ${orderId} → ${newState}${newTracking && acabaDeEnviar ? ' · Email enviado al cliente 📧' : ''}`);
+  }
+
   // Actualizar badge sin re-renderizar todo
   const badgeClass = { 'Pendiente':'ob-pendiente', 'En preparación':'ob-preparacion', 'Enviado':'ob-enviado', 'Entregado':'ob-entregado', 'Cancelado':'ob-cancelado' };
   const row = document.getElementById('omr-' + orderId);
@@ -4061,7 +4080,7 @@ function guardarEstadoPedido(orderId) {
     const badge = row.querySelector('.order-badge');
     if (badge) { badge.className = 'order-badge ' + (badgeClass[newState]||'ob-pendiente'); badge.textContent = newState; }
   }
-  // También actualizar en historial del cliente si está abierto
+  // Actualizar en historial del cliente si está abierto
   const userOrder = document.querySelector(`.ap-order[data-id="${orderId}"]`);
   if (userOrder) {
     const st = userOrder.querySelector('.ap-order-status');
@@ -4501,7 +4520,9 @@ function confirmarPago() {
       estado: 'Pendiente',
       fecha: new Date().toLocaleDateString('es-AR'),
       metodo: selectedPayMethod,
-      envio: shippingInfo
+      envio: shippingInfo,
+      contactEmail: contactData.email,
+      contactName:  (contactData.nombre + ' ' + contactData.apellido).trim()
     };
     orders.push(newOrder);
     dbSaveOrders(orders);
@@ -5338,7 +5359,8 @@ function sendOrderEmail(order, contactData) {
       total:          formatPrice(order.total),
       metodo:         metodoLabel,
       tienda:         'Sol en tu Hogar',
-      fecha:          order.fecha
+      fecha:          order.fecha,
+      tracking:       ''
     }).then(() => {
       showToast('📧 Email de confirmación enviado a ' + contactData.email);
     }).catch(err => {
@@ -5347,6 +5369,48 @@ function sendOrderEmail(order, contactData) {
 
   } catch(e) {
     console.warn('sendOrderEmail error:', e);
+  }
+}
+
+/* ── Email de seguimiento — reutiliza template_0jljlhx ── */
+function sendTrackingEmail(order) {
+  try {
+    if (typeof emailjs === 'undefined' || EMAILJS_PUBLIC_KEY === 'TU_PUBLIC_KEY') return;
+
+    // Obtener email del cliente: del pedido o de los usuarios registrados
+    const users = dbGetUsers();
+    const user  = users.find(u => u.id === order.userId);
+    const customerEmail = order.contactEmail || user?.email;
+    const customerName  = order.contactName  || (user ? user.nombre + ' ' + user.apellido : 'Cliente');
+
+    if (!customerEmail) {
+      showToast('⚠️ No se encontró el email del cliente');
+      return;
+    }
+
+    const itemsList = (order.items || [])
+      .map(i => `• ${i.name} ×${i.qty}  —  ${formatPrice(i.price * i.qty)}`)
+      .join('\n');
+
+    emailjs.send(EMAILJS_SERVICE_ID, EMAILJS_TEMPLATE_ID, {
+      order_id:       order.id,
+      customer_name:  customerName,
+      customer_email: customerEmail,
+      items_list:     itemsList,
+      total:          formatPrice(order.total),
+      metodo:         '—',
+      tienda:         'Sol en tu Hogar',
+      fecha:          order.fecha,
+      tracking:       order.tracking || ''
+    }).then(() => {
+      showToast(`📧 Email de seguimiento enviado a ${customerEmail}`);
+    }).catch(err => {
+      console.warn('EmailJS — error al enviar seguimiento:', err);
+      showToast('⚠️ No se pudo enviar el email de seguimiento');
+    });
+
+  } catch(e) {
+    console.warn('sendTrackingEmail error:', e);
   }
 }
 
