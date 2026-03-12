@@ -5402,7 +5402,7 @@ function sendOrderEmail(order, contactData) {
       metodo:         metodoLabel,
       tienda:         'Sol en tu Hogar',
       fecha:          order.fecha,
-      tracking:       ''
+      tracking_section: ''
     }).then(() => {
       showToast('📧 Email de confirmación enviado a ' + contactData.email);
     }).catch(err => {
@@ -5443,7 +5443,9 @@ function sendTrackingEmail(order) {
       metodo:         '—',
       tienda:         'Sol en tu Hogar',
       fecha:          order.fecha,
-      tracking:       order.tracking || ''
+      tracking_section: order.tracking
+        ? `📦 Tu número de seguimiento es: ${order.tracking}\nRastreá tu paquete en: https://www.correoargentino.com.ar/MiPaquete`
+        : ''
     }).then(() => {
       showToast(`📧 Email de seguimiento enviado a ${customerEmail}`);
     }).catch(err => {
