@@ -1698,6 +1698,47 @@ footer{background:var(--ink);color:rgba(255,255,255,.45);padding:5rem 2.5rem 2re
         </div>
         <div id="adminOrdersList"></div>
 
+        <!-- ═ Configuración de envíos ═ -->
+        <div class="admin-filters" style="margin-top:1.5rem;margin-bottom:.8rem">
+          <span class="admin-section-lbl" style="margin:0">🚚 Configuración de envíos</span>
+          <button class="omg-save-btn" onclick="guardarConfigEnvios()" style="margin-left:auto">💾 Guardar tarifas</button>
+        </div>
+        <div style="background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.08);border-radius:10px;padding:1rem 1.2rem;margin-bottom:1rem">
+          <!-- Envío gratis desde -->
+          <div style="display:flex;align-items:center;gap:1rem;margin-bottom:1.2rem;flex-wrap:wrap">
+            <span style="font-size:.72rem;color:rgba(255,255,255,.6);white-space:nowrap">✅ Envío gratis desde:</span>
+            <div style="display:flex;align-items:center;gap:.4rem">
+              <span style="font-size:.8rem;color:rgba(255,255,255,.4)">$</span>
+              <input class="admin-ci" id="cfgEnvioGratis" type="number" min="0" step="100"
+                style="width:110px;text-transform:none;font-size:.82rem"
+                title="Monto mínimo de compra para envío gratis (0 = desactivado)">
+            </div>
+            <span style="font-size:.65rem;color:rgba(255,255,255,.3)">(0 = desactivado)</span>
+          </div>
+          <!-- Tabla de zonas -->
+          <div style="font-size:.6rem;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:rgba(255,255,255,.3);margin-bottom:.6rem">Tarifas por zona — Correo Argentino</div>
+          <div style="overflow-x:auto">
+            <table style="width:100%;border-collapse:collapse;min-width:520px" id="cfgTarifasTable">
+              <thead>
+                <tr>
+                  <th style="font-size:.6rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:rgba(255,255,255,.25);padding:.4rem .7rem;border-bottom:1px solid rgba(255,255,255,.07);text-align:left">Zona</th>
+                  <th style="font-size:.6rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:rgba(255,255,255,.25);padding:.4rem .7rem;border-bottom:1px solid rgba(255,255,255,.07);text-align:center">Estándar ($)</th>
+                  <th style="font-size:.6rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:rgba(255,255,255,.25);padding:.4rem .7rem;border-bottom:1px solid rgba(255,255,255,.07);text-align:center">Express ($)</th>
+                  <th style="font-size:.6rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:rgba(255,255,255,.25);padding:.4rem .7rem;border-bottom:1px solid rgba(255,255,255,.07);text-align:center">Días estándar</th>
+                  <th style="font-size:.6rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:rgba(255,255,255,.25);padding:.4rem .7rem;border-bottom:1px solid rgba(255,255,255,.07);text-align:center">Días express</th>
+                </tr>
+              </thead>
+              <tbody id="cfgTarifasBody"></tbody>
+            </table>
+          </div>
+          <div style="font-size:.65rem;color:rgba(255,255,255,.25);margin-top:.8rem">
+            💡 Verificá las tarifas reales en
+            <a href="https://www.correoargentino.com.ar/herramientas/cotizador" target="_blank"
+              style="color:var(--gold);text-decoration:none">correoargentino.com.ar/herramientas/cotizador</a>
+            · Origen: Morón (1708)
+          </div>
+        </div>
+
         <!-- Cupones -->
         <div class="admin-filters" style="margin-top:1.5rem;margin-bottom:.8rem">
           <span class="admin-section-lbl" style="margin:0">Cupones de descuento</span>
@@ -2926,7 +2967,7 @@ function waitForSupabase(timeoutMs = 8000) {
     }, 200);
   });
 }
-const ENVIO_GRATIS_DESDE = 30000;
+const ENVIO_GRATIS_DESDE_DEFAULT = 30000; // referencia — el valor real se carga desde localStorage
 const CUOTAS_SIN_INTERES = 6;
 
 // ✏️ CAMBIÁ ESTA CONTRASEÑA por la tuya propia
@@ -3846,6 +3887,7 @@ function renderAdminDashboard() {
 
   renderAdminUsersTable(_adminUsers, _adminOrders);
   renderAdminOrdersList(filteredOrders, _adminUsers);
+  renderAdminEnvios();
   renderAdminCoupons();
   renderAdminReviews();
   renderAdminProducts();
@@ -6856,10 +6898,9 @@ function changeQty(btn, delta) {
 
 /* ══════════════════════════════════════════════════════
    SISTEMA DE ENVÍO — Correo Argentino por zona de CP
-   Tarifas aproximadas actualizadas 2025 (ajustables en TARIFAS_ENVIO)
+   Tarifas aproximadas actualizadas 2025 (ajustables desde el panel admin)
    ══════════════════════════════════════════════════════ */
-const TARIFAS_ENVIO = {
-  // zona: { label, precio_estandar, precio_express, dias_estandar, dias_express }
+const TARIFAS_DEFAULT = {
   caba:      { label: 'CABA',                  estandar: 1800,  express: 3200,  diasE: '1–2',  diasX: '24hs' },
   gba1:      { label: 'GBA 1er cordón',        estandar: 2200,  express: 3800,  diasE: '2–3',  diasX: '24hs' },
   gba2:      { label: 'GBA 2do cordón',        estandar: 2600,  express: 4500,  diasE: '3–4',  diasX: '48hs' },
@@ -6869,6 +6910,73 @@ const TARIFAS_ENVIO = {
   cuyo:      { label: 'Cuyo / San Luis',       estandar: 4200,  express: 6800,  diasE: '5–7',  diasX: '72hs' },
   patagonia: { label: 'Patagonia',             estandar: 5500,  express: 8500,  diasE: '6–8',  diasX: '96hs' },
 };
+
+function _loadShippingConfig() {
+  try {
+    const saved = localStorage.getItem('sol_shipping_config');
+    if (saved) {
+      const cfg = JSON.parse(saved);
+      TARIFAS_ENVIO = cfg.tarifas || TARIFAS_DEFAULT;
+      ENVIO_GRATIS_DESDE = cfg.envioGratis ?? 30000;
+    }
+  } catch(e) {}
+}
+
+let TARIFAS_ENVIO = JSON.parse(JSON.stringify(TARIFAS_DEFAULT));
+let ENVIO_GRATIS_DESDE = 30000;
+_loadShippingConfig();
+
+/* ── Admin: renderizar y guardar tarifas ── */
+function renderAdminEnvios() {
+  const tbody = document.getElementById('cfgTarifasBody');
+  const inputGratis = document.getElementById('cfgEnvioGratis');
+  if (!tbody) return;
+  if (inputGratis) inputGratis.value = ENVIO_GRATIS_DESDE;
+
+  const inputStyle = 'background:rgba(255,255,255,.07);border:1px solid rgba(255,255,255,.1);border-radius:5px;color:#fff;font-family:var(--sans);font-size:.78rem;padding:.3rem .5rem;width:80px;text-align:center;outline:none';
+  const smallStyle = 'background:rgba(255,255,255,.07);border:1px solid rgba(255,255,255,.1);border-radius:5px;color:#fff;font-family:var(--sans);font-size:.78rem;padding:.3rem .5rem;width:65px;text-align:center;outline:none';
+
+  tbody.innerHTML = Object.entries(TARIFAS_ENVIO).map(([key, t]) => `
+    <tr style="border-bottom:1px solid rgba(255,255,255,.05)">
+      <td style="padding:.5rem .7rem;font-size:.78rem;color:rgba(255,255,255,.7);font-weight:600">${t.label}</td>
+      <td style="padding:.5rem .7rem;text-align:center">
+        <input style="${inputStyle}" type="number" min="0" step="100"
+          id="cfg-e-${key}" value="${t.estandar}">
+      </td>
+      <td style="padding:.5rem .7rem;text-align:center">
+        <input style="${inputStyle}" type="number" min="0" step="100"
+          id="cfg-x-${key}" value="${t.express}">
+      </td>
+      <td style="padding:.5rem .7rem;text-align:center">
+        <input style="${smallStyle}" type="text"
+          id="cfg-de-${key}" value="${t.diasE}" maxlength="8">
+      </td>
+      <td style="padding:.5rem .7rem;text-align:center">
+        <input style="${smallStyle}" type="text"
+          id="cfg-dx-${key}" value="${t.diasX}" maxlength="8">
+      </td>
+    </tr>`).join('');
+}
+
+function guardarConfigEnvios() {
+  const gravisVal = parseInt(document.getElementById('cfgEnvioGratis')?.value) || 0;
+  ENVIO_GRATIS_DESDE = gravisVal;
+
+  Object.keys(TARIFAS_ENVIO).forEach(key => {
+    TARIFAS_ENVIO[key].estandar = parseInt(document.getElementById('cfg-e-' + key)?.value)  || TARIFAS_ENVIO[key].estandar;
+    TARIFAS_ENVIO[key].express  = parseInt(document.getElementById('cfg-x-' + key)?.value)  || TARIFAS_ENVIO[key].express;
+    TARIFAS_ENVIO[key].diasE    = document.getElementById('cfg-de-' + key)?.value || TARIFAS_ENVIO[key].diasE;
+    TARIFAS_ENVIO[key].diasX    = document.getElementById('cfg-dx-' + key)?.value || TARIFAS_ENVIO[key].diasX;
+  });
+
+  localStorage.setItem('sol_shipping_config', JSON.stringify({
+    tarifas: TARIFAS_ENVIO,
+    envioGratis: ENVIO_GRATIS_DESDE
+  }));
+
+  showToast('✅ Tarifas de envío actualizadas');
+  calcularEnvio(); // recalcular si el checkout está abierto
+}
 
 // Rangos de CP → zona
 function cpAZona(cp) {
