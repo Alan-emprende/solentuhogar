@@ -1222,7 +1222,17 @@ footer{background:var(--ink);color:rgba(255,255,255,.45);padding:5rem 2.5rem 2re
 .omg-export-btn:hover{background:rgba(255,255,255,.13)}
 @media(max-width:860px){.dash-charts{grid-template-columns:1fr}.order-mgmt-head{grid-template-columns:80px 1fr 80px}}
 
-/* ══ VIDEOS EN GALERÍA ══ */
+/* ══ VER MÁS — botón que despliega productos ocultos ══ */
+.pgrid-more-wrap{grid-column:1/-1;display:flex;flex-direction:column;align-items:center;gap:.6rem;padding:2rem 0 .5rem}
+.pgrid-more-btn{display:inline-flex;align-items:center;gap:.6rem;background:transparent;border:2px solid var(--clay);color:var(--clay);font-family:var(--sans);font-size:.85rem;font-weight:700;padding:.75rem 2rem;border-radius:50px;cursor:pointer;transition:background .2s,color .2s,transform .15s;letter-spacing:.03em}
+.pgrid-more-btn:hover{background:var(--clay);color:#fff;transform:translateY(-1px)}
+.pgrid-more-btn .pgrid-more-icon{font-size:.75rem;transition:transform .3s}
+.pgrid-more-btn.loading .pgrid-more-icon{animation:spin .7s linear infinite}
+@keyframes spin{to{transform:rotate(360deg)}}
+.pgrid-more-hint{font-size:.72rem;color:var(--stone-light)}
+/* animación de entrada para cards nuevas */
+@keyframes cardReveal{from{opacity:0;transform:translateY(18px)}to{opacity:1;transform:translateY(0)}}
+.pcard.revealing{animation:cardReveal .35s ease forwards}
 .pdm-video-wrap{width:100%;height:100%;position:absolute;inset:0;z-index:1;background:#000;display:flex;align-items:center;justify-content:center}
 .pdm-video-wrap iframe{width:100%;height:100%;border:none;display:block}
 .pdm-video-wrap video{width:100%;height:100%;object-fit:contain;background:#000}
@@ -5686,7 +5696,6 @@ function filterGrid(section, cat, btn) {
   const grid = document.getElementById(section + 'Grid');
   if (!grid) return;
   const cards = grid.querySelectorAll('.pcard');
-  let visible = 0;
   cards.forEach(card => {
     const catText = card.querySelector('.pcard-cat')?.textContent || '';
     const isProx  = card.dataset.prox === '1';
@@ -5696,10 +5705,14 @@ function filterGrid(section, cat, btn) {
     else if (cat === 'proximamente') show = isProx;
     else show = catText.toLowerCase().includes(cat.toLowerCase());
     card.classList.toggle('hidden', !show);
-    if (show) visible++;
+    // Resetear display para que _applyGridVisibility tome el control
+    if (!show) card.style.display = 'none';
+    else card.style.display = '';
   });
-  const countEl = document.getElementById(section + 'Count');
-  if (countEl) countEl.textContent = `${visible} producto${visible !== 1 ? 's' : ''}`;
+
+  // Resetear paginación al filtrar
+  _gridVisible[section] = GRID_PAGE_SIZE;
+  _applyGridVisibility(section, false);
 }
 
 function sortGrid(section, order) {
@@ -5711,7 +5724,12 @@ function sortGrid(section, order) {
     const pb = parseInt(b.dataset.price || 0);
     return order === 'price-asc' ? pa - pb : pb - pa;
   });
-  cards.forEach(c => grid.appendChild(c));
+  // Reinsertar antes del botón Ver más
+  const moreWrap = grid.querySelector('.pgrid-more-wrap');
+  cards.forEach(c => grid.insertBefore(c, moreWrap || null));
+  // Resetear paginación al ordenar
+  _gridVisible[section] = GRID_PAGE_SIZE;
+  _applyGridVisibility(section, false);
 }
 
 function initGridCounts() {
@@ -6355,10 +6373,15 @@ function renderProductCard(p) {
 }
 
 /* ── Renderiza el grid de una sección desde localStorage ── */
+const GRID_PAGE_SIZE = 8; // cuántos productos mostrar inicialmente
+// Mapa de cuántos productos están visibles por sección
+const _gridVisible = { hogar: GRID_PAGE_SIZE, ropa: GRID_PAGE_SIZE };
+
 function renderProductGrid(section) {
   const grid = document.getElementById(section + 'Grid');
   if (!grid) return;
   const prods = dbGetProducts().filter(p => p.section === section);
+
   if (!prods.length) {
     grid.innerHTML = `<div style="grid-column:1/-1;text-align:center;padding:4rem 2rem;color:var(--stone);font-size:.85rem;opacity:.5">
       <div style="font-size:2.5rem;margin-bottom:.8rem">📭</div>
@@ -6366,10 +6389,67 @@ function renderProductGrid(section) {
       <span style="font-size:.75rem">Agregá productos desde el panel de administración.</span>
     </div>`;
   } else {
+    // Resetear contador de visibles
+    _gridVisible[section] = GRID_PAGE_SIZE;
     grid.innerHTML = prods.map(renderProductCard).join('');
+    _applyGridVisibility(section, false);
   }
   if (section === 'ropa') rebuildRopaFilters();
   initGridCounts();
+}
+
+// Muestra/oculta cards según _gridVisible y maneja el botón Ver más
+function _applyGridVisibility(section, animate) {
+  const grid = document.getElementById(section + 'Grid');
+  if (!grid) return;
+
+  // Remover botón anterior
+  const oldBtn = grid.querySelector('.pgrid-more-wrap');
+  if (oldBtn) oldBtn.remove();
+
+  const all     = Array.from(grid.querySelectorAll('.pcard'));
+  const visible = all.filter(c => !c.classList.contains('hidden')); // respeta filtros activos
+  const limit   = _gridVisible[section] || GRID_PAGE_SIZE;
+  let shown = 0;
+
+  visible.forEach((card, i) => {
+    if (i < limit) {
+      if (card.style.display === 'none') {
+        card.style.display = '';
+        if (animate) { card.classList.add('revealing'); setTimeout(() => card.classList.remove('revealing'), 400); }
+      }
+      shown++;
+    } else {
+      card.style.display = 'none';
+    }
+  });
+
+  const remaining = visible.length - shown;
+  if (remaining > 0) {
+    const next = Math.min(remaining, GRID_PAGE_SIZE);
+    const wrap = document.createElement('div');
+    wrap.className = 'pgrid-more-wrap';
+    wrap.innerHTML = `
+      <button class="pgrid-more-btn" onclick="showMoreProducts('${section}')">
+        <span class="pgrid-more-icon">↓</span>
+        Ver ${next} producto${next !== 1 ? 's' : ''} más
+      </button>
+      <span class="pgrid-more-hint">${remaining} producto${remaining !== 1 ? 's' : ''} sin mostrar</span>`;
+    grid.appendChild(wrap);
+  }
+
+  // Actualizar contador
+  const countEl = document.getElementById(section + 'Count');
+  if (countEl) countEl.textContent = `${visible.length} producto${visible.length !== 1 ? 's' : ''}`;
+}
+
+function showMoreProducts(section) {
+  _gridVisible[section] = (_gridVisible[section] || GRID_PAGE_SIZE) + GRID_PAGE_SIZE;
+  _applyGridVisibility(section, true);
+  // Scroll suave hacia los nuevos productos
+  const grid = document.getElementById(section + 'Grid');
+  const newCards = Array.from(grid.querySelectorAll('.pcard')).filter(c => c.classList.contains('revealing'));
+  if (newCards[0]) newCards[0].scrollIntoView({ behavior: 'smooth', block: 'nearest' });
 }
 
 /* ── Renderiza una oferta como ocard con countdown timer ── */
