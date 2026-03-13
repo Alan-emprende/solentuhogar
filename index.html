@@ -1222,7 +1222,21 @@ footer{background:var(--ink);color:rgba(255,255,255,.45);padding:5rem 2.5rem 2re
 .omg-export-btn:hover{background:rgba(255,255,255,.13)}
 @media(max-width:860px){.dash-charts{grid-template-columns:1fr}.order-mgmt-head{grid-template-columns:80px 1fr 80px}}
 
-/* ══ VER MÁS — botón que despliega productos ocultos ══ */
+/* ══ GESTOR DE SECCIONES ══ */
+.sec-mgr-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:.8rem;margin-bottom:1rem}
+.sec-mgr-card{background:rgba(255,255,255,.04);border:1.5px solid rgba(255,255,255,.08);border-radius:10px;padding:.9rem 1rem;display:flex;align-items:center;gap:.8rem;transition:border-color .2s}
+.sec-mgr-card.active{border-color:rgba(61,107,74,.5)}
+.sec-mgr-card.inactive{opacity:.55}
+.sec-mgr-icon{font-size:1.4rem;flex-shrink:0}
+.sec-mgr-info{flex:1;min-width:0}
+.sec-mgr-name{font-size:.82rem;font-weight:700;color:#fff}
+.sec-mgr-count{font-size:.65rem;color:rgba(255,255,255,.35);margin-top:.1rem}
+.sec-mgr-toggle{position:relative;width:38px;height:22px;flex-shrink:0}
+.sec-mgr-toggle input{opacity:0;width:0;height:0;position:absolute}
+.sec-mgr-slider{position:absolute;inset:0;background:rgba(255,255,255,.15);border-radius:11px;cursor:pointer;transition:background .2s}
+.sec-mgr-slider::before{content:'';position:absolute;width:16px;height:16px;left:3px;top:3px;background:#fff;border-radius:50%;transition:transform .2s;box-shadow:0 1px 3px rgba(0,0,0,.3)}
+.sec-mgr-toggle input:checked+.sec-mgr-slider{background:#3D6B4A}
+.sec-mgr-toggle input:checked+.sec-mgr-slider::before{transform:translateX(16px)}
 .pgrid-more-wrap{grid-column:1/-1;display:flex;flex-direction:column;align-items:center;gap:.6rem;padding:2rem 0 .5rem}
 .pgrid-more-btn{display:inline-flex;align-items:center;gap:.6rem;background:transparent;border:2px solid var(--clay);color:var(--clay);font-family:var(--sans);font-size:.85rem;font-weight:700;padding:.75rem 2rem;border-radius:50px;cursor:pointer;transition:background .2s,color .2s,transform .15s;letter-spacing:.03em}
 .pgrid-more-btn:hover{background:var(--clay);color:#fff;transform:translateY(-1px)}
@@ -1738,6 +1752,12 @@ footer{background:var(--ink);color:rgba(255,255,255,.45);padding:5rem 2.5rem 2re
             <div class="dash-pay-pie" id="dashOrderStates"></div>
           </div>
         </div>
+
+        <!-- ═══ SECCIONES DE LA TIENDA ═══ -->
+        <div class="admin-filters" style="margin-top:0;margin-bottom:.8rem">
+          <span class="admin-section-lbl" style="margin:0">🏪 Secciones de la tienda</span>
+        </div>
+        <div class="sec-mgr-grid" id="secMgrGrid"></div>
 
         <!-- ═══ PRODUCTOS ═══ -->
         <div class="admin-filters" style="margin-top:0;margin-bottom:.8rem">
@@ -2301,9 +2321,9 @@ footer{background:var(--ink);color:rgba(255,255,255,.45);padding:5rem 2.5rem 2re
     <span class="logo-tagline" style="display:block;margin-top:2px">Ropa &amp; Artículos del Hogar</span>
   </div>
   <div class="mobile-nav-sep">Tienda</div>
-  <a href="#hogar" onclick="closeMobileNav()">🏠 Hogar</a>
-  <a href="#ropa" onclick="closeMobileNav()">👗 Ropa</a>
-  <a href="#oportunidades" onclick="closeMobileNav()">🔥 Oportunidades</a>
+  <a href="#hogar" data-section="hogar" onclick="closeMobileNav()">🏠 Hogar</a>
+  <a href="#ropa" data-section="ropa" onclick="closeMobileNav()">👗 Ropa</a>
+  <a href="#oportunidades" data-section="oportunidades" onclick="closeMobileNav()">🔥 Oportunidades</a>
   <div class="mobile-nav-sep">Ayuda</div>
   <a href="#" onclick="closeMobileNav();openInfoModal('faq');return false">❓ Preguntas frecuentes</a>
   <a href="https://wa.me/5491131496246" target="_blank" onclick="closeMobileNav()">💬 WhatsApp</a>
@@ -2345,9 +2365,9 @@ footer{background:var(--ink);color:rgba(255,255,255,.45);padding:5rem 2.5rem 2re
         <span></span><span></span><span></span>
       </button>
       <div class="nav-links">
-        <a href="#hogar" class="nav-link">Hogar</a>
-        <a href="#ropa" class="nav-link">Ropa</a>
-        <a href="#oportunidades" class="nav-link">Oportunidades</a>
+        <a href="#hogar" class="nav-link" data-section="hogar">Hogar</a>
+        <a href="#ropa" class="nav-link" data-section="ropa">Ropa</a>
+        <a href="#oportunidades" class="nav-link" data-section="oportunidades">Oportunidades</a>
       </div>
     </div>
     <!-- ✏️ EDITAR: Cambiá el nombre de tu tienda aquí -->
@@ -2390,8 +2410,8 @@ footer{background:var(--ink);color:rgba(255,255,255,.45);padding:5rem 2.5rem 2re
       <!-- ✏️ EDITAR: Subtítulo/descripción -->
       <p class="hero-body">Artículos de cocina, termos, licuadoras y más. Y ropa de calidad en oportunidades únicas, todo con la atención que merecés.</p>
       <div class="hero-actions">
-        <a href="#hogar" class="btn-primary">Ver Hogar</a>
-        <a href="#oportunidades" class="btn-ghost">Ver Oportunidades</a>
+        <a href="#hogar" class="btn-primary" data-section="hogar">Ver Hogar</a>
+        <a href="#oportunidades" class="btn-ghost" data-section="oportunidades">Ver Oportunidades</a>
       </div>
       <div class="hero-trust">
         <div class="ht-item"><span class="ht-icon">🚚</span><div class="ht-text"><strong>Envío gratis</strong>desde $30.000</div></div>
@@ -2498,7 +2518,7 @@ footer{background:var(--ink);color:rgba(255,255,255,.45);padding:5rem 2.5rem 2re
     <div class="mb-center">
       <div class="mb-kicker">También tenemos</div>
       <div class="mb-title">Ropa &amp; <em>Oportunidades</em><br>únicas</div>
-      <a href="#ropa" class="btn-primary">Ver Ropa</a>
+      <a href="#ropa" class="btn-primary" data-section="ropa">Ver Ropa</a>
     </div>
     <div>
       <div class="mb-feat">
@@ -2690,9 +2710,9 @@ footer{background:var(--ink);color:rgba(255,255,255,.45);padding:5rem 2.5rem 2re
       <div class="footer-col">
         <h4>Tienda</h4>
         <ul>
-          <li><a href="#hogar">Hogar</a></li>
-          <li><a href="#ropa">Ropa</a></li>
-          <li><a href="#oportunidades">Oportunidades</a></li>
+          <li><a href="#hogar" data-section="hogar">Hogar</a></li>
+          <li><a href="#ropa" data-section="ropa">Ropa</a></li>
+          <li><a href="#oportunidades" data-section="oportunidades">Oportunidades</a></li>
           <li><a href="#resenas">Reseñas</a></li>
         </ul>
       </div>
@@ -3910,6 +3930,77 @@ async function forceSyncToSupabase() {
   }
 }
 
+/* ══════════════════════════════════════════════════════
+   SISTEMA DE VISIBILIDAD DE SECCIONES
+   ══════════════════════════════════════════════════════ */
+const SECTIONS_CONFIG = [
+  { id: 'hogar',        label: 'Hogar',        icon: '🏠', navIds: ['navLinkHogar','mobileNavHogar'], footerIds: ['footerLinkHogar'] },
+  { id: 'ropa',         label: 'Ropa',          icon: '👗', navIds: ['navLinkRopa','mobileNavRopa'],   footerIds: ['footerLinkRopa'] },
+  { id: 'oportunidades',label: 'Oportunidades', icon: '🔥', navIds: ['navLinkOport','mobileNavOport'], footerIds: ['footerLinkOport'] },
+];
+
+function dbGetSections() {
+  try {
+    const s = localStorage.getItem('sol_sections');
+    if (s) return JSON.parse(s);
+  } catch(e) {}
+  // Default: todas visibles
+  const def = {};
+  SECTIONS_CONFIG.forEach(s => def[s.id] = true);
+  return def;
+}
+
+function dbSaveSections(map) {
+  localStorage.setItem('sol_sections', JSON.stringify(map));
+}
+
+function toggleSection(id, visible) {
+  const map = dbGetSections();
+  map[id] = visible;
+  dbSaveSections(map);
+  applyAllSections();
+  renderSecMgr();
+  showToast(visible ? `✅ Sección "${SECTIONS_CONFIG.find(s=>s.id===id)?.label}" activada` : `👁 Sección "${SECTIONS_CONFIG.find(s=>s.id===id)?.label}" ocultada`);
+}
+
+function applyAllSections() {
+  const map = dbGetSections();
+  SECTIONS_CONFIG.forEach(cfg => {
+    const visible = map[cfg.id] !== false; // default visible
+    // Mostrar/ocultar el bloque de sección completo
+    const anchor  = document.getElementById(cfg.id);
+    const section = anchor?.nextElementSibling;
+    if (anchor)  anchor.style.display  = visible ? '' : 'none';
+    if (section) section.style.display = visible ? '' : 'none';
+    // Nav links desktop + mobile — usamos data-section para identificarlos
+    document.querySelectorAll(`[data-section="${cfg.id}"]`).forEach(el => {
+      el.style.display = visible ? '' : 'none';
+    });
+  });
+}
+
+function renderSecMgr() {
+  const el = document.getElementById('secMgrGrid');
+  if (!el) return;
+  const map   = dbGetSections();
+  const prods = dbGetProducts();
+  el.innerHTML = SECTIONS_CONFIG.map(cfg => {
+    const active = map[cfg.id] !== false;
+    const count  = prods.filter(p => p.section === cfg.id).length;
+    return `<div class="sec-mgr-card ${active ? 'active' : 'inactive'}">
+      <div class="sec-mgr-icon">${cfg.icon}</div>
+      <div class="sec-mgr-info">
+        <div class="sec-mgr-name">${cfg.label}</div>
+        <div class="sec-mgr-count">${count} producto${count!==1?'s':''} · ${active?'<span style="color:#81c784">Visible</span>':'<span style="color:rgba(255,255,255,.3)">Oculta</span>'}</div>
+      </div>
+      <label class="sec-mgr-toggle" title="${active?'Ocultar':'Mostrar'} sección">
+        <input type="checkbox" ${active?'checked':''} onchange="toggleSection('${cfg.id}',this.checked)">
+        <span class="sec-mgr-slider"></span>
+      </label>
+    </div>`;
+  }).join('');
+}
+
 function renderAdminDashboard() {
   _adminUsers  = dbGetUsers();
   _adminOrders = dbGetOrders();
@@ -3969,6 +4060,7 @@ function renderAdminDashboard() {
   renderAdminReviews();
   renderAdminProducts();
   renderShippingEditor();
+  renderSecMgr();
 }
 
 function _renderSalesChart(orders) {
@@ -7924,6 +8016,7 @@ document.addEventListener('keydown', e => {
   renderOportunidadesGrid();
   buildRopaFilterChips();
   initGridCounts();
+  applyAllSections(); // Aplicar visibilidad de secciones guardada
   populateReviewProductSelect();
   await renderReviews();
   await loadWishlist();
