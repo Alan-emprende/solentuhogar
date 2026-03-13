@@ -1094,6 +1094,29 @@ footer{background:var(--ink);color:rgba(255,255,255,.45);padding:5rem 2.5rem 2re
 .admin-stat-n{font-family:var(--serif);font-size:1.8rem;font-weight:700;color:var(--gold)}
 .admin-stat-l{font-size:.65rem;letter-spacing:.12em;text-transform:uppercase;color:rgba(255,255,255,.4);margin-top:.2rem}
 .admin-section-lbl{font-size:.65rem;font-weight:700;letter-spacing:.18em;text-transform:uppercase;color:rgba(255,255,255,.3);margin-bottom:.8rem}
+/* ── Editor de tarifas de envío ── */
+.shp-editor-wrap{background:rgba(255,255,255,.03);border:1px solid rgba(255,255,255,.08);border-radius:10px;overflow:hidden;margin-bottom:1.2rem}
+.shp-editor-head{display:grid;grid-template-columns:1.1fr 1fr 1fr;gap:.5rem;padding:.5rem 1rem;background:rgba(255,255,255,.06);font-size:.6rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:rgba(255,255,255,.4)}
+.shp-editor-row{display:grid;grid-template-columns:1.1fr 1fr 1fr;gap:.5rem;padding:.5rem 1rem;border-top:1px solid rgba(255,255,255,.05);align-items:center;transition:background .15s}
+.shp-editor-row:hover{background:rgba(255,255,255,.03)}
+.shp-weight-lbl{font-size:.78rem;color:rgba(255,255,255,.75);font-weight:700}
+.shp-price-input{background:rgba(255,255,255,.07);border:1px solid rgba(255,255,255,.1);border-radius:5px;color:#fff;font-family:var(--sans);font-size:.78rem;font-weight:700;padding:.3rem .5rem;width:100%;outline:none;box-sizing:border-box;text-align:right}
+.shp-price-input:focus{border-color:var(--gold)}
+.shp-type-badge{display:inline-block;font-size:.58rem;font-weight:700;padding:.15rem .5rem;border-radius:3px;letter-spacing:.06em;margin-bottom:.4rem}
+.shp-badge-reg{background:rgba(78,160,100,.18);color:#81c784}
+.shp-badge-nac{background:rgba(100,150,220,.18);color:#90caf9}
+.shp-free-row{display:flex;align-items:center;gap:.8rem;padding:.7rem 1rem;background:rgba(255,255,255,.03);border:1px solid rgba(255,255,255,.08);border-radius:8px;margin-bottom:.6rem}
+.shp-free-label{font-size:.78rem;color:rgba(255,255,255,.7);flex:1}
+.shp-free-input{background:rgba(255,255,255,.07);border:1px solid rgba(255,255,255,.1);border-radius:5px;color:#fff;font-family:var(--sans);font-size:.82rem;font-weight:700;padding:.32rem .6rem;width:130px;outline:none;text-align:right}
+.shp-free-input:focus{border-color:var(--gold)}
+.shp-save-btn{background:var(--clay);color:#fff;border:none;border-radius:7px;font-family:var(--sans);font-size:.75rem;font-weight:700;padding:.55rem 1.2rem;cursor:pointer;transition:opacity .15s;letter-spacing:.04em}
+.shp-save-btn:hover{opacity:.85}
+.shp-reset-btn{background:rgba(255,255,255,.07);color:rgba(255,255,255,.45);border:1px solid rgba(255,255,255,.1);border-radius:7px;font-family:var(--sans);font-size:.72rem;padding:.5rem 1rem;cursor:pointer;transition:background .15s}
+.shp-reset-btn:hover{background:rgba(255,255,255,.12)}
+.shp-region-title{font-size:.62rem;font-weight:700;letter-spacing:.12em;text-transform:uppercase;padding:.4rem 1rem;margin-top:.1rem}
+.shp-region-reg{color:#81c784;background:rgba(78,160,100,.08)}
+.shp-region-nac{color:#90caf9;background:rgba(100,150,220,.08)}
+@media(max-width:540px){.shp-editor-head,.shp-editor-row{grid-template-columns:1fr 1fr 1fr;gap:.3rem}.shp-price-input{font-size:.7rem}}
 .admin-table{width:100%;border-collapse:collapse;margin-bottom:1.5rem}
 .admin-table th{font-size:.62rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:rgba(255,255,255,.3);padding:.5rem .8rem;border-bottom:1px solid rgba(255,255,255,.08);text-align:left}
 .admin-table td{font-size:.78rem;color:rgba(255,255,255,.75);padding:.65rem .8rem;border-bottom:1px solid rgba(255,255,255,.05)}
@@ -1716,6 +1739,28 @@ footer{background:var(--ink);color:rgba(255,255,255,.45);padding:5rem 2.5rem 2re
         </div>
         <div id="adminOrdersList"></div>
 
+        <!-- Tarifas de envío -->
+        <div class="admin-filters" style="margin-top:1.5rem;margin-bottom:.8rem">
+          <span class="admin-section-lbl" style="margin:0">🚚 Tarifas de envío</span>
+        </div>
+        <div class="shp-free-row">
+          <span class="shp-free-label">🎁 Envío gratis desde</span>
+          <input class="shp-free-input" type="number" id="adminEnvioGratis" min="0" placeholder="30000">
+          <span style="font-size:.75rem;color:rgba(255,255,255,.4)">$</span>
+        </div>
+        <div class="shp-editor-wrap">
+          <div class="shp-region-title shp-region-reg">🟢 Regional — CABA · GBA · Prov. Buenos Aires</div>
+          <div class="shp-editor-head"><span>Hasta (kg)</span><span>Regional $</span><span>Nacional $</span></div>
+          <div id="shpEditorRows"></div>
+        </div>
+        <div style="font-size:.68rem;color:rgba(255,255,255,.3);margin-bottom:.8rem;padding:.1rem .2rem">
+          📌 Regional = CABA, GBA y Provincia de Buenos Aires &nbsp;·&nbsp; Nacional = resto del país
+        </div>
+        <div style="display:flex;gap:.6rem;flex-wrap:wrap;margin-bottom:1.5rem">
+          <button class="shp-save-btn" onclick="saveShippingRates()">💾 Guardar tarifas</button>
+          <button class="shp-reset-btn" onclick="resetShippingRates()">↺ Restablecer originales</button>
+        </div>
+
         <!-- Cupones -->
         <div class="admin-filters" style="margin-top:1.5rem;margin-bottom:.8rem">
           <span class="admin-section-lbl" style="margin:0">Cupones de descuento</span>
@@ -1855,7 +1900,7 @@ footer{background:var(--ink);color:rgba(255,255,255,.45);padding:5rem 2.5rem 2re
           </div>
           <div class="form-group">
             <label class="form-label">Código postal<span class="req">*</span></label>
-            <input class="form-input" type="text" placeholder="1043" id="payCP" oninput="calcularEnvio()" maxlength="8">
+            <input class="form-input" type="text" placeholder="Ej: C1437JEC · B7600GUA · 1043" id="payCP" oninput="calcularEnvio()" maxlength="8" style="text-transform:uppercase">
             <a href="https://www.correoargentino.com.ar/formularios/cpa" target="_blank" rel="noopener" style="display:inline-block;margin-top:.35rem;font-size:.68rem;color:var(--clay);text-decoration:none;font-family:var(--sans)">¿No sabés tu código postal? Consultalo en el sitio oficial de Correo Argentino →</a>
           </div>
         </div>
@@ -2763,7 +2808,12 @@ footer{background:var(--ink);color:rgba(255,255,255,.45);padding:5rem 2.5rem 2re
         </div>
       </div>
 
-      <div class="pe-row cols-2">
+      <div class="pe-row cols-3">
+        <div class="pe-group">
+          <label class="pe-label">Peso por unidad <span style="font-size:.6rem;text-transform:none;letter-spacing:0;opacity:.55">(kg)</span></label>
+          <input class="pe-input" id="pePeso" type="number" min="0" step="0.1" placeholder="Ej: 0.5">
+          <p class="pe-hint">Para calcular el envío por peso.</p>
+        </div>
         <div class="pe-group">
           <label class="pe-label">Etiqueta</label>
           <select class="pe-select" id="peTag">
@@ -2945,7 +2995,6 @@ function waitForSupabase(timeoutMs = 8000) {
     }, 200);
   });
 }
-const ENVIO_GRATIS_DESDE = 30000;
 const CUOTAS_SIN_INTERES = 6;
 
 // ✏️ CAMBIÁ ESTA CONTRASEÑA por la tuya propia
@@ -3868,6 +3917,7 @@ function renderAdminDashboard() {
   renderAdminCoupons();
   renderAdminReviews();
   renderAdminProducts();
+  renderShippingEditor();
 }
 
 function _renderSalesChart(orders) {
@@ -4334,7 +4384,8 @@ function addToCart(btn) {
   const imgSrc = imgEl ? imgEl.src : null;
   const existing = cartItems.find(i => i.name === name);
   if (existing) { existing.qty++; } else {
-    cartItems.push({ name, price, qty: 1, bg: card.dataset.bg, imgSrc });
+    const cardProd1 = dbGetProducts().find(p => p.name === name);
+    cartItems.push({ name, price, qty: 1, bg: card.dataset.bg, imgSrc, peso: cardProd1?.peso || 0 });
   }
   updateCart();
   toggleCart();
@@ -4346,7 +4397,8 @@ function addToCartByName(name, price) {
     // Buscar imagen en la grilla
     const card = Array.from(document.querySelectorAll('.pcard')).find(c => c.dataset.name === name);
     const imgEl = card ? card.querySelector('.pcard-img img') : null;
-    cartItems.push({ name, price, qty: 1, bg: '#C45C2A', imgSrc: imgEl ? imgEl.src : null });
+    const cardProd2 = dbGetProducts().find(p => p.name === name);
+    cartItems.push({ name, price, qty: 1, bg: '#C45C2A', imgSrc: imgEl ? imgEl.src : null, peso: cardProd2?.peso || 0 });
   }
   updateCart();
   toggleCart();
@@ -5089,7 +5141,8 @@ function pdAddToCart() {
   const imgSrc = imgEl ? imgEl.src : null;
   const existing = cartItems.find(i => i.name === displayName);
   if (existing) { existing.qty += _pdQty; } else {
-    cartItems.push({ name: displayName, price, qty: _pdQty, bg: _pdCard.dataset.bg || '#C45C2A', imgSrc });
+    const pdProd = dbGetProducts().find(p => p.name === _pdCard.dataset.name);
+    cartItems.push({ name: displayName, price, qty: _pdQty, bg: _pdCard.dataset.bg || '#C45C2A', imgSrc, peso: pdProd?.peso || 0 });
   }
   updateCart();
   closePdModal();
@@ -6468,6 +6521,8 @@ function openProductEditor(id) {
   document.getElementById('peProx').value      = p?.prox ? '1' : '0';
   document.getElementById('peStars').value     = p?.stars || 5;
   document.getElementById('peTimerHours').value = p?.timerHours || '';
+  const pePesoEl = document.getElementById('pePeso');
+  if (pePesoEl) pePesoEl.value = p?.peso || '';
   // Campos de ropa
   ['peMaterial'].forEach(fid => { const el = document.getElementById(fid); if (el) el.value = ''; });
   if (document.getElementById('peMaterial')) document.getElementById('peMaterial').value = p?.material || '';
@@ -6566,7 +6621,8 @@ function saveProductFromEditor() {
     timerHours: parseInt(document.getElementById('peTimerHours').value) || null,
     material: document.getElementById('peMaterial')?.value.trim() || '',
     genero:   document.getElementById('peGenero')?.value || '',
-    oportunidadMotivo: document.getElementById('peOportMotivo')?.value.trim() || ''
+    oportunidadMotivo: document.getElementById('peOportMotivo')?.value.trim() || '',
+    peso: parseFloat(document.getElementById('pePeso')?.value) || 0
   };
 
   // Guardar variantes y derivar talles/colores automáticamente
@@ -6949,56 +7005,233 @@ function changeQty(btn, delta) {
    SISTEMA DE ENVÍO — Correo Argentino por zona de CP
    Tarifas aproximadas actualizadas 2025 (ajustables en TARIFAS_ENVIO)
    ══════════════════════════════════════════════════════ */
-const TARIFAS_ENVIO = {
-  // zona: { label, precio_estandar, precio_express, dias_estandar, dias_express }
-  caba:      { label: 'CABA',                  estandar: 1800,  express: 3200,  diasE: '1–2',  diasX: '24hs' },
-  gba1:      { label: 'GBA 1er cordón',        estandar: 2200,  express: 3800,  diasE: '2–3',  diasX: '24hs' },
-  gba2:      { label: 'GBA 2do cordón',        estandar: 2600,  express: 4500,  diasE: '3–4',  diasX: '48hs' },
-  bonaerense:{ label: 'Prov. Buenos Aires',    estandar: 3200,  express: 5500,  diasE: '3–5',  diasX: '48hs' },
-  litoral:   { label: 'Litoral / Córdoba',     estandar: 3800,  express: 6200,  diasE: '4–6',  diasX: '72hs' },
-  noa:       { label: 'NOA / NEA',             estandar: 4500,  express: 7200,  diasE: '5–7',  diasX: '72hs' },
-  cuyo:      { label: 'Cuyo / San Luis',       estandar: 4200,  express: 6800,  diasE: '5–7',  diasX: '72hs' },
-  patagonia: { label: 'Patagonia',             estandar: 5500,  express: 8500,  diasE: '6–8',  diasX: '96hs' },
+/* ══════════════════════════════════════════════════════
+   SISTEMA DE ENVÍO — Correo Argentino
+   Precios por peso (kg) × tipo de destino (Regional / Nacional)
+   Regional = CABA + GBA + Provincia de Buenos Aires
+   Nacional = todo el resto del país
+   ══════════════════════════════════════════════════════ */
+
+// Tramos de peso: hasta X kg → { regional, nacional }
+const TARIFAS_PESO_DEFAULT = [
+  { hasta: 1,  regional: 16100, nacional: 22200 },
+  { hasta: 5,  regional: 19400, nacional: 36900 },
+  { hasta: 10, regional: 26000, nacional: 37900 },
+  { hasta: 15, regional: 32100, nacional: 47500 },
+  { hasta: 20, regional: 37800, nacional: 55100 },
+  { hasta: 25, regional: 45500, nacional: 67900 },
+];
+
+// Carga tarifas editadas por el admin desde localStorage
+function _loadTarifasPeso() {
+  try {
+    const saved = JSON.parse(localStorage.getItem('sol_tarifas_peso') || 'null');
+    if (!saved || !Array.isArray(saved)) return TARIFAS_PESO_DEFAULT.map(t => ({...t}));
+    return TARIFAS_PESO_DEFAULT.map((def, i) => ({
+      hasta:    def.hasta,
+      regional: saved[i]?.regional || def.regional,
+      nacional: saved[i]?.nacional || def.nacional,
+    }));
+  } catch(e) { return TARIFAS_PESO_DEFAULT.map(t => ({...t})); }
+}
+let TARIFAS_PESO = _loadTarifasPeso();
+
+// Envío gratis dinámico
+let ENVIO_GRATIS_DESDE = (() => {
+  try { return parseInt(localStorage.getItem('sol_envio_gratis') || '0') || 30000; } catch(e) { return 30000; }
+})();
+
+// CP → 'regional' | 'nacional'
+/*
+  DETECCIÓN DE ZONA POR CPA (Código Postal Argentino)
+  ─────────────────────────────────────────────────────
+  El CPA tiene formato alfanumérico de 8 caracteres:
+    [Letra provincia] [4 dígitos ciudad] [3 letras manzana]
+    Ej: C1437JEC = CABA · 1437 · JEC
+        B7600GUA = Prov. Bs As · Mar del Plata · GUA
+
+  La 1ª letra identifica la provincia con exactitud total.
+  También soporta el CP numérico clásico de 4 dígitos como fallback.
+
+  Zonas Correo Argentino:
+    REGIONAL = C (CABA) + B (Prov. Buenos Aires)
+    NACIONAL = todo el resto del país
+*/
+const CPA_PROVINCIA = {
+  C: { nombre: 'CABA',                      tipo: 'regional'  },
+  B: { nombre: 'Provincia de Buenos Aires',  tipo: 'regional'  },
+  A: { nombre: 'Salta',                      tipo: 'nacional'  },
+  D: { nombre: 'San Luis',                   tipo: 'nacional'  },
+  E: { nombre: 'Entre Ríos',                 tipo: 'nacional'  },
+  F: { nombre: 'La Rioja',                   tipo: 'nacional'  },
+  G: { nombre: 'Santiago del Estero',        tipo: 'nacional'  },
+  H: { nombre: 'Chaco',                      tipo: 'nacional'  },
+  J: { nombre: 'San Juan',                   tipo: 'nacional'  },
+  K: { nombre: 'Catamarca',                  tipo: 'nacional'  },
+  L: { nombre: 'La Pampa',                   tipo: 'nacional'  },
+  M: { nombre: 'Mendoza',                    tipo: 'nacional'  },
+  N: { nombre: 'Misiones',                   tipo: 'nacional'  },
+  P: { nombre: 'Formosa',                    tipo: 'nacional'  },
+  Q: { nombre: 'Neuquén',                    tipo: 'nacional'  },
+  R: { nombre: 'Río Negro',                  tipo: 'nacional'  },
+  S: { nombre: 'Santa Fe',                   tipo: 'nacional'  },
+  T: { nombre: 'Tucumán',                    tipo: 'nacional'  },
+  U: { nombre: 'Chubut',                     tipo: 'nacional'  },
+  V: { nombre: 'Tierra del Fuego',           tipo: 'nacional'  },
+  W: { nombre: 'Corrientes',                 tipo: 'nacional'  },
+  X: { nombre: 'Córdoba',                    tipo: 'nacional'  },
+  Y: { nombre: 'Jujuy',                      tipo: 'nacional'  },
+  Z: { nombre: 'Santa Cruz',                 tipo: 'nacional'  },
 };
 
-// Rangos de CP → zona
-function cpAZona(cp) {
-  const n = parseInt((cp || '').replace(/\D/g, ''));
-  if (isNaN(n)) return null;
-  // CABA: 1000–1499
-  if (n >= 1000 && n <= 1499) return 'caba';
-  // GBA 1er: 1600-1749, 1800-1949
-  if ((n >= 1600 && n <= 1749) || (n >= 1800 && n <= 1949)) return 'gba1';
-  // GBA 2do: 1500-1599, 1750-1799, 1950-1999
-  if ((n >= 1500 && n <= 1599) || (n >= 1750 && n <= 1799) || (n >= 1950 && n <= 1999)) return 'gba2';
-  // Prov BA: 2000-2999, 6000-8399
-  if ((n >= 2000 && n <= 2999) || (n >= 6000 && n <= 8399)) return 'bonaerense';
-  // Litoral / Córdoba / Santa Fe: 3000-5999
-  if (n >= 3000 && n <= 5999) return 'litoral';
-  // NOA / NEA: 4000-4999 ya incluido en litoral, mapa más específico:
-  if ((n >= 4000 && n <= 4999) || (n >= 3600 && n <= 3799)) return 'noa';
-  // Cuyo: 5400-5999
-  if (n >= 5400 && n <= 5999) return 'cuyo';
-  // Patagonia: 8400-9999
-  if (n >= 8400 && n <= 9999) return 'patagonia';
-  // Fallback según provincias conocidas
-  return 'bonaerense';
+// Parsea cualquier formato: CPA alfanumérico (C1437JEC) o numérico clásico (1437)
+function _parseCp(cp) {
+  const raw = (cp || '').trim().toUpperCase().replace(/\s/g, '');
+  // CPA completo: letra + 4 dígitos + 3 letras
+  const cpaFull = raw.match(/^([A-Z])(\d{4})([A-Z]{3})$/);
+  if (cpaFull) return { tipo: 'cpa', letra: cpaFull[1], num: parseInt(cpaFull[2]) };
+  // CPA parcial: solo letra + dígitos (ej: B7600)
+  const cpaPartial = raw.match(/^([A-Z])(\d{4})$/);
+  if (cpaPartial) return { tipo: 'cpa', letra: cpaPartial[1], num: parseInt(cpaPartial[2]) };
+  // CP numérico clásico
+  const num = parseInt(raw.replace(/\D/g, ''));
+  if (!isNaN(num) && num >= 1000) return { tipo: 'num', num };
+  return null;
 }
 
+function cpTipoDestino(cp) {
+  const parsed = _parseCp(cp);
+  if (!parsed) return null;
+
+  if (parsed.tipo === 'cpa') {
+    const prov = CPA_PROVINCIA[parsed.letra];
+    return prov ? prov.tipo : 'nacional';
+  }
+
+  // Fallback numérico clásico
+  const n = parsed.num;
+  if (n >= 1000 && n <= 1499) return 'regional'; // CABA
+  if ((n >= 1500 && n <= 1999) || (n >= 2000 && n <= 2999) || (n >= 6000 && n <= 8399)) return 'regional'; // GBA + PBA
+  return 'nacional';
+}
+
+function cpNombreZona(cp) {
+  const parsed = _parseCp(cp);
+  if (!parsed) return '';
+
+  if (parsed.tipo === 'cpa') {
+    const prov = CPA_PROVINCIA[parsed.letra];
+    if (!prov) return 'Interior del país';
+    // Para CABA y PBA mostrar subzona si se puede por número
+    if (parsed.letra === 'C') return 'CABA';
+    if (parsed.letra === 'B') {
+      const n = parsed.num;
+      if (n >= 1600 && n <= 1999) return 'GBA · Provincia de Buenos Aires';
+      return 'Provincia de Buenos Aires';
+    }
+    return prov.nombre;
+  }
+
+  // Fallback numérico
+  const n = parsed.num;
+  if (n >= 1000 && n <= 1499) return 'CABA';
+  if ((n >= 1600 && n <= 1749) || (n >= 1800 && n <= 1949)) return 'GBA 1er cordón';
+  if ((n >= 1500 && n <= 1599) || (n >= 1750 && n <= 1799) || (n >= 1950 && n <= 1999)) return 'GBA 2do cordón';
+  if ((n >= 2000 && n <= 2999) || (n >= 6000 && n <= 8399)) return 'Provincia de Buenos Aires';
+  if (n >= 3000 && n <= 3599) return 'Santa Fe / Entre Ríos';
+  if ((n >= 3600 && n <= 3799) || (n >= 4000 && n <= 4999)) return 'NOA / NEA';
+  if (n >= 5000 && n <= 5999) return 'Córdoba / Cuyo';
+  if (n >= 8400 && n <= 9999) return 'Patagonia';
+  return 'Interior del país';
+}
+
+// Peso total del carrito (kg)
+function cartTotalPeso() {
+  return cartItems.reduce((acc, item) => acc + (item.peso || 0) * item.qty, 0);
+}
+
+// Buscar tarifa según peso y tipo de destino
+function getTarifaPorPeso(pesoKg, tipo) {
+  const banda = TARIFAS_PESO.find(t => pesoKg <= t.hasta);
+  if (!banda) {
+    // Más de 25kg: usar la última banda
+    const last = TARIFAS_PESO[TARIFAS_PESO.length - 1];
+    return tipo === 'regional' ? last.regional : last.nacional;
+  }
+  return tipo === 'regional' ? banda.regional : banda.nacional;
+}
+
+/* ── Admin: renderizar editor de tarifas por peso ── */
+function renderShippingEditor() {
+  const container = document.getElementById('shpEditorRows');
+  const freeInput = document.getElementById('adminEnvioGratis');
+  if (!container) return;
+  if (freeInput) freeInput.value = ENVIO_GRATIS_DESDE;
+
+  container.innerHTML = TARIFAS_PESO.map((t, i) => `
+    <div class="shp-editor-row">
+      <div class="shp-weight-lbl">Hasta ${t.hasta} kg</div>
+      <div>
+        <input class="shp-price-input" type="number" min="0" step="100"
+          id="shp-reg-${i}" value="${t.regional}" placeholder="0"
+          title="Precio regional hasta ${t.hasta}kg">
+      </div>
+      <div>
+        <input class="shp-price-input" type="number" min="0" step="100"
+          id="shp-nac-${i}" value="${t.nacional}" placeholder="0"
+          title="Precio nacional hasta ${t.hasta}kg">
+      </div>
+    </div>`).join('');
+}
+
+function saveShippingRates() {
+  const freeVal = parseInt(document.getElementById('adminEnvioGratis')?.value || 0);
+  if (freeVal >= 0) {
+    ENVIO_GRATIS_DESDE = freeVal || 30000;
+    localStorage.setItem('sol_envio_gratis', String(ENVIO_GRATIS_DESDE));
+  }
+
+  const saved = TARIFAS_PESO.map((t, i) => {
+    const reg = parseInt(document.getElementById(`shp-reg-${i}`)?.value || 0);
+    const nac = parseInt(document.getElementById(`shp-nac-${i}`)?.value || 0);
+    if (reg > 0) TARIFAS_PESO[i].regional = reg;
+    if (nac > 0) TARIFAS_PESO[i].nacional = nac;
+    return { regional: TARIFAS_PESO[i].regional, nacional: TARIFAS_PESO[i].nacional };
+  });
+
+  localStorage.setItem('sol_tarifas_peso', JSON.stringify(saved));
+  showToast('✅ Tarifas de envío guardadas');
+  if (document.getElementById('payCP')?.value) calcularEnvio();
+}
+
+function resetShippingRates() {
+  if (!confirm('¿Restablecer todas las tarifas a los valores originales de Correo Argentino?')) return;
+  localStorage.removeItem('sol_tarifas_peso');
+  localStorage.removeItem('sol_envio_gratis');
+  TARIFAS_PESO = TARIFAS_PESO_DEFAULT.map(t => ({...t}));
+  ENVIO_GRATIS_DESDE = 30000;
+  renderShippingEditor();
+  showToast('↺ Tarifas restablecidas a los valores de Correo Argentino');
+}
+
+// Compatibilidad: cpAZona sigue funcionando para el campo zona del pedido
+function cpAZona(cp) {
+  return cpTipoDestino(cp) === 'regional' ? 'regional' : 'nacional';
+}
 
 function calcularEnvio() {
-  const cp   = (document.getElementById('payCP')?.value || '').trim();
+  const cp    = (document.getElementById('payCP')?.value || '').trim();
   const resEl = document.getElementById('shippingResult');
   const optsEl = document.getElementById('shippingOptions');
   if (!resEl) return;
 
   if (cp.length < 4) {
-    resEl.textContent = 'Completá el código postal para calcular el envío →';
+    resEl.textContent = 'Ingresá tu CPA (ej: C1437JEC) o CP numérico (ej: 1043) para calcular el envío →';
     if (optsEl) optsEl.style.display = 'none';
     shippingCost = 0; refreshCheckoutTotal(); return;
   }
 
-  // Envío gratis si supera el mínimo
+  // Envío gratis
   if (cartTotal >= ENVIO_GRATIS_DESDE) {
     resEl.innerHTML = `<span style="color:var(--leaf);font-weight:700">✅ ¡Envío gratis! (compras desde ${formatPrice(ENVIO_GRATIS_DESDE)})</span>`;
     if (optsEl) optsEl.style.display = 'none';
@@ -7006,40 +7239,53 @@ function calcularEnvio() {
     refreshCheckoutTotal(); return;
   }
 
-  const zona = cpAZona(cp);
-  if (!zona) {
-    resEl.textContent = '⚠️ CP no reconocido. Ingresá solo el número (ej: 1043).';
+  const tipo = cpTipoDestino(cp);
+  if (!tipo) {
+    resEl.textContent = '⚠️ CP no reconocido. Usá el formato CPA (ej: C1437JEC) o el numérico (ej: 1043).';
     if (optsEl) optsEl.style.display = 'none';
     shippingCost = 0; refreshCheckoutTotal(); return;
   }
 
-  const t = TARIFAS_ENVIO[zona];
-  resEl.innerHTML = `<span style="font-size:.78rem;color:var(--stone)">Zona: <strong>${t.label}</strong> · Correo Argentino</span>`;
+  const pesoTotal = cartTotalPeso();
+  const zonaNombre = cpNombreZona(cp);
+  const tipoBadge  = tipo === 'regional'
+    ? `<span style="background:rgba(78,160,100,.15);color:#4caf50;font-size:.65rem;font-weight:700;padding:.1rem .45rem;border-radius:3px;letter-spacing:.05em">🟢 REGIONAL</span>`
+    : `<span style="background:rgba(100,150,220,.15);color:#64b5f6;font-size:.65rem;font-weight:700;padding:.1rem .45rem;border-radius:3px;letter-spacing:.05em">🔵 NACIONAL</span>`;
+
+  const costoCalculado = getTarifaPorPeso(pesoTotal, tipo);
+  const bandaLabel = TARIFAS_PESO.find(t => pesoTotal <= t.hasta);
+
+  // Info de peso
+  const pesoInfo = pesoTotal > 0
+    ? `· Peso total: <strong>${pesoTotal.toFixed(2)} kg</strong>`
+    : `· <span style="color:rgba(0,0,0,.4);font-style:italic">productos sin peso asignado</span>`;
+
+  resEl.innerHTML = `
+    <div style="display:flex;align-items:center;gap:.5rem;flex-wrap:wrap;margin-bottom:.4rem">
+      ${tipoBadge}
+      <span style="font-size:.78rem;color:var(--stone)">${zonaNombre} ${pesoInfo}</span>
+    </div>`;
+
   if (optsEl) {
     optsEl.style.display = 'flex';
     optsEl.innerHTML = `
-      <label style="display:flex;align-items:center;gap:.6rem;cursor:pointer;padding:.6rem .8rem;border-radius:8px;border:1.5px solid var(--sand-deep);background:var(--white);font-size:.8rem;transition:border-color .2s" id="shpOptE" onclick="this.style.borderColor='var(--clay)';document.getElementById('shpOptX')&&(document.getElementById('shpOptX').style.borderColor='var(--sand-deep)')">
-        <input type="radio" name="shpOpt" value="estandar" checked onchange="selectShipping('estandar',${t.estandar})">
-        <div style="flex:1">
-          <div style="font-weight:700">Estándar &nbsp;<span style="color:var(--stone);font-weight:400;font-size:.75rem">${t.diasE} días hábiles</span></div>
-          <div style="font-size:.72rem;color:var(--stone)">Correo Argentino · entrega a domicilio</div>
+      <div style="background:var(--clay-pale,#fdf0ea);border:1.5px solid var(--clay);border-radius:10px;padding:.8rem 1rem">
+        <div style="display:flex;align-items:center;justify-content:space-between">
+          <div>
+            <div style="font-weight:700;font-size:.88rem">Correo Argentino · entrega a domicilio</div>
+            <div style="font-size:.7rem;color:var(--stone);margin-top:.2rem">
+              ${bandaLabel ? `Tarifa tramo hasta ${bandaLabel.hasta} kg` : 'Tarifa máxima (25 kg)'}
+              ${pesoTotal === 0 ? ' — asigná el peso en los productos para mayor precisión' : ''}
+            </div>
+          </div>
+          <div style="font-size:1.3rem;font-weight:800;color:var(--clay)">${formatPrice(costoCalculado)}</div>
         </div>
-        <strong style="font-size:.95rem;color:var(--clay);white-space:nowrap">${formatPrice(t.estandar)}</strong>
-      </label>
-      <label style="display:flex;align-items:center;gap:.6rem;cursor:pointer;padding:.6rem .8rem;border-radius:8px;border:1.5px solid var(--sand-deep);background:var(--white);font-size:.8rem;transition:border-color .2s" id="shpOptX" onclick="this.style.borderColor='var(--clay)';document.getElementById('shpOptE')&&(document.getElementById('shpOptE').style.borderColor='var(--sand-deep)')">
-        <input type="radio" name="shpOpt" value="express" onchange="selectShipping('express',${t.express})">
-        <div style="flex:1">
-          <div style="font-weight:700">Express ⚡ &nbsp;<span style="color:var(--stone);font-weight:400;font-size:.75rem">${t.diasX}</span></div>
-          <div style="font-size:.72rem;color:var(--stone)">Correo Argentino · entrega prioritaria</div>
-        </div>
-        <strong style="font-size:.95rem;color:var(--clay);white-space:nowrap">${formatPrice(t.express)}</strong>
-      </label>
-      <div style="font-size:.68rem;color:var(--stone);padding:.2rem .3rem">
-        💡 Envío <strong>gratis</strong> en compras desde <strong>${formatPrice(ENVIO_GRATIS_DESDE)}</strong> &nbsp;·&nbsp; Tarifas de referencia Correo Argentino
       </div>
-    `;
-    // Default: estándar selected
-    selectShipping('estandar', t.estandar);
+      <div style="font-size:.68rem;color:var(--stone);padding:.15rem .3rem">
+        💡 Envío <strong>gratis</strong> en compras desde <strong>${formatPrice(ENVIO_GRATIS_DESDE)}</strong>
+        &nbsp;·&nbsp; Tarifas Correo Argentino Encomienda Clásica
+      </div>`;
+    selectShipping('estandar', costoCalculado);
   }
 }
 
