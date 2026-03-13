@@ -2899,7 +2899,8 @@ footer{background:var(--ink);color:rgba(255,255,255,.45);padding:5rem 2.5rem 2re
           <div class="pe-video-list" id="peVideoList"></div>
           <div class="pe-video-input-row">
             <input id="peVideoInput" placeholder="https://youtube.com/watch?v=... o URL de video" type="url">
-            <button type="button" class="pe-video-add-btn" onclick="videoAddItem()">＋ Agregar</button>
+            <button type="button" class="pe-video-add-btn" onclick="videoAddItem()">＋ URL</button>
+            <button type="button" class="pe-video-add-btn" onclick="cloudinaryVideoUpload()" style="background:var(--clay);border-color:var(--clay);color:#fff" title="Subir video desde tu dispositivo">📹 Subir</button>
           </div>
           <p class="pe-hint">Los videos aparecen al final del carrusel de fotos.</p>
         </div>
@@ -7032,6 +7033,7 @@ function fillSuccessSugeridos(excludeNames = []) {
 // Luego editá estas 2 líneas con tus datos:
 const CLOUDINARY_CLOUD_NAME    = 'djihiaahb';
 const CLOUDINARY_UPLOAD_PRESET = 'Galeria de Sol en tu hogar';
+const CLOUDINARY_VIDEO_PRESET  = 'solentuhogar-videos'; // preset para videos
 
 function cloudinaryUpload(targetInputId) {
   if (CLOUDINARY_CLOUD_NAME === 'TU_CLOUD_NAME') {
@@ -7731,7 +7733,7 @@ function videoRenderList() {
 function videoAddItem() {
   const input = document.getElementById('peVideoInput');
   const url = (input?.value || '').trim();
-  if (!url) { showToast('⚠️ Pegá la URL del video'); input?.focus(); return; }
+  if (!url) { showToast('⚠️ Pegá la URL del video o usá el botón 📹 Subir'); input?.focus(); return; }
   if (!/^https?:\/\//i.test(url)) { showToast('⚠️ La URL debe empezar con https://'); return; }
   if (_peVideoList.includes(url)) { showToast('⚠️ Ese video ya está en la lista'); return; }
   if (_peVideoList.length >= 4) { showToast('⚠️ Máximo 4 videos por producto'); return; }
@@ -7739,6 +7741,52 @@ function videoAddItem() {
   if (input) input.value = '';
   videoRenderList();
   showToast('✅ Video agregado al carrusel');
+}
+
+async function cloudinaryVideoUpload() {
+  if (_peVideoList.length >= 4) { showToast('⚠️ Máximo 4 videos por producto'); return; }
+
+  const fileInput = document.createElement('input');
+  fileInput.type = 'file';
+  fileInput.accept = 'video/mp4,video/webm,video/ogg,video/quicktime,.mp4,.webm,.mov,.avi';
+  fileInput.onchange = async () => {
+    const file = fileInput.files[0];
+    if (!file) return;
+
+    if (file.size > 100 * 1024 * 1024) {
+      showToast('❌ El video es demasiado grande (máx 100MB)');
+      return;
+    }
+
+    showToast('⏳ Subiendo video... puede tardar unos segundos');
+
+    try {
+      const fd = new FormData();
+      fd.append('file', file);
+      fd.append('upload_preset', CLOUDINARY_VIDEO_PRESET);
+      fd.append('folder', 'solentuhogar/videos');
+
+      const res  = await fetch(
+        `https://api.cloudinary.com/v1_1/${CLOUDINARY_CLOUD_NAME}/video/upload`,
+        { method: 'POST', body: fd }
+      );
+      const data = await res.json();
+
+      if (data.secure_url) {
+        _peVideoList.push(data.secure_url);
+        videoRenderList();
+        showToast('✅ Video subido correctamente');
+      } else {
+        const msg = data.error?.message || 'error desconocido';
+        showToast('❌ Error al subir: ' + msg);
+        console.error('Cloudinary video error:', data);
+      }
+    } catch(e) {
+      showToast('❌ Error de red al subir el video');
+      console.error(e);
+    }
+  };
+  fileInput.click();
 }
 
 function videoRemoveItem(idx) {
