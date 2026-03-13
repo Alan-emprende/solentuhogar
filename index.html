@@ -1222,6 +1222,37 @@ footer{background:var(--ink);color:rgba(255,255,255,.45);padding:5rem 2.5rem 2re
 .omg-export-btn:hover{background:rgba(255,255,255,.13)}
 @media(max-width:860px){.dash-charts{grid-template-columns:1fr}.order-mgmt-head{grid-template-columns:80px 1fr 80px}}
 
+/* ══ VIDEOS EN GALERÍA ══ */
+.pdm-video-wrap{width:100%;height:100%;position:absolute;inset:0;z-index:1;background:#000;display:flex;align-items:center;justify-content:center}
+.pdm-video-wrap iframe{width:100%;height:100%;border:none;display:block}
+.pdm-video-wrap video{width:100%;height:100%;object-fit:contain;background:#000}
+.pdModal-img.has-video{cursor:default}
+.pdg-dot.is-video::after{content:'▶';position:absolute;font-size:.45rem;margin-top:.05rem}
+.pdg-dot.is-video{position:relative;display:flex;align-items:center;justify-content:center}
+/* Editor de videos */
+.pe-video-list{display:flex;flex-direction:column;gap:.4rem;margin-bottom:.5rem}
+.pe-video-item{display:flex;align-items:center;gap:.5rem;background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.08);border-radius:6px;padding:.4rem .6rem}
+.pe-video-item-icon{font-size:1rem;flex-shrink:0}
+.pe-video-item-url{flex:1;font-size:.7rem;color:rgba(255,255,255,.55);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.pe-video-item-type{font-size:.58rem;font-weight:700;letter-spacing:.06em;padding:.15rem .4rem;border-radius:4px;flex-shrink:0}
+.pe-video-item-type.yt{background:rgba(255,0,0,.18);color:#ff6b6b}
+.pe-video-item-type.mp4{background:rgba(100,181,246,.15);color:#64b5f6}
+.pe-video-del{background:none;border:none;color:rgba(255,255,255,.3);cursor:pointer;font-size:.85rem;padding:.1rem .2rem;line-height:1;transition:color .15s;flex-shrink:0}
+.pe-video-del:hover{color:#ef5350}
+.pe-video-input-row{display:flex;gap:.4rem}
+.pe-video-input-row input{flex:1;background:rgba(255,255,255,.06);border:1.5px solid rgba(255,255,255,.1);border-radius:6px;color:#fff;font-family:var(--sans);font-size:.75rem;padding:.45rem .7rem;outline:none;min-width:0}
+.pe-video-input-row input::placeholder{color:rgba(255,255,255,.25)}
+.pe-video-input-row input:focus{border-color:var(--gold)}
+.pe-video-add-btn{background:rgba(255,255,255,.07);border:1.5px solid rgba(255,255,255,.15);border-radius:6px;color:rgba(255,255,255,.5);font-family:var(--sans);font-size:.72rem;font-weight:600;padding:.45rem .9rem;cursor:pointer;white-space:nowrap;transition:background .15s,border-color .15s}
+.pe-video-add-btn:hover{background:rgba(255,255,255,.11);border-color:var(--gold);color:var(--gold)}
+/* ══ ORDEN DE PRODUCTOS ══ */
+.prod-order-col{width:60px;text-align:center}
+.prod-order-btns{display:flex;flex-direction:column;align-items:center;gap:2px}
+.prod-order-btn{background:rgba(255,255,255,.07);border:1px solid rgba(255,255,255,.1);border-radius:4px;color:rgba(255,255,255,.55);width:24px;height:20px;cursor:pointer;font-size:.65rem;display:flex;align-items:center;justify-content:center;transition:background .15s,color .15s;line-height:1}
+.prod-order-btn:hover:not(:disabled){background:rgba(196,150,42,.25);color:var(--gold);border-color:var(--gold)}
+.prod-order-btn:disabled{opacity:.2;cursor:default}
+.prod-order-num{font-size:.6rem;color:rgba(255,255,255,.3);font-weight:700}
+
 /* Tap targets mínimos 44px en mobile */
 @media(max-width:860px){
   .pcard-cta,.nav-account-btn,.nav-cart-btn,.qty-btn,.pdModal-qty-btn,
@@ -1711,7 +1742,7 @@ footer{background:var(--ink);color:rgba(255,255,255,.45);padding:5rem 2.5rem 2re
           <button class="admin-filter-btn" onclick="openProductEditor()">+ Nuevo producto</button>
         </div>
         <table class="prod-table" id="adminProdTable">
-          <thead><tr><th>Foto</th><th>Nombre</th><th>Sección</th><th>Precio</th><th>Stock</th><th>Etiqueta</th><th>Estado</th><th>Acciones</th></tr></thead>
+          <thead><tr><th class="prod-order-col">Orden</th><th>Foto</th><th>Nombre</th><th>Sección</th><th>Precio</th><th>Stock</th><th>Etiqueta</th><th>Estado</th><th>Acciones</th></tr></thead>
           <tbody id="adminProdBody"></tbody>
         </table>
 
@@ -2862,6 +2893,15 @@ footer{background:var(--ink);color:rgba(255,255,255,.45);padding:5rem 2.5rem 2re
             </button>
           </div>
           <p class="pe-hint">Cada foto se suma al carrusel del producto.</p>
+        </div>
+        <div class="pe-group">
+          <label class="pe-label">Videos <span style="font-size:.6rem;text-transform:none;letter-spacing:0;opacity:.5">(YouTube o enlace directo .mp4)</span></label>
+          <div class="pe-video-list" id="peVideoList"></div>
+          <div class="pe-video-input-row">
+            <input id="peVideoInput" placeholder="https://youtube.com/watch?v=... o URL de video" type="url">
+            <button type="button" class="pe-video-add-btn" onclick="videoAddItem()">＋ Agregar</button>
+          </div>
+          <p class="pe-hint">Los videos aparecen al final del carrusel de fotos.</p>
         </div>
       </div>
 
@@ -5897,6 +5937,12 @@ function buildGallery(card) {
     extra.forEach(src => _pdGallery.push({ type: 'img', src, alt: card.dataset.name }));
   } catch(e) {}
 
+  // Videos desde data-videos
+  try {
+    const vids = JSON.parse(card.dataset.videos || '[]');
+    vids.forEach(src => _pdGallery.push({ type: 'video', src }));
+  } catch(e) {}
+
   // Si no hay foto real, placeholder
   if (!_pdGallery.length) {
     const thumb = card.querySelector('.pcard-thumb');
@@ -5915,9 +5961,9 @@ function renderGallery() {
   const total     = _pdGallery.length;
   const idx       = _pdGalleryIndex;
 
-  // Imagen principal
-  const existImg = container.querySelector('img.pdm-real');
-  if (existImg) existImg.remove();
+  // Limpiar contenido previo (img + video)
+  container.querySelectorAll('img.pdm-real, .pdm-video-wrap').forEach(el => el.remove());
+  container.classList.remove('has-video');
 
   const active = _pdGallery[idx];
   if (active && active.type === 'img') {
@@ -5927,37 +5973,61 @@ function renderGallery() {
     img.alt = active.alt || '';
     img.className = 'pdm-real';
     img.style.cssText = 'width:100%;height:100%;object-fit:cover;position:absolute;inset:0;z-index:0;transition:opacity .25s';
-    // Insertar antes de las flechas
     container.insertBefore(img, container.querySelector('.pdg-arrow-left') || container.firstChild);
+  } else if (active && active.type === 'video') {
+    ph.style.display = 'none';
+    container.classList.add('has-video');
+    const wrap = document.createElement('div');
+    wrap.className = 'pdm-video-wrap';
+    const ytId = _getYouTubeId(active.src);
+    if (ytId) {
+      const iframe = document.createElement('iframe');
+      iframe.src = `https://www.youtube.com/embed/${ytId}?autoplay=0&rel=0&modestbranding=1`;
+      iframe.allow = 'accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture';
+      iframe.allowFullscreen = true;
+      iframe.loading = 'lazy';
+      wrap.appendChild(iframe);
+    } else {
+      const video = document.createElement('video');
+      video.src = active.src;
+      video.controls = true;
+      video.playsInline = true;
+      video.style.cssText = 'width:100%;height:100%;object-fit:contain;background:#000';
+      wrap.appendChild(video);
+    }
+    container.insertBefore(wrap, container.querySelector('.pdg-arrow-left') || container.firstChild);
   } else if (active) {
     ph.style.display = '';
     ph.textContent = active.label || '🛍';
   }
 
-  // Mostrar/ocultar controles solo si hay más de 1 foto
+  // Mostrar/ocultar controles solo si hay más de 1 item
   const multi = total > 1;
   if (btnLeft)  btnLeft.style.display  = multi ? 'flex' : 'none';
   if (btnRight) btnRight.style.display = multi ? 'flex' : 'none';
   if (counter)  counter.style.display  = multi ? '' : 'none';
 
-  // Deshabilitar flechas en los extremos
   if (btnLeft)  btnLeft.disabled  = idx === 0;
   if (btnRight) btnRight.disabled = idx === total - 1;
   if (btnLeft)  btnLeft.style.opacity  = idx === 0       ? '.35' : '1';
   if (btnRight) btnRight.style.opacity = idx === total-1 ? '.35' : '1';
 
-  // Contador  "2 / 3"
   if (counter) counter.textContent = `${idx + 1} / ${total}`;
 
-  // Dots
   if (dotsEl) {
     dotsEl.style.display = multi ? 'flex' : 'none';
     dotsEl.innerHTML = multi
-      ? _pdGallery.map((_, i) =>
-          `<button class="pdg-dot ${i === idx ? 'active' : ''}" onclick="pdGalleryGo(${i})"></button>`
+      ? _pdGallery.map((item, i) =>
+          `<button class="pdg-dot ${i === idx ? 'active' : ''}${item.type==='video' ? ' is-video' : ''}" onclick="pdGalleryGo(${i})" title="${item.type==='video'?'▶ Video':'Foto '+(i+1)}"></button>`
         ).join('')
       : '';
   }
+}
+
+function _getYouTubeId(url) {
+  if (!url) return null;
+  const m = url.match(/(?:youtu\.be\/|youtube\.com\/(?:watch\?v=|embed\/|shorts\/|v\/))([a-zA-Z0-9_-]{11})/);
+  return m ? m[1] : null;
 }
 
 function pdGalleryGo(i) {
@@ -6239,6 +6309,7 @@ function renderProductCard(p) {
   const tagHtml  = (p.tag && p.tagText) ? `<span class="pcard-tag ${tagClass}">${p.tagText}</span>` : '';
   const stars    = '★'.repeat(Math.min(5, p.stars||5)) + '☆'.repeat(5 - Math.min(5, p.stars||5));
   const gAttr    = (p.gallery && p.gallery.length) ? `data-gallery='${JSON.stringify(p.gallery)}'` : '';
+  const vAttr    = (p.videos  && p.videos.length)  ? `data-videos='${JSON.stringify(p.videos)}'`   : '';
   const proxAttr = p.prox ? 'data-prox="1"' : '';
   const clickAttr= p.prox ? '' : 'onclick="openProduct(this)"';
   const proxOvl  = p.prox ? '<div class="pcard-prox"><div class="pcard-prox-badge">Próximamente</div><p class="pcard-prox-txt">Muy pronto disponible</p></div>' : '';
@@ -6256,7 +6327,7 @@ function renderProductCard(p) {
   const wishClass = isWished ? ' on' : '';
   const wishChar  = isWished ? '♥' : '♡';
 
-  return `<div class="pcard" ${clickAttr} data-id="${p.id}" data-name="${safeName}" data-price="${p.price}" data-stock="${p.stock}" ${gAttr} ${proxAttr} data-desc="${safeDesc}">
+  return `<div class="pcard" ${clickAttr} data-id="${p.id}" data-name="${safeName}" data-price="${p.price}" data-stock="${p.stock}" ${gAttr} ${vAttr} ${proxAttr} data-desc="${safeDesc}">
   <div class="pcard-img">
     ${imgHtml}${tagHtml}
     <button class="pcard-wish${wishClass}" onclick="event.stopPropagation();toggleWish(this)" style="${isWished?'opacity:1':''}">${wishChar}</button>
@@ -6370,6 +6441,30 @@ function renderOportunidadesGrid() {
   initTimers();
 }
 
+/* ══ ADMIN: mover producto arriba/abajo dentro de su sección ══ */
+function moveProduct(id, dir) {
+  const prods   = dbGetProducts();
+  const idx     = prods.findIndex(p => p.id === id);
+  if (idx < 0) return;
+  const section = prods[idx].section;
+  // Índices de productos de la misma sección, en orden
+  const secIdxs = prods.map((p, i) => p.section === section ? i : -1).filter(i => i >= 0);
+  const posInSec = secIdxs.indexOf(idx);
+  const swapPos  = posInSec + dir;
+  if (swapPos < 0 || swapPos >= secIdxs.length) return;
+  const swapIdx = secIdxs[swapPos];
+  // Intercambiar en el array global
+  [prods[idx], prods[swapIdx]] = [prods[swapIdx], prods[idx]];
+  dbSaveProducts(prods);
+  // Re-render tienda + admin
+  if (section === 'oportunidades') renderOportunidadesGrid();
+  else { renderProductGrid(section); if (section === 'ropa') buildRopaFilterChips(); }
+  renderAdminProducts(
+    (document.getElementById('adminProdSearch')?.value || '').trim().toLowerCase(),
+    document.getElementById('adminProdSection')?.value || ''
+  );
+}
+
 /* ══ ADMIN: tabla de productos ══ */
 function renderAdminProducts(filterQ, filterSec) {
   const body = document.getElementById('adminProdBody');
@@ -6380,9 +6475,15 @@ function renderAdminProducts(filterQ, filterSec) {
     p.name.toLowerCase().includes(filterQ) || (p.cat||'').toLowerCase().includes(filterQ));
 
   if (!prods.length) {
-    body.innerHTML = '<tr><td colspan="8" style="text-align:center;padding:1.5rem;color:rgba(255,255,255,.3);font-size:.8rem">No hay productos que coincidan</td></tr>';
+    body.innerHTML = '<tr><td colspan="9" style="text-align:center;padding:1.5rem;color:rgba(255,255,255,.3);font-size:.8rem">No hay productos que coincidan</td></tr>';
     return;
   }
+
+  // Para saber si es el primero/último de su sección (para deshabilitar flechas)
+  const allProds = dbGetProducts();
+  const secCounts = {}; // section -> [ids en orden]
+  allProds.forEach(p => { if (!secCounts[p.section]) secCounts[p.section] = []; secCounts[p.section].push(p.id); });
+
   const tagBadge = p => {
     if (!p.tag || !p.tagText) return '—';
     const cls = {hot:'ptb-hot',sale:'ptb-sale',new:'ptb-new'}[p.tag]||'ptb-new';
@@ -6398,9 +6499,22 @@ function renderAdminProducts(filterQ, filterSec) {
     const priceStr = p.priceOld
       ? `${formatPrice(p.price)}<br><span style="text-decoration:line-through;color:rgba(255,255,255,.3);font-size:.68rem">${formatPrice(p.priceOld)}</span>`
       : formatPrice(p.price);
+    const secList  = secCounts[p.section] || [];
+    const posInSec = secList.indexOf(p.id);
+    const isFirst  = posInSec === 0;
+    const isLast   = posInSec === secList.length - 1;
+    const posLabel = posInSec >= 0 ? `<div class="prod-order-num">#${posInSec + 1}</div>` : '';
+    const videoCount = (p.videos && p.videos.length) ? `<br><span style="font-size:.62rem;color:#64b5f6">▶ ${p.videos.length} video${p.videos.length>1?'s':''}</span>` : '';
     return `<tr>
+      <td class="prod-order-col">
+        ${posLabel}
+        <div class="prod-order-btns">
+          <button class="prod-order-btn" onclick="moveProduct('${p.id}',-1)" ${isFirst?'disabled':''} title="Subir">▲</button>
+          <button class="prod-order-btn" onclick="moveProduct('${p.id}',1)"  ${isLast?'disabled':''}  title="Bajar">▼</button>
+        </div>
+      </td>
       <td>${thumb}</td>
-      <td><strong style="color:#fff;font-size:.8rem">${p.name}</strong><br><span style="font-size:.67rem;color:rgba(255,255,255,.35)">${p.cat||''}</span></td>
+      <td><strong style="color:#fff;font-size:.8rem">${p.name}</strong><br><span style="font-size:.67rem;color:rgba(255,255,255,.35)">${p.cat||''}</span>${videoCount}</td>
       <td style="text-transform:capitalize;font-size:.75rem">${p.section}</td>
       <td style="color:var(--gold);font-weight:700;font-size:.78rem">${priceStr}</td>
       <td style="text-align:center">${p.stock}</td>
@@ -6518,6 +6632,7 @@ function openProductEditor(id) {
   document.getElementById('peDesc').value      = p?.desc || '';
   document.getElementById('peImg').value       = p?.img || '';
   galleryLoadFromProduct(p); // Cargar galería visual
+  videoLoadFromProduct(p);   // Cargar videos
   document.getElementById('peProx').value      = p?.prox ? '1' : '0';
   document.getElementById('peStars').value     = p?.stars || 5;
   document.getElementById('peTimerHours').value = p?.timerHours || '';
@@ -6605,6 +6720,7 @@ function saveProductFromEditor() {
   }
 
   const gallery = galleryGetList(); // Leer de la galería visual
+  const videos  = videoGetList();   // Leer videos
 
   const prod = {
     id:         document.getElementById('peId').value || ('p_' + Date.now()),
@@ -6617,7 +6733,8 @@ function saveProductFromEditor() {
     tag: tagType||'', tagText: finalTagText,
     prox:       document.getElementById('peProx').value === '1',
     img:        document.getElementById('peImg').value.trim(),
-    gallery,    desc: document.getElementById('peDesc').value.trim(),
+    gallery,    videos,
+    desc: document.getElementById('peDesc').value.trim(),
     timerHours: parseInt(document.getElementById('peTimerHours').value) || null,
     material: document.getElementById('peMaterial')?.value.trim() || '',
     genero:   document.getElementById('peGenero')?.value || '',
@@ -7578,9 +7695,71 @@ function galleryGetList() {
   return [..._peGalleryList];
 }
 
+/* ══════════════════════════════════════════════════════
+   EDITOR DE VIDEOS — lista de videos del producto
+   ══════════════════════════════════════════════════════ */
+let _peVideoList = []; // Array de URLs de video
+
+function _videoDetectType(url) {
+  if (!url) return null;
+  if (/youtu\.be|youtube\.com/i.test(url)) return 'yt';
+  if (/\.mp4|\.webm|\.ogg/i.test(url)) return 'mp4';
+  if (/vimeo\.com/i.test(url)) return 'mp4'; // tratamos Vimeo como embed genérico
+  return 'mp4';
+}
+
+function videoRenderList() {
+  const el = document.getElementById('peVideoList');
+  if (!el) return;
+  if (!_peVideoList.length) {
+    el.innerHTML = '<div style="font-size:.7rem;color:rgba(255,255,255,.25);font-style:italic;padding:.2rem 0">Sin videos aún</div>';
+    return;
+  }
+  el.innerHTML = _peVideoList.map((url, i) => {
+    const type = _videoDetectType(url);
+    const label = type === 'yt' ? 'YouTube' : 'Video';
+    const short = url.length > 52 ? url.slice(0, 50) + '…' : url;
+    return `<div class="pe-video-item">
+      <span class="pe-video-item-icon">${type === 'yt' ? '▶️' : '🎥'}</span>
+      <span class="pe-video-item-url" title="${url}">${short}</span>
+      <span class="pe-video-item-type ${type}">${label}</span>
+      <button type="button" class="pe-video-del" onclick="videoRemoveItem(${i})" title="Eliminar">✕</button>
+    </div>`;
+  }).join('');
+}
+
+function videoAddItem() {
+  const input = document.getElementById('peVideoInput');
+  const url = (input?.value || '').trim();
+  if (!url) { showToast('⚠️ Pegá la URL del video'); input?.focus(); return; }
+  if (!/^https?:\/\//i.test(url)) { showToast('⚠️ La URL debe empezar con https://'); return; }
+  if (_peVideoList.includes(url)) { showToast('⚠️ Ese video ya está en la lista'); return; }
+  if (_peVideoList.length >= 4) { showToast('⚠️ Máximo 4 videos por producto'); return; }
+  _peVideoList.push(url);
+  if (input) input.value = '';
+  videoRenderList();
+  showToast('✅ Video agregado al carrusel');
+}
+
+function videoRemoveItem(idx) {
+  _peVideoList.splice(idx, 1);
+  videoRenderList();
+}
+
+function videoLoadFromProduct(p) {
+  _peVideoList = p?.videos ? [...p.videos] : [];
+  videoRenderList();
+}
+
+function videoGetList() {
+  return [..._peVideoList];
+}
+
 function openImgZoom(e) {
   // No disparar si se hace clic en flechas/dots del carrusel
   if (e.target.closest('.pdg-arrow') || e.target.closest('.pdg-dots')) return;
+  // No disparar si el ítem activo es un video
+  if (_pdGallery[_pdGalleryIndex]?.type === 'video') return;
 
   const imgEl = document.querySelector('#pdModalImg img');
   if (!imgEl) return;
