@@ -1174,6 +1174,24 @@ footer{background:var(--ink);color:rgba(255,255,255,.45);padding:5rem 2.5rem 2re
 .omg-state-select option{background:#1a1a2e}
 .omg-note-input{flex:1;min-width:140px;background:rgba(255,255,255,.07);border:1px solid rgba(255,255,255,.1);border-radius:6px;color:#fff;font-family:var(--sans);font-size:.75rem;padding:.4rem .7rem;outline:none}
 .omg-note-input::placeholder{color:rgba(255,255,255,.3)}
+/* ── Tracking en admin ── */
+.omg-tracking-wrap{width:100%;display:flex;flex-direction:column;gap:.4rem;margin-bottom:.5rem;padding:.65rem .8rem;background:rgba(255,200,50,.06);border:1px solid rgba(255,200,50,.18);border-radius:8px}
+.omg-tracking-label{font-size:.6rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:rgba(255,200,50,.7)}
+.omg-tracking-row{display:flex;gap:.5rem;align-items:center}
+.omg-tracking-input{flex:1;background:rgba(255,255,255,.07);border:1px solid rgba(255,255,255,.14);border-radius:6px;color:#fff;font-family:var(--sans);font-size:.78rem;padding:.38rem .65rem;outline:none}
+.omg-tracking-input:focus{border-color:var(--gold)}
+.omg-tracking-input::placeholder{color:rgba(255,255,255,.25)}
+.omg-notify-btn{display:inline-flex;align-items:center;gap:.35rem;background:#1565c0;color:#fff;border:none;border-radius:6px;font-family:var(--sans);font-size:.7rem;font-weight:700;padding:.38rem .8rem;cursor:pointer;transition:opacity .15s;white-space:nowrap}
+.omg-notify-btn:hover{opacity:.85}
+.omg-notify-btn.sent{background:#2e7d32}
+.omg-tracking-hint{font-size:.62rem;color:rgba(255,255,255,.3)}
+/* ── Resumen de envío en checkout mejorado ── */
+.shp-cost-card{background:var(--clay-pale,#fdf0ea);border:1.5px solid var(--clay);border-radius:10px;padding:.8rem 1rem;margin-top:.6rem}
+.shp-cost-row{display:flex;align-items:center;justify-content:space-between;gap:.5rem}
+.shp-cost-label{font-size:.8rem;color:var(--ink);font-weight:600}
+.shp-cost-amount{font-size:1rem;font-weight:800;color:var(--clay)}
+.shp-cost-detail{font-size:.68rem;color:var(--stone);margin-top:.2rem}
+.shp-free-badge{background:var(--leaf,#2e7d32);color:#fff;font-size:.65rem;font-weight:700;padding:.2rem .55rem;border-radius:4px;letter-spacing:.05em}
 .omg-save-btn{background:var(--gold);color:var(--ink);border:none;border-radius:6px;font-family:var(--sans);font-size:.72rem;font-weight:700;padding:.4rem .9rem;cursor:pointer;transition:opacity .15s;white-space:nowrap}
 .omg-save-btn:hover{opacity:.85}
 .omg-wa-btn{display:inline-flex;align-items:center;gap:.35rem;background:#25D366;color:#fff;border:none;border-radius:6px;font-family:var(--sans);font-size:.72rem;font-weight:700;padding:.4rem .9rem;cursor:pointer;text-decoration:none;white-space:nowrap}
@@ -1698,47 +1716,6 @@ footer{background:var(--ink);color:rgba(255,255,255,.45);padding:5rem 2.5rem 2re
         </div>
         <div id="adminOrdersList"></div>
 
-        <!-- ═ Configuración de envíos ═ -->
-        <div class="admin-filters" style="margin-top:1.5rem;margin-bottom:.8rem">
-          <span class="admin-section-lbl" style="margin:0">🚚 Configuración de envíos</span>
-          <button class="omg-save-btn" onclick="guardarConfigEnvios()" style="margin-left:auto">💾 Guardar tarifas</button>
-        </div>
-        <div style="background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.08);border-radius:10px;padding:1rem 1.2rem;margin-bottom:1rem">
-          <!-- Envío gratis desde -->
-          <div style="display:flex;align-items:center;gap:1rem;margin-bottom:1.2rem;flex-wrap:wrap">
-            <span style="font-size:.72rem;color:rgba(255,255,255,.6);white-space:nowrap">✅ Envío gratis desde:</span>
-            <div style="display:flex;align-items:center;gap:.4rem">
-              <span style="font-size:.8rem;color:rgba(255,255,255,.4)">$</span>
-              <input class="admin-ci" id="cfgEnvioGratis" type="number" min="0" step="100"
-                style="width:110px;text-transform:none;font-size:.82rem"
-                title="Monto mínimo de compra para envío gratis (0 = desactivado)">
-            </div>
-            <span style="font-size:.65rem;color:rgba(255,255,255,.3)">(0 = desactivado)</span>
-          </div>
-          <!-- Tabla de zonas -->
-          <div style="font-size:.6rem;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:rgba(255,255,255,.3);margin-bottom:.6rem">Tarifas por zona — Correo Argentino</div>
-          <div style="overflow-x:auto">
-            <table style="width:100%;border-collapse:collapse;min-width:520px" id="cfgTarifasTable">
-              <thead>
-                <tr>
-                  <th style="font-size:.6rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:rgba(255,255,255,.25);padding:.4rem .7rem;border-bottom:1px solid rgba(255,255,255,.07);text-align:left">Zona</th>
-                  <th style="font-size:.6rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:rgba(255,255,255,.25);padding:.4rem .7rem;border-bottom:1px solid rgba(255,255,255,.07);text-align:center">Estándar ($)</th>
-                  <th style="font-size:.6rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:rgba(255,255,255,.25);padding:.4rem .7rem;border-bottom:1px solid rgba(255,255,255,.07);text-align:center">Express ($)</th>
-                  <th style="font-size:.6rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:rgba(255,255,255,.25);padding:.4rem .7rem;border-bottom:1px solid rgba(255,255,255,.07);text-align:center">Días estándar</th>
-                  <th style="font-size:.6rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:rgba(255,255,255,.25);padding:.4rem .7rem;border-bottom:1px solid rgba(255,255,255,.07);text-align:center">Días express</th>
-                </tr>
-              </thead>
-              <tbody id="cfgTarifasBody"></tbody>
-            </table>
-          </div>
-          <div style="font-size:.65rem;color:rgba(255,255,255,.25);margin-top:.8rem">
-            💡 Verificá las tarifas reales en
-            <a href="https://www.correoargentino.com.ar/herramientas/cotizador" target="_blank"
-              style="color:var(--gold);text-decoration:none">correoargentino.com.ar/herramientas/cotizador</a>
-            · Origen: Morón (1708)
-          </div>
-        </div>
-
         <!-- Cupones -->
         <div class="admin-filters" style="margin-top:1.5rem;margin-bottom:.8rem">
           <span class="admin-section-lbl" style="margin:0">Cupones de descuento</span>
@@ -1879,6 +1856,7 @@ footer{background:var(--ink);color:rgba(255,255,255,.45);padding:5rem 2.5rem 2re
           <div class="form-group">
             <label class="form-label">Código postal<span class="req">*</span></label>
             <input class="form-input" type="text" placeholder="1043" id="payCP" oninput="calcularEnvio()" maxlength="8">
+            <a href="https://www.correoargentino.com.ar/formularios/cpa" target="_blank" rel="noopener" style="display:inline-block;margin-top:.35rem;font-size:.68rem;color:var(--clay);text-decoration:none;font-family:var(--sans)">¿No sabés tu código postal? Consultalo en el sitio oficial de Correo Argentino →</a>
           </div>
         </div>
         <div class="form-row cols-2">
@@ -2967,7 +2945,7 @@ function waitForSupabase(timeoutMs = 8000) {
     }, 200);
   });
 }
-const ENVIO_GRATIS_DESDE_DEFAULT = 30000; // referencia — el valor real se carga desde localStorage
+const ENVIO_GRATIS_DESDE = 30000;
 const CUOTAS_SIN_INTERES = 6;
 
 // ✏️ CAMBIÁ ESTA CONTRASEÑA por la tuya propia
@@ -3887,7 +3865,6 @@ function renderAdminDashboard() {
 
   renderAdminUsersTable(_adminUsers, _adminOrders);
   renderAdminOrdersList(filteredOrders, _adminUsers);
-  renderAdminEnvios();
   renderAdminCoupons();
   renderAdminReviews();
   renderAdminProducts();
@@ -4041,6 +4018,9 @@ function renderAdminOrdersList(orders, users) {
     const itemsText = (o.items||[]).map(i => `${i.name} ×${i.qty} — ${formatPrice(i.price*i.qty)}`).join('<br>');
     const envioText = o.envio ? `${o.envio.tipo}${o.envio.costo > 0 ? ' ('+formatPrice(o.envio.costo)+')' : ' (GRATIS)'}` : '—';
     const waMsg = encodeURIComponent(`Hola ${user?.nombre||''}! Te escribimos de Sol en tu Hogar 🌟\nTu pedido *${o.id}* está *${o.estado}*. Ante cualquier duda estamos a disposición 😊`);
+    const trackingVal = (o.tracking || '').replace(/"/g, '&quot;');
+    const notifiedClass = o.trackingNotified ? 'sent' : '';
+    const notifiedLabel = o.trackingNotified ? '✅ Notificado' : '📧 Notificar cliente';
     return `
     <div class="order-mgmt-row" id="omr-${o.id}">
       <div class="order-mgmt-head" onclick="toggleOrderMgmt('${o.id}')">
@@ -4066,12 +4046,22 @@ function renderAdminOrdersList(orders, users) {
         </div>
         <div style="font-size:.6rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:rgba(255,255,255,.3);margin-bottom:.4rem">Productos</div>
         <div class="order-mgmt-items">${itemsText}</div>
+
+        <!-- Número de seguimiento -->
+        <div class="omg-tracking-wrap">
+          <span class="omg-tracking-label">📦 Número de seguimiento (Correo Argentino / Andreani / OCA)</span>
+          <div class="omg-tracking-row">
+            <input class="omg-tracking-input" id="omg-track-${o.id}" placeholder="Ej: CA123456789AR  ·  Dejar vacío si no aplica" value="${trackingVal}">
+            <button class="omg-notify-btn ${notifiedClass}" id="omg-notify-${o.id}" onclick="notificarTracking('${o.id}')">${notifiedLabel}</button>
+          </div>
+          <span class="omg-tracking-hint">Al presionar "Notificar cliente" se envía email + mensaje de WhatsApp automático.</span>
+        </div>
+
         <div class="order-mgmt-actions">
           <select class="omg-state-select" id="omg-sel-${o.id}">
             ${['Pendiente','En preparación','Enviado','Entregado','Cancelado'].map(s=>`<option${o.estado===s?' selected':''}>${s}</option>`).join('')}
           </select>
-          <input class="omg-note-input" id="omg-track-${o.id}" placeholder="📦 Nro. seguimiento (ej: CA123456789AR)" value="${o.tracking||''}" style="flex:1.2">
-          <input class="omg-note-input" id="omg-note-${o.id}" placeholder="Nota interna" value="${o.nota||''}" style="flex:1">
+          <input class="omg-note-input" id="omg-note-${o.id}" placeholder="Nota interna" value="${o.nota||''}">
           <button class="omg-save-btn" onclick="guardarEstadoPedido('${o.id}')">💾 Guardar</button>
           <a class="omg-wa-btn" href="https://wa.me/${tel.replace(/\D/g,'')||'5491131496246'}?text=${waMsg}" target="_blank" rel="noopener">💬 WA</a>
         </div>
@@ -4079,41 +4069,26 @@ function renderAdminOrdersList(orders, users) {
     </div>`;
   }).join('');
 }
-
 function toggleOrderMgmt(id) {
   const el = document.getElementById('omr-' + id);
   if (el) el.classList.toggle('expanded');
 }
 
 function guardarEstadoPedido(orderId) {
-  const orders    = dbGetOrders();
-  const idx       = orders.findIndex(o => o.id === orderId);
+  const orders  = dbGetOrders();
+  const idx     = orders.findIndex(o => o.id === orderId);
   if (idx < 0) return;
+  const newState   = document.getElementById('omg-sel-'   + orderId)?.value;
+  const newNote    = document.getElementById('omg-note-'  + orderId)?.value || '';
+  const newTracking= document.getElementById('omg-track-' + orderId)?.value.trim() || '';
 
-  const newState   = document.getElementById('omg-sel-' + orderId)?.value;
-  const newTracking = (document.getElementById('omg-track-' + orderId)?.value || '').trim();
-  const newNote    = document.getElementById('omg-note-' + orderId)?.value || '';
-
-  const prevState  = orders[idx].estado;
   orders[idx].estado   = newState;
-  orders[idx].tracking = newTracking;
   orders[idx].nota     = newNote;
-
+  orders[idx].tracking = newTracking;
   dbSaveOrders(orders);
   dbUpsertOrder(orders[idx]);
   _adminOrders = orders;
-
-  // Enviar email de seguimiento si cambió a "Enviado" y hay número de tracking
-  const acabaDeEnviar = newState === 'Enviado' && prevState !== 'Enviado';
-  if (acabaDeEnviar && newTracking) {
-    sendTrackingEmail(orders[idx]);
-  } else if (acabaDeEnviar && !newTracking) {
-    showToast(`✅ Pedido ${orderId} → Enviado (sin nro. de seguimiento)`);
-  }
-
-  if (!acabaDeEnviar || newTracking) {
-    showToast(`✅ Pedido ${orderId} → ${newState}${newTracking && acabaDeEnviar ? ' · Email enviado al cliente 📧' : ''}`);
-  }
+  showToast(`✅ Pedido ${orderId} → ${newState}`);
 
   // Actualizar badge sin re-renderizar todo
   const badgeClass = { 'Pendiente':'ob-pendiente', 'En preparación':'ob-preparacion', 'Enviado':'ob-enviado', 'Entregado':'ob-entregado', 'Cancelado':'ob-cancelado' };
@@ -4128,6 +4103,124 @@ function guardarEstadoPedido(orderId) {
     const st = userOrder.querySelector('.ap-order-status');
     if (st) st.textContent = newState;
   }
+}
+
+// ── Notificar al cliente con número de seguimiento ──
+async function notificarTracking(orderId) {
+  const tracking = document.getElementById('omg-track-' + orderId)?.value.trim();
+  if (!tracking) {
+    showToast('⚠️ Ingresá primero el número de seguimiento');
+    document.getElementById('omg-track-' + orderId)?.focus();
+    return;
+  }
+
+  const orders = dbGetOrders();
+  const order  = orders.find(o => o.id === orderId);
+  if (!order) return;
+
+  const users  = dbGetUsers();
+  const user   = users.find(u => u.id === order.userId);
+  const email  = user?.email || order.contactEmail;
+  const nombre = user ? user.nombre : 'Cliente';
+  const tel    = (user?.tel || order.contactTel || '').replace(/\D/g,'');
+
+  if (!email || email === '—') {
+    showToast('⚠️ Este pedido no tiene email del cliente');
+    return;
+  }
+
+  const btn = document.getElementById('omg-notify-' + orderId);
+  if (btn) { btn.textContent = '⏳ Enviando...'; btn.disabled = true; }
+
+  // Detectar empresa de transporte según formato del código
+  const transportLabel = _detectTransport(tracking);
+  const trackingUrl    = _trackingUrl(tracking);
+
+  // 1. Email via EmailJS
+  let emailOk = false;
+  try {
+    if (typeof emailjs !== 'undefined' && EMAILJS_TRACKING_ID && EMAILJS_TRACKING_ID !== 'template_tracking') {
+      await emailjs.send(EMAILJS_SERVICE_ID, EMAILJS_TRACKING_ID, {
+        customer_name:  nombre,
+        customer_email: email,
+        order_id:       orderId,
+        tracking_number:tracking,
+        transport:      transportLabel,
+        tracking_url:   trackingUrl,
+        tienda:         'Sol en tu Hogar'
+      });
+      emailOk = true;
+    } else {
+      // Sin template configurado: usar template de confirmación con nota extra
+      await emailjs.send(EMAILJS_SERVICE_ID, EMAILJS_TEMPLATE_ID, {
+        customer_name:  nombre,
+        customer_email: email,
+        order_id:       orderId,
+        items_list:     `📦 Tu pedido fue enviado.\n\nNúmero de seguimiento: ${tracking}\nEmpresa: ${transportLabel}\nSeguí tu envío en: ${trackingUrl}`,
+        total:          formatPrice(order.total),
+        metodo:         'Seguimiento de envío',
+        tienda:         'Sol en tu Hogar',
+        fecha:          new Date().toLocaleDateString('es-AR')
+      });
+      emailOk = true;
+    }
+  } catch(e) {
+    console.warn('EmailJS tracking error:', e);
+  }
+
+  // 2. WhatsApp si hay teléfono
+  if (tel) {
+    const waText = encodeURIComponent(
+      `📦 Hola ${nombre}! Te escribimos de Sol en tu Hogar 🌟\n\n` +
+      `Tu pedido *${orderId}* fue enviado ✅\n\n` +
+      `🔍 *Número de seguimiento:* ${tracking}\n` +
+      `🚚 *Empresa:* ${transportLabel}\n` +
+      `🔗 *Seguilo en:* ${trackingUrl}\n\n` +
+      `Ante cualquier duda estamos disponibles. ¡Gracias por tu compra! 😊`
+    );
+    window.open(`https://wa.me/${tel}?text=${waText}`, '_blank');
+  }
+
+  // Marcar como notificado
+  const idx = orders.findIndex(o => o.id === orderId);
+  if (idx >= 0) {
+    orders[idx].tracking = tracking;
+    orders[idx].trackingNotified = true;
+    orders[idx].estado = 'Enviado'; // Auto-cambiar estado a Enviado
+    dbSaveOrders(orders);
+    dbUpsertOrder(orders[idx]);
+    _adminOrders = orders;
+    // Actualizar selector de estado en la UI
+    const sel = document.getElementById('omg-sel-' + orderId);
+    if (sel) sel.value = 'Enviado';
+    // Actualizar badge
+    const row = document.getElementById('omr-' + orderId);
+    if (row) {
+      const badge = row.querySelector('.order-badge');
+      if (badge) { badge.className = 'order-badge ob-enviado'; badge.textContent = 'Enviado'; }
+    }
+  }
+
+  if (btn) { btn.textContent = '✅ Notificado'; btn.classList.add('sent'); btn.disabled = false; }
+  showToast(emailOk ? '✅ Email enviado + WhatsApp abierto' : '📱 WhatsApp abierto (configurá EmailJS para el email)');
+}
+
+function _detectTransport(code) {
+  code = (code || '').toUpperCase().trim();
+  if (/^(CA|CC|CX|RA|RE|RX)[A-Z0-9]{8,12}AR$/.test(code)) return 'Correo Argentino';
+  if (/^\d{10,14}$/.test(code) && code.startsWith('3')) return 'Andreani';
+  if (/^OCA/i.test(code) || /^\d{10,12}$/.test(code)) return 'OCA';
+  if (/^(1Z|JD)/.test(code)) return 'UPS / FedEx';
+  return 'Correo / Andreani';
+}
+
+function _trackingUrl(code) {
+  code = (code || '').toUpperCase().trim();
+  if (/^(CA|CC|CX|RA|RE|RX)[A-Z0-9]{8,12}AR$/.test(code))
+    return `https://www.correoargentino.com.ar/formularios/ondnc?item=${code}`;
+  if (/^\d{10,14}$/.test(code) && code.startsWith('3'))
+    return `https://www.andreani.com/#!/informacionEnvio/${code}`;
+  return `https://www.correoargentino.com.ar/formularios/ondnc?item=${code}`;
 }
 
 function exportOrdersCSV() {
@@ -4562,9 +4655,7 @@ function confirmarPago() {
       estado: 'Pendiente',
       fecha: new Date().toLocaleDateString('es-AR'),
       metodo: selectedPayMethod,
-      envio: shippingInfo,
-      contactEmail: contactData.email,
-      contactName:  (contactData.nombre + ' ' + contactData.apellido).trim()
+      envio: shippingInfo
     };
     orders.push(newOrder);
     dbSaveOrders(orders);
@@ -5248,6 +5339,7 @@ const EMAILJS_SERVICE_ID  = 'service_t521mli';       // ✅ Configurado
 const EMAILJS_TEMPLATE_ID = 'template_0jljlhx';       // ✅ Confirmación al cliente
 const EMAILJS_VERIFY_ID   = 'template_20ts0x3';       // ✅ Verificación de email
 const EMAILJS_ADMIN_ID    = '';  // no se usa — notificaciones via Telegram
+const EMAILJS_TRACKING_ID = 'template_tracking';      // 📦 Crear esta plantilla en EmailJS (ver instrucciones abajo)
 const ADMIN_EMAIL         = 'solentuhogar.soporte@gmail.com';
 
 /* ── TELEGRAM BOT — notificaciones de pedidos al admin ──
@@ -5401,8 +5493,7 @@ function sendOrderEmail(order, contactData) {
       total:          formatPrice(order.total),
       metodo:         metodoLabel,
       tienda:         'Sol en tu Hogar',
-      fecha:          order.fecha,
-      tracking_section: ''
+      fecha:          order.fecha
     }).then(() => {
       showToast('📧 Email de confirmación enviado a ' + contactData.email);
     }).catch(err => {
@@ -5411,50 +5502,6 @@ function sendOrderEmail(order, contactData) {
 
   } catch(e) {
     console.warn('sendOrderEmail error:', e);
-  }
-}
-
-/* ── Email de seguimiento — reutiliza template_0jljlhx ── */
-function sendTrackingEmail(order) {
-  try {
-    if (typeof emailjs === 'undefined' || EMAILJS_PUBLIC_KEY === 'TU_PUBLIC_KEY') return;
-
-    // Obtener email del cliente: del pedido o de los usuarios registrados
-    const users = dbGetUsers();
-    const user  = users.find(u => u.id === order.userId);
-    const customerEmail = order.contactEmail || user?.email;
-    const customerName  = order.contactName  || (user ? user.nombre + ' ' + user.apellido : 'Cliente');
-
-    if (!customerEmail) {
-      showToast('⚠️ No se encontró el email del cliente');
-      return;
-    }
-
-    const itemsList = (order.items || [])
-      .map(i => `• ${i.name} ×${i.qty}  —  ${formatPrice(i.price * i.qty)}`)
-      .join('\n');
-
-    emailjs.send(EMAILJS_SERVICE_ID, EMAILJS_TEMPLATE_ID, {
-      order_id:       order.id,
-      customer_name:  customerName,
-      customer_email: customerEmail,
-      items_list:     itemsList,
-      total:          formatPrice(order.total),
-      metodo:         '—',
-      tienda:         'Sol en tu Hogar',
-      fecha:          order.fecha,
-      tracking_section: order.tracking
-        ? `📦 Tu número de seguimiento es: ${order.tracking}\nRastreá tu paquete en: https://www.correoargentino.com.ar/MiPaquete`
-        : ''
-    }).then(() => {
-      showToast(`📧 Email de seguimiento enviado a ${customerEmail}`);
-    }).catch(err => {
-      console.warn('EmailJS — error al enviar seguimiento:', err);
-      showToast('⚠️ No se pudo enviar el email de seguimiento');
-    });
-
-  } catch(e) {
-    console.warn('sendTrackingEmail error:', e);
   }
 }
 
@@ -6900,9 +6947,10 @@ function changeQty(btn, delta) {
 
 /* ══════════════════════════════════════════════════════
    SISTEMA DE ENVÍO — Correo Argentino por zona de CP
-   Tarifas aproximadas actualizadas 2025 (ajustables desde el panel admin)
+   Tarifas aproximadas actualizadas 2025 (ajustables en TARIFAS_ENVIO)
    ══════════════════════════════════════════════════════ */
-const TARIFAS_DEFAULT = {
+const TARIFAS_ENVIO = {
+  // zona: { label, precio_estandar, precio_express, dias_estandar, dias_express }
   caba:      { label: 'CABA',                  estandar: 1800,  express: 3200,  diasE: '1–2',  diasX: '24hs' },
   gba1:      { label: 'GBA 1er cordón',        estandar: 2200,  express: 3800,  diasE: '2–3',  diasX: '24hs' },
   gba2:      { label: 'GBA 2do cordón',        estandar: 2600,  express: 4500,  diasE: '3–4',  diasX: '48hs' },
@@ -6912,73 +6960,6 @@ const TARIFAS_DEFAULT = {
   cuyo:      { label: 'Cuyo / San Luis',       estandar: 4200,  express: 6800,  diasE: '5–7',  diasX: '72hs' },
   patagonia: { label: 'Patagonia',             estandar: 5500,  express: 8500,  diasE: '6–8',  diasX: '96hs' },
 };
-
-function _loadShippingConfig() {
-  try {
-    const saved = localStorage.getItem('sol_shipping_config');
-    if (saved) {
-      const cfg = JSON.parse(saved);
-      TARIFAS_ENVIO = cfg.tarifas || TARIFAS_DEFAULT;
-      ENVIO_GRATIS_DESDE = cfg.envioGratis ?? 30000;
-    }
-  } catch(e) {}
-}
-
-let TARIFAS_ENVIO = JSON.parse(JSON.stringify(TARIFAS_DEFAULT));
-let ENVIO_GRATIS_DESDE = 30000;
-_loadShippingConfig();
-
-/* ── Admin: renderizar y guardar tarifas ── */
-function renderAdminEnvios() {
-  const tbody = document.getElementById('cfgTarifasBody');
-  const inputGratis = document.getElementById('cfgEnvioGratis');
-  if (!tbody) return;
-  if (inputGratis) inputGratis.value = ENVIO_GRATIS_DESDE;
-
-  const inputStyle = 'background:rgba(255,255,255,.07);border:1px solid rgba(255,255,255,.1);border-radius:5px;color:#fff;font-family:var(--sans);font-size:.78rem;padding:.3rem .5rem;width:80px;text-align:center;outline:none';
-  const smallStyle = 'background:rgba(255,255,255,.07);border:1px solid rgba(255,255,255,.1);border-radius:5px;color:#fff;font-family:var(--sans);font-size:.78rem;padding:.3rem .5rem;width:65px;text-align:center;outline:none';
-
-  tbody.innerHTML = Object.entries(TARIFAS_ENVIO).map(([key, t]) => `
-    <tr style="border-bottom:1px solid rgba(255,255,255,.05)">
-      <td style="padding:.5rem .7rem;font-size:.78rem;color:rgba(255,255,255,.7);font-weight:600">${t.label}</td>
-      <td style="padding:.5rem .7rem;text-align:center">
-        <input style="${inputStyle}" type="number" min="0" step="100"
-          id="cfg-e-${key}" value="${t.estandar}">
-      </td>
-      <td style="padding:.5rem .7rem;text-align:center">
-        <input style="${inputStyle}" type="number" min="0" step="100"
-          id="cfg-x-${key}" value="${t.express}">
-      </td>
-      <td style="padding:.5rem .7rem;text-align:center">
-        <input style="${smallStyle}" type="text"
-          id="cfg-de-${key}" value="${t.diasE}" maxlength="8">
-      </td>
-      <td style="padding:.5rem .7rem;text-align:center">
-        <input style="${smallStyle}" type="text"
-          id="cfg-dx-${key}" value="${t.diasX}" maxlength="8">
-      </td>
-    </tr>`).join('');
-}
-
-function guardarConfigEnvios() {
-  const gravisVal = parseInt(document.getElementById('cfgEnvioGratis')?.value) || 0;
-  ENVIO_GRATIS_DESDE = gravisVal;
-
-  Object.keys(TARIFAS_ENVIO).forEach(key => {
-    TARIFAS_ENVIO[key].estandar = parseInt(document.getElementById('cfg-e-' + key)?.value)  || TARIFAS_ENVIO[key].estandar;
-    TARIFAS_ENVIO[key].express  = parseInt(document.getElementById('cfg-x-' + key)?.value)  || TARIFAS_ENVIO[key].express;
-    TARIFAS_ENVIO[key].diasE    = document.getElementById('cfg-de-' + key)?.value || TARIFAS_ENVIO[key].diasE;
-    TARIFAS_ENVIO[key].diasX    = document.getElementById('cfg-dx-' + key)?.value || TARIFAS_ENVIO[key].diasX;
-  });
-
-  localStorage.setItem('sol_shipping_config', JSON.stringify({
-    tarifas: TARIFAS_ENVIO,
-    envioGratis: ENVIO_GRATIS_DESDE
-  }));
-
-  showToast('✅ Tarifas de envío actualizadas');
-  calcularEnvio(); // recalcular si el checkout está abierto
-}
 
 // Rangos de CP → zona
 function cpAZona(cp) {
@@ -7033,19 +7014,29 @@ function calcularEnvio() {
   }
 
   const t = TARIFAS_ENVIO[zona];
-  resEl.innerHTML = `Zona: <strong>${t.label}</strong> · Correo Argentino`;
+  resEl.innerHTML = `<span style="font-size:.78rem;color:var(--stone)">Zona: <strong>${t.label}</strong> · Correo Argentino</span>`;
   if (optsEl) {
     optsEl.style.display = 'flex';
     optsEl.innerHTML = `
-      <label style="display:flex;align-items:center;gap:.6rem;cursor:pointer;padding:.5rem .7rem;border-radius:6px;border:1.5px solid var(--sand-deep);background:var(--white);font-size:.8rem" id="shpOptE">
+      <label style="display:flex;align-items:center;gap:.6rem;cursor:pointer;padding:.6rem .8rem;border-radius:8px;border:1.5px solid var(--sand-deep);background:var(--white);font-size:.8rem;transition:border-color .2s" id="shpOptE" onclick="this.style.borderColor='var(--clay)';document.getElementById('shpOptX')&&(document.getElementById('shpOptX').style.borderColor='var(--sand-deep)')">
         <input type="radio" name="shpOpt" value="estandar" checked onchange="selectShipping('estandar',${t.estandar})">
-        <span><strong>Estándar</strong> · ${t.diasE} días hábiles · <strong>${formatPrice(t.estandar)}</strong></span>
+        <div style="flex:1">
+          <div style="font-weight:700">Estándar &nbsp;<span style="color:var(--stone);font-weight:400;font-size:.75rem">${t.diasE} días hábiles</span></div>
+          <div style="font-size:.72rem;color:var(--stone)">Correo Argentino · entrega a domicilio</div>
+        </div>
+        <strong style="font-size:.95rem;color:var(--clay);white-space:nowrap">${formatPrice(t.estandar)}</strong>
       </label>
-      <label style="display:flex;align-items:center;gap:.6rem;cursor:pointer;padding:.5rem .7rem;border-radius:6px;border:1.5px solid var(--sand-deep);background:var(--white);font-size:.8rem" id="shpOptX">
+      <label style="display:flex;align-items:center;gap:.6rem;cursor:pointer;padding:.6rem .8rem;border-radius:8px;border:1.5px solid var(--sand-deep);background:var(--white);font-size:.8rem;transition:border-color .2s" id="shpOptX" onclick="this.style.borderColor='var(--clay)';document.getElementById('shpOptE')&&(document.getElementById('shpOptE').style.borderColor='var(--sand-deep)')">
         <input type="radio" name="shpOpt" value="express" onchange="selectShipping('express',${t.express})">
-        <span><strong>Express ⚡</strong> · ${t.diasX} · <strong>${formatPrice(t.express)}</strong></span>
+        <div style="flex:1">
+          <div style="font-weight:700">Express ⚡ &nbsp;<span style="color:var(--stone);font-weight:400;font-size:.75rem">${t.diasX}</span></div>
+          <div style="font-size:.72rem;color:var(--stone)">Correo Argentino · entrega prioritaria</div>
+        </div>
+        <strong style="font-size:.95rem;color:var(--clay);white-space:nowrap">${formatPrice(t.express)}</strong>
       </label>
-      <div style="font-size:.65rem;color:var(--stone);margin-top:.2rem">💡 Envío gratis en compras desde ${formatPrice(ENVIO_GRATIS_DESDE)}</div>
+      <div style="font-size:.68rem;color:var(--stone);padding:.2rem .3rem">
+        💡 Envío <strong>gratis</strong> en compras desde <strong>${formatPrice(ENVIO_GRATIS_DESDE)}</strong> &nbsp;·&nbsp; Tarifas de referencia Correo Argentino
+      </div>
     `;
     // Default: estándar selected
     selectShipping('estandar', t.estandar);
