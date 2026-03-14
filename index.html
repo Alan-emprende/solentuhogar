@@ -108,6 +108,67 @@ body.dark-mode .announce{background:#0E0B06}
 body.dark-mode .midband{background:#1A1208}
 body.dark-mode .pe-input,.dark-mode .pe-select,.dark-mode .pe-textarea{background:#2A1E10;border-color:#3C2E1A;color:#EDE0CC}
 body.dark-mode .prod-editor-box{background:#1A1208;border-color:#2C2010}
+/* Dark mode — product modal */
+body.dark-mode .pdModal{background:#201810;color:var(--ink)}
+body.dark-mode .pdModal-name{color:var(--ink)}
+body.dark-mode .pdModal-cat{color:var(--stone)}
+body.dark-mode .pdModal-price{color:var(--clay)}
+body.dark-mode .pdModal-desc{color:var(--stone);border-top-color:#2C2010}
+body.dark-mode .pdModal-opts{border-top-color:#2C2010}
+body.dark-mode .pdModal-opt-lbl{color:var(--stone)}
+body.dark-mode .pdModal-features{border-top-color:#2C2010}
+body.dark-mode .pdModal-feat{background:#2A1E10;border-color:#3C2E1A;color:var(--stone)}
+body.dark-mode .pdModal-close{background:rgba(40,28,18,.85);color:var(--stone)}
+body.dark-mode .pdModal-close:hover{background:#2A1E10}
+body.dark-mode .pdModal-share-btn{background:rgba(40,28,18,.85);color:var(--stone)}
+body.dark-mode .pdModal-share-btn:hover{background:#2A1E10}
+body.dark-mode .pdModal-body{background:#201810}
+body.dark-mode .pdModal-qty-ctrl{border-color:#3C2E1A}
+body.dark-mode .pdModal-qty-btn{background:#2A1E10;color:var(--ink)}
+body.dark-mode .pdModal-qty-btn:hover{background:#3C2E1A;color:var(--clay)}
+body.dark-mode .pdModal-qty-num{color:var(--ink)}
+body.dark-mode .pdModal-add-btn{background:var(--clay);color:#fff}
+body.dark-mode .pdModal-add-btn:disabled{background:#3C2E1A;color:rgba(255,255,255,.3)}
+body.dark-mode .pdModal-swatch-lbl{background:#2A1E10;color:var(--ink);border-color:#3C2E1A}
+body.dark-mode .pdModal-swatch-lbl:hover,body.dark-mode .pdModal-swatch-lbl.selected{background:var(--clay-pale);border-color:var(--clay);color:var(--clay)}
+body.dark-mode .pdModal-stock.ok{background:rgba(61,107,74,.25);color:#81c784}
+body.dark-mode .pdModal-stock.low{background:rgba(230,81,0,.2);color:#ffcc80}
+body.dark-mode .pdModal-stock.out{background:rgba(198,40,40,.2);color:#ef9a9a}
+/* Dark mode — gallery thumbnails */
+body.dark-mode .gal-thumb{background:#2A1E10;border-color:#3C2E1A}
+body.dark-mode .gal-thumb.active{border-color:var(--clay)}
+/* Dark mode — checkout form */
+body.dark-mode .form-input{background:#2A1E10;border-color:#3C2E1A;color:var(--ink)}
+body.dark-mode .form-input:focus{border-color:var(--clay);background:#2A1E10}
+body.dark-mode .form-input::placeholder{color:rgba(255,255,255,.2)}
+body.dark-mode .form-select{background-color:#2A1E10;border-color:#3C2E1A;color:var(--ink)}
+body.dark-mode .form-label{color:var(--stone)}
+body.dark-mode .pay-step-title{color:var(--ink)}
+body.dark-mode .pay-steps-bar{border-bottom-color:#2C2010}
+body.dark-mode .ps-step.done .ps-dot{background:var(--leaf)}
+body.dark-mode .shp-cost-card{background:#2A1808;border-color:var(--clay)}
+/* Dark mode — hero buttons */
+body.dark-mode .btn-ghost{border-color:#3C2E1A;color:var(--ink)}
+body.dark-mode .btn-ghost:hover{border-color:var(--clay);color:var(--clay)}
+/* Dark mode — nav account button */
+body.dark-mode .nav-account-btn{border-color:#3C2E1A;color:var(--stone)}
+body.dark-mode .nav-account-btn:hover{border-color:var(--clay);color:var(--clay);background:var(--clay-pale)}
+/* Dark mode — shipping options */
+body.dark-mode label[id^="shpOpt"],body.dark-mode label[id="shpRetiroOpt"]{background:#2A1E10!important;border-color:#3C2E1A!important;color:var(--ink)!important}
+body.dark-mode #shippingOptions label{background:#2A1E10!important;border-color:#3C2E1A!important;color:var(--ink)!important}
+/* Dark mode — coupon input */
+body.dark-mode .coupon-row input{background:#2A1E10;border-color:#3C2E1A;color:var(--ink)}
+/* Dark mode — search results */
+body.dark-mode .sf-result-card{background:#201810;border-color:#2C2010}
+body.dark-mode .sf-result-name{color:var(--ink)}
+body.dark-mode .sf-result-price{color:var(--clay)}
+body.dark-mode .sf-chip{background:#2A1E10;border-color:#3C2E1A;color:var(--stone)}
+body.dark-mode .sf-chip.active{background:var(--clay);border-color:var(--clay);color:#fff}
+/* Dark mode — ropa filter chips */
+body.dark-mode .ropa-chip{background:#2A1E10;border-color:#3C2E1A;color:var(--stone)}
+body.dark-mode .ropa-chip.active{background:var(--clay);border-color:var(--clay);color:#fff}
+/* Dark mode — product variant chip required warning */
+body.dark-mode .variant-required-notice{background:#3C1A0A;border-color:var(--clay);color:#ffb085}
 .dark-toggle-btn{background:none;border:none;cursor:pointer;width:40px;height:40px;border-radius:var(--radius);display:flex;align-items:center;justify-content:center;font-size:1.05rem;transition:background var(--trans);color:var(--stone);flex-shrink:0}
 /* ── Tooltip del botón de tema ── */
 .dark-toggle-wrap{position:relative;flex-shrink:0}
@@ -124,10 +185,10 @@ body.dark-mode .dark-tip::after{border-bottom-color:#ede0cc}
 .pe-variants-add:hover{opacity:.82}
 .pe-variant-cols{display:grid;gap:.45rem;font-size:.58rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:rgba(255,255,255,.25);margin-bottom:.28rem;padding:0 .1rem}
 .pe-variant-cols.ropa{grid-template-columns:1fr 1fr 74px 26px}
-.pe-variant-cols.hogar{grid-template-columns:1fr 74px 26px}
+.pe-variant-cols.hogar{grid-template-columns:1fr 1fr 74px 26px}
 .pe-variant-row{display:grid;gap:.45rem;align-items:center;margin-bottom:.38rem}
 .pe-variant-row.ropa{grid-template-columns:1fr 1fr 74px 26px}
-.pe-variant-row.hogar{grid-template-columns:1fr 74px 26px}
+.pe-variant-row.hogar{grid-template-columns:1fr 1fr 74px 26px}
 .pe-variant-input{background:rgba(255,255,255,.07);border:1px solid rgba(255,255,255,.12);border-radius:5px;padding:.32rem .55rem;color:#fff;font-family:var(--sans);font-size:.74rem;outline:none;width:100%;box-sizing:border-box}
 .pe-variant-input:focus{border-color:var(--gold)}
 .pe-variant-input::placeholder{color:rgba(255,255,255,.22)}
@@ -135,7 +196,7 @@ body.dark-mode .dark-tip::after{border-bottom-color:#ede0cc}
 .pe-variant-del:hover{color:#ef5350;background:rgba(239,83,80,.12)}
 .pe-variants-total{font-size:.7rem;color:rgba(255,255,255,.38);margin-top:.5rem;text-align:right}
 .pe-variants-total strong{color:var(--gold)}
-@media(max-width:500px){.pe-variant-cols.ropa,.pe-variant-row.ropa{grid-template-columns:1fr 1fr 60px 24px}.pe-variant-cols.hogar,.pe-variant-row.hogar{grid-template-columns:1fr 60px 24px}}
+@media(max-width:500px){.pe-variant-cols.ropa,.pe-variant-row.ropa{grid-template-columns:1fr 1fr 60px 24px}.pe-variant-cols.hogar,.pe-variant-row.hogar{grid-template-columns:1fr 1fr 60px 24px}}
 .dark-toggle-btn:hover{background:var(--sand)}
 html{scroll-behavior:smooth;font-size:16px}
 body{background:var(--white);color:var(--ink);font-family:var(--sans);font-weight:400;overflow-x:hidden;-webkit-font-smoothing:antialiased;transition:background .3s,color .3s}
@@ -320,10 +381,27 @@ nav.raised{box-shadow:0 4px 24px rgba(26,18,9,.08)}
 .pdModal-add-btn:disabled{background:#ccc;cursor:not-allowed}
 .pdModal-features{display:flex;gap:.6rem;flex-wrap:wrap;border-top:1px solid var(--sand-deep);padding-top:.9rem}
 .pdModal-feat{font-size:.7rem;color:var(--stone);background:var(--surface);border:1px solid var(--sand-deep);border-radius:4px;padding:.25rem .6rem}
+/* ── Modal producto como bottom-sheet en mobile ── */
 @media(max-width:680px){
-  .pdModal{flex-direction:column;max-height:96vh}
-  .pdModal-img{width:100%;height:240px}
-  .pdModal-body{padding:1.2rem}
+  .pdModal-overlay{align-items:flex-end;padding:0}
+  .pdModal{flex-direction:column;max-height:92dvh;width:100%;border-radius:16px 16px 0 0;transform:translateY(100%)}
+  .pdModal-overlay.open .pdModal{transform:translateY(0)}
+  .pdModal-img{width:100%;height:220px;flex-shrink:0}
+  .pdModal-body{padding:1.2rem 1.2rem 2rem;overflow-y:auto}
+  .pdModal-name{font-size:1.3rem}
+  .pdModal-price{font-size:1.5rem}
+  .pdModal-add-btn{padding:.95rem;font-size:.9rem}
+  .pdModal-qty-btn{width:42px;height:42px}
+  .pdModal-swatch{width:32px;height:32px}
+  .pdModal-swatch-lbl{padding:.35rem .85rem;font-size:.75rem}
+  .pdModal-close,.pdModal-share-btn{top:.6rem}
+  .pdModal-close{right:.6rem}
+  .pdModal-share-btn{right:3rem}
+}
+/* ── Swipe handle indicator on mobile ── */
+@media(max-width:680px){
+  .pdModal::before{content:'';display:block;width:36px;height:4px;background:rgba(0,0,0,.15);border-radius:4px;margin:10px auto 0;flex-shrink:0}
+  body.dark-mode .pdModal::before{background:rgba(255,255,255,.15)}
 }
 
 /* ── Admin mejorado ── */
@@ -895,6 +973,19 @@ footer{background:var(--ink);color:rgba(255,255,255,.45);padding:5rem 2.5rem 2re
   .pay-steps-bar{padding:.8rem 1rem}
   .ps-label{display:none}
   .ap-wish-grid{grid-template-columns:1fr}
+  /* Botones de acción del producto más grandes en mobile */
+  .pcard-cta{padding:.7rem 1.2rem;font-size:.76rem}
+  .pcard-wish{width:38px;height:38px;font-size:1rem}
+  /* Checkout steps más compacto */
+  .pay-step-title{font-size:.95rem}
+  .form-input,.form-select{font-size:16px}/* Prevent iOS zoom */
+  /* Cart items más legibles */
+  .citem-name{font-size:.82rem}
+  /* Botón carrito sticky */
+  .cart-footer{padding:.9rem 1rem 1.4rem}
+  /* Checkout nav buttons */
+  .pay-nav{gap:.5rem}
+  .pay-back,.pay-next{padding:.75rem 1rem;font-size:.78rem}
 }
 
 /* ══════════════════════════════════════════════════════
@@ -2823,17 +2914,17 @@ footer{background:var(--ink);color:rgba(255,255,255,.45);padding:5rem 2.5rem 2re
       <!-- ── Variantes de color — Hogar / Oportunidades ── -->
       <div id="peHogarColorWrap" style="display:none">
         <div class="pe-group">
-          <label class="pe-label">Colores disponibles <span style="font-size:.6rem;text-transform:none;letter-spacing:0;opacity:.5">(stock por color — opcional)</span></label>
+          <label class="pe-label">Variantes <span style="font-size:.6rem;text-transform:none;letter-spacing:0;opacity:.5">(color y/o talla con stock — opcional)</span></label>
           <div class="pe-variants-wrap">
             <div class="pe-variants-head">
-              <span class="pe-variants-title">Variantes de Color</span>
-              <button type="button" class="pe-variants-add" onclick="addVariantRow('hogar')">+ Agregar color</button>
+              <span class="pe-variants-title">Color · Talla/Tamaño · Stock</span>
+              <button type="button" class="pe-variants-add" onclick="addVariantRow('hogar')">+ Agregar variante</button>
             </div>
-            <div class="pe-variant-cols hogar"><span>Color</span><span>Stock</span><span></span></div>
+            <div class="pe-variant-cols hogar"><span>Color</span><span>Talla/Tamaño</span><span>Stock</span><span></span></div>
             <div id="peHogarVariantRows"></div>
             <p class="pe-variants-total">Stock total: <strong id="peHogarTotalStock">0</strong> unidades</p>
           </div>
-          <p class="pe-hint">Si no agregás colores, usá el campo Stock general de abajo.</p>
+          <p class="pe-hint">Ej: Color "Rojo", Talla "1L" · o solo Color "Verde" · o solo Talla "750ml". Si no usás variantes, completá el stock general.</p>
         </div>
       </div>
 
@@ -5136,15 +5227,60 @@ document.addEventListener('keydown', e => {
 let _pdCard = null; // Card activa
 let _pdQty = 1;
 let _pdSelectedColor = null;
+let _pdSelectedTalle = null;
 let _pdPrice = 0;
 let _pdStock = 0;
+let _pdVariants = []; // variantes del producto abierto
+
+/* Actualiza el stock mostrado y el botón según la combinación elegida */
+function _pdUpdateVariantStock() {
+  if (!_pdVariants || !_pdVariants.length) return;
+  // Buscar variante que coincida con color y/o talla seleccionados
+  let match = null;
+  if (_pdSelectedColor && _pdSelectedTalle) {
+    match = _pdVariants.find(v => v.color === _pdSelectedColor && v.talle === _pdSelectedTalle);
+  } else if (_pdSelectedColor) {
+    // Sumar stock de todas las tallas de ese color
+    const byColor = _pdVariants.filter(v => v.color === _pdSelectedColor);
+    if (byColor.length) {
+      match = { stock: byColor.reduce((s, v) => s + (v.stock || 0), 0) };
+    }
+  } else if (_pdSelectedTalle) {
+    const byTalle = _pdVariants.filter(v => v.talle === _pdSelectedTalle);
+    if (byTalle.length) {
+      match = { stock: byTalle.reduce((s, v) => s + (v.stock || 0), 0) };
+    }
+  }
+  if (match) {
+    _pdStock = match.stock ?? 0;
+    const stockEl = document.getElementById('pdModalStock');
+    if (stockEl) {
+      if (_pdStock === 0)      { stockEl.textContent = 'Sin stock'; stockEl.className = 'pdModal-stock out'; }
+      else if (_pdStock <= 5)  { stockEl.textContent = `¡Últimas ${_pdStock}!`; stockEl.className = 'pdModal-stock low'; }
+      else                     { stockEl.textContent = `${_pdStock} disponibles`; stockEl.className = 'pdModal-stock ok'; }
+    }
+    const addBtn = document.getElementById('pdModalAddBtn');
+    if (addBtn) {
+      addBtn.disabled  = _pdStock === 0;
+      addBtn.textContent = _pdStock === 0 ? '😕 Sin stock' : '🛒 Agregar al carrito';
+    }
+    _pdQty = Math.min(_pdQty, _pdStock || 99);
+    const qtyEl = document.getElementById('pdModalQtyNum');
+    if (qtyEl) qtyEl.textContent = _pdQty;
+  }
+}
 
 function openProduct(card) {
   _pdCard = card;
   _pdQty = 1;
   _pdSelectedColor = null;
+  _pdSelectedTalle = null;
   _pdPrice = parseInt(card.dataset.price || 0);
   _pdStock = parseInt(card.dataset.stock || 0);
+  // Cargar variantes desde la base de datos
+  const _pId = card.dataset.id;
+  const _pDb = (typeof dbGetProducts === 'function') ? dbGetProducts().find(p => p.id === _pId) : null;
+  _pdVariants = _pDb?.variants || [];
 
   // Nombre y categoría
   document.getElementById('pdModalName').textContent = card.dataset.name || card.querySelector('.pcard-name')?.textContent || '';
@@ -5202,49 +5338,115 @@ function openProduct(card) {
     `<span class="pdModal-feat">✓ ${f}</span>`
   ).join('');
 
-  // Opciones del card (colores, tamaños)
-  const optsEl = card.querySelector('.pcard-options');
+  // Leer variantes desde la base de datos (fuente de verdad)
+  const prodId   = card.dataset.id;
+  const prodData = (typeof dbGetProducts === 'function') ? dbGetProducts().find(p => p.id === prodId) : null;
+  const variants = prodData?.variants || [];
+
+  // Separar colores únicos y tallas únicas
+  const hasVariants = variants.length > 0;
+  const uniqueColors = hasVariants ? [...new Set(variants.map(v => v.color).filter(Boolean))] : [];
+  const uniqueTalles = hasVariants ? [...new Set(variants.map(v => v.talle).filter(Boolean))] : [];
+
+  // Paleta de colores conocidos para mostrar swatches de color real
+  const COLOR_MAP = {
+    'negro':'#1a1a1a','blanco':'#f5f5f5','rojo':'#e53935','azul':'#1565c0',
+    'verde':'#2e7d32','amarillo':'#f9a825','naranja':'#e65100','rosa':'#e91e63',
+    'violeta':'#6a1b9a','gris':'#757575','celeste':'#0288d1','beige':'#d7ccc8',
+    'marron':'#5d4037','marrón':'#5d4037','plateado':'#90a4ae','dorado':'#f9a825',
+    'turquesa':'#00897b','lila':'#9c27b0','bordo':'#880e4f'
+  };
+  function getColorHex(name) {
+    const k = (name||'').toLowerCase().normalize('NFD').replace(/[̀-ͯ]/g,'');
+    for (const [key, val] of Object.entries(COLOR_MAP)) {
+      if (k.includes(key)) return val;
+    }
+    return null;
+  }
+
+  _pdSelectedColor = null;
+  _pdSelectedTalle = null;
+
   const optsContainer = document.getElementById('pdModalOpts');
   optsContainer.innerHTML = '';
-  if (optsEl) {
-    optsEl.querySelectorAll('.opt-row').forEach(row => {
-      const lbl = row.querySelector('.opt-lbl')?.textContent || '';
-      const swatches = row.querySelectorAll('.color-swatch');
-      if (!swatches.length) return;
-      const div = document.createElement('div');
-      div.innerHTML = `<div class="pdModal-opt-lbl">${lbl} <span id="pdOptSelected_${lbl.replace(/\s/g,'')}" style="color:var(--clay);font-style:italic;text-transform:none;font-weight:400"></span></div>`;
-      const swatchRow = document.createElement('div');
-      swatchRow.className = 'pdModal-swatches';
-      swatches.forEach(sw => {
-        const isText = sw.style.borderRadius && sw.style.borderRadius.includes('4px');
-        const title = sw.title;
-        const el = document.createElement(isText ? 'div' : 'div');
-        if (isText) {
-          el.className = 'pdModal-swatch-lbl' + (sw.classList.contains('selected') ? ' selected' : '');
-          el.textContent = sw.textContent;
-        } else {
-          el.className = 'pdModal-swatch' + (sw.classList.contains('selected') ? ' selected' : '');
-          el.style.background = sw.style.background;
-          el.style.border = sw.style.border || '';
-          el.title = title;
-        }
-        el.onclick = () => {
-          swatchRow.querySelectorAll('.pdModal-swatch,.pdModal-swatch-lbl').forEach(s => s.classList.remove('selected'));
-          el.classList.add('selected');
-          _pdSelectedColor = title;
-          const selLabel = document.getElementById('pdOptSelected_' + lbl.replace(/\s/g,''));
-          if (selLabel) selLabel.textContent = title ? `— ${title}` : '';
-        };
-        // Auto-seleccionar el primero
-        if (sw.classList.contains('selected')) {
-          _pdSelectedColor = title;
-        }
-        swatchRow.appendChild(el);
-      });
-      div.appendChild(swatchRow);
-      optsContainer.appendChild(div);
+
+  // ── Selector de COLOR ──
+  if (uniqueColors.length > 0) {
+    const div = document.createElement('div');
+    div.innerHTML = '<div class="pdModal-opt-lbl">Color <span id="pdOptSelColor" style="color:var(--clay);font-style:italic;text-transform:none;font-weight:400"></span></div>';
+    const swatchRow = document.createElement('div');
+    swatchRow.className = 'pdModal-swatches';
+    swatchRow.id = 'pdSwatchColors';
+    uniqueColors.forEach((color, i) => {
+      const hex = getColorHex(color);
+      let el;
+      if (hex) {
+        // Circulo de color real
+        el = document.createElement('div');
+        el.className = 'pdModal-swatch' + (i === 0 ? ' selected' : '');
+        el.style.background = hex;
+        el.title = color;
+        // Borde blanco para colores claros
+        if (['#f5f5f5','#d7ccc8','#f9a825'].includes(hex)) el.style.outline = '1px solid #ddd';
+      } else {
+        // Chip de texto
+        el = document.createElement('div');
+        el.className = 'pdModal-swatch-lbl' + (i === 0 ? ' selected' : '');
+        el.textContent = color;
+        el.title = color;
+      }
+      el.dataset.color = color;
+      el.onclick = () => {
+        swatchRow.querySelectorAll('.pdModal-swatch,.pdModal-swatch-lbl').forEach(s => s.classList.remove('selected'));
+        el.classList.add('selected');
+        _pdSelectedColor = color;
+        const lbl = document.getElementById('pdOptSelColor');
+        if (lbl) lbl.textContent = '— ' + color;
+        _pdUpdateVariantStock();
+      };
+      if (i === 0) {
+        _pdSelectedColor = color;
+      }
+      swatchRow.appendChild(el);
     });
+    div.appendChild(swatchRow);
+    optsContainer.appendChild(div);
+    // Actualizar label del primero
+    const lbl0 = document.getElementById('pdOptSelColor');
+    if (lbl0 && uniqueColors[0]) lbl0.textContent = '— ' + uniqueColors[0];
   }
+
+  // ── Selector de TALLA/TAMAÑO ──
+  if (uniqueTalles.length > 0) {
+    const div = document.createElement('div');
+    div.innerHTML = '<div class="pdModal-opt-lbl">Talla / Tamaño <span id="pdOptSelTalle" style="color:var(--clay);font-style:italic;text-transform:none;font-weight:400"></span></div>';
+    const talleRow = document.createElement('div');
+    talleRow.className = 'pdModal-swatches';
+    talleRow.id = 'pdSwatchTalles';
+    uniqueTalles.forEach((talle, i) => {
+      const el = document.createElement('div');
+      el.className = 'pdModal-swatch-lbl' + (i === 0 ? ' selected' : '');
+      el.textContent = talle;
+      el.dataset.talle = talle;
+      el.onclick = () => {
+        talleRow.querySelectorAll('.pdModal-swatch-lbl').forEach(s => s.classList.remove('selected'));
+        el.classList.add('selected');
+        _pdSelectedTalle = talle;
+        const lbl = document.getElementById('pdOptSelTalle');
+        if (lbl) lbl.textContent = '— ' + talle;
+        _pdUpdateVariantStock();
+      };
+      if (i === 0) _pdSelectedTalle = talle;
+      talleRow.appendChild(el);
+    });
+    div.appendChild(talleRow);
+    optsContainer.appendChild(div);
+    const lbl0t = document.getElementById('pdOptSelTalle');
+    if (lbl0t && uniqueTalles[0]) lbl0t.textContent = '— ' + uniqueTalles[0];
+  }
+
+  // Actualizar stock inicial según selección
+  _pdUpdateVariantStock();
 
   // Cantidad reset
   document.getElementById('pdModalQtyNum').textContent = '1';
@@ -5263,7 +5465,12 @@ function openProduct(card) {
 function closePdModal() {
   document.getElementById('pdModalOverlay').classList.remove('open');
   document.body.style.overflow = '';
-  _pdCard = null;
+  _pdCard     = null;
+  _pdVariants = [];
+  _pdSelectedColor = null;
+  _pdSelectedTalle = null;
+  const notice = document.getElementById('pdVariantNotice');
+  if (notice) notice.style.display = 'none';
 }
 
 function closePdModalBg(e) {
@@ -5277,20 +5484,67 @@ function pdQty(delta) {
 
 function pdAddToCart() {
   if (!_pdCard) return;
-  const name = _pdCard.dataset.name;
-  const price = parseInt(_pdCard.dataset.price);
-  const displayName = _pdSelectedColor ? `${name} (${_pdSelectedColor})` : name;
+  const name   = _pdCard.dataset.name;
+  const price  = parseInt(_pdCard.dataset.price);
+
+  // Validar que haya elegido las opciones requeridas
+  const hasColors = _pdVariants.some(v => v.color);
+  const hasTalles = _pdVariants.some(v => v.talle);
+  if (hasColors && !_pdSelectedColor) {
+    _showVariantNotice('Por favor elegí un color antes de agregar al carrito.');
+    return;
+  }
+  if (hasTalles && !_pdSelectedTalle) {
+    _showVariantNotice('Por favor elegí una talla/tamaño antes de agregar al carrito.');
+    return;
+  }
+
+  // Armar sufijo de variante
+  const parts = [];
+  if (_pdSelectedColor) parts.push(_pdSelectedColor);
+  if (_pdSelectedTalle) parts.push(_pdSelectedTalle);
+  const displayName = parts.length ? `${name} (${parts.join(' · ')})` : name;
+
   const imgEl = _pdCard.querySelector('.pcard-img img');
   const imgSrc = imgEl ? imgEl.src : null;
   const existing = cartItems.find(i => i.name === displayName);
-  if (existing) { existing.qty += _pdQty; } else {
-    const pdProd = dbGetProducts().find(p => p.name === _pdCard.dataset.name);
-    cartItems.push({ name: displayName, price, qty: _pdQty, bg: _pdCard.dataset.bg || '#C45C2A', imgSrc, peso: pdProd?.peso || 0 });
+  if (existing) {
+    existing.qty += _pdQty;
+  } else {
+    const pdProd = dbGetProducts().find(p => p.name === name);
+    cartItems.push({
+      name: displayName,
+      price,
+      qty: _pdQty,
+      bg: _pdCard.dataset.bg || '#C45C2A',
+      imgSrc,
+      peso: pdProd?.peso || 0,
+      variantColor: _pdSelectedColor || null,
+      variantTalle: _pdSelectedTalle || null
+    });
   }
   updateCart();
   closePdModal();
   toggleCart();
-  showToast(`${name} agregado al carrito ✓`);
+  showToast(`${displayName} agregado al carrito ✓`);
+}
+
+function _showVariantNotice(msg) {
+  let el = document.getElementById('pdVariantNotice');
+  if (!el) {
+    el = document.createElement('div');
+    el.id = 'pdVariantNotice';
+    el.className = 'variant-required-notice';
+    el.style.cssText = 'margin-top:.5rem;padding:.5rem .8rem;background:#fff3e0;border:1.5px solid var(--clay);border-radius:7px;font-size:.78rem;color:var(--clay);font-weight:600;animation:fadeUp .2s ease';
+    const optsEl = document.getElementById('pdModalOpts');
+    if (optsEl && optsEl.parentNode) {
+      optsEl.parentNode.insertBefore(el, optsEl.nextSibling);
+    }
+  }
+  el.textContent = '⚠️ ' + msg;
+  el.style.display = '';
+  clearTimeout(el._t);
+  el._t = setTimeout(() => { el.style.display = 'none'; }, 3500);
 }
 
 function changeCartQty(idx, delta) {
@@ -6368,15 +6622,35 @@ document.addEventListener('keydown', e => {
 
 const DEFAULT_PRODUCTS = [
   { id:'p_001', section:'hogar', name:'Licuadora Portátil USB', cat:'Cocina · Electrodomésticos',
-    sub:'Recargable · 380ml · 6 cuchillas · Sin cable', price:11999, priceOld:null, stock:15, stars:5,
+    sub:'Recargable · 380ml · 6 cuchillas · Sin cable · 5 colores', price:11999, priceOld:null, stock:15, stars:5,
     tag:'hot', tagText:'Más vendido', prox:false,
     img:'licuadora-colores.jpeg', gallery:['licuadora-portatil.png'],
-    desc:'Licuadora recargable por USB, ideal para llevar a cualquier lado. Vaso de 380ml libre de BPA, con 6 cuchillas de acero inoxidable que trituran fruta, hielo y vegetales en segundos. Batería de larga duración: hasta 15 licuados por carga. Silenciosa, liviana y fácil de limpiar.' },
-  { id:'p_002', section:'hogar', name:'Botella Stanley 700ml', cat:'Cocina · Termo & Botella',
-    sub:'Acero inox · 24hs fría · 12hs caliente · 8 colores', price:13999, priceOld:null, stock:20, stars:5,
+    desc:'Licuadora recargable por USB, ideal para llevar a cualquier lado. Vaso de 380ml libre de BPA, con 6 cuchillas de acero inoxidable que trituran fruta, hielo y vegetales en segundos. Batería de larga duración: hasta 15 licuados por carga. Silenciosa, liviana y fácil de limpiar.',
+    variants:[
+      {color:'Rosa',    stock:3},
+      {color:'Celeste', stock:3},
+      {color:'Verde',   stock:3},
+      {color:'Blanco',  stock:3},
+      {color:'Naranja', stock:3},
+    ],
+    colores:['Rosa','Celeste','Verde','Blanco','Naranja'] },
+  { id:'p_002', section:'hogar', name:'Botella Stanley', cat:'Cocina · Termo & Botella',
+    sub:'Acero inox · 24hs fría · 12hs caliente · 8 colores · 2 tamaños', price:13999, priceOld:null, stock:40, stars:5,
     tag:'hot', tagText:'Popular', prox:false,
     img:'botella-stanley.png', gallery:[],
-    desc:'El ícono de las botellas térmicas, ahora con tapa con pico integrado. Fabricada en acero inoxidable 18/8 de doble pared al vacío: mantiene bebidas frías 24 hs y calientes 12 hs. Capacidad 700ml, apta para lavavajillas. Resistente a golpes y rayones.' },
+    desc:'El ícono de las botellas térmicas, ahora con tapa con pico integrado. Fabricada en acero inoxidable 18/8 de doble pared al vacío: mantiene bebidas frías 24 hs y calientes 12 hs. Apta para lavavajillas. Resistente a golpes y rayones.',
+    variants:[
+      {color:'Negro',   talle:'700ml', stock:5},
+      {color:'Negro',   talle:'1L',    stock:5},
+      {color:'Blanco',  talle:'700ml', stock:5},
+      {color:'Blanco',  talle:'1L',    stock:5},
+      {color:'Rojo',    talle:'700ml', stock:5},
+      {color:'Rojo',    talle:'1L',    stock:5},
+      {color:'Verde',   talle:'700ml', stock:5},
+      {color:'Azul',    talle:'700ml', stock:5},
+    ],
+    colores:['Negro','Blanco','Rojo','Verde','Azul'],
+    talles:['700ml','1L'] },
   { id:'p_003', section:'hogar', name:'Placa Silicona Para Horno', cat:'Cocina · Repostería',
     sub:'Antiadherente · Reutilizable · Apta hasta 230°C', price:4500, priceOld:6500, stock:25, stars:4,
     tag:'sale', tagText:'−30%', prox:false,
@@ -6732,13 +7006,15 @@ function addVariantRow(type, talle, color, stock) {
   row.className = 'pe-variant-row ' + type;
   if (type === 'ropa') {
     row.innerHTML = `
-      <input class="pe-variant-input" type="text" placeholder="M" value="${tVal}" oninput="recalcVariantTotal('ropa')">
-      <input class="pe-variant-input" type="text" placeholder="Negro" value="${cVal}" oninput="recalcVariantTotal('ropa')">
+      <input class="pe-variant-input" type="text" placeholder="Talle (M, L…)" value="${tVal}" oninput="recalcVariantTotal('ropa')">
+      <input class="pe-variant-input" type="text" placeholder="Color (Negro…)" value="${cVal}" oninput="recalcVariantTotal('ropa')">
       <input class="pe-variant-input" type="number" min="0" placeholder="0" value="${sVal}" oninput="recalcVariantTotal('ropa')">
       <button type="button" class="pe-variant-del" onclick="this.parentElement.remove();recalcVariantTotal('ropa')" title="Eliminar">✕</button>`;
   } else {
+    // hogar: color + talla/tamaño + stock
     row.innerHTML = `
-      <input class="pe-variant-input" type="text" placeholder="Negro" value="${cVal}" oninput="recalcVariantTotal('hogar')">
+      <input class="pe-variant-input" type="text" placeholder="Color (ej: Rojo)" value="${cVal}" oninput="recalcVariantTotal('hogar')">
+      <input class="pe-variant-input" type="text" placeholder="Talla (ej: 1L, 750ml)" value="${tVal}" oninput="recalcVariantTotal('hogar')">
       <input class="pe-variant-input" type="number" min="0" placeholder="0" value="${sVal}" oninput="recalcVariantTotal('hogar')">
       <button type="button" class="pe-variant-del" onclick="this.parentElement.remove();recalcVariantTotal('hogar')" title="Eliminar">✕</button>`;
   }
@@ -6773,8 +7049,9 @@ function getVariantsFromEditor(type) {
       const t = inp[0]?.value.trim(), c = inp[1]?.value.trim(), s = parseInt(inp[2]?.value || 0);
       if (t || c) out.push({ talle: t, color: c, stock: s });
     } else {
-      const c = inp[0]?.value.trim(), s = parseInt(inp[1]?.value || 0);
-      if (c) out.push({ color: c, stock: s });
+      // hogar: inp[0]=color, inp[1]=talla, inp[2]=stock
+      const c = inp[0]?.value.trim(), t = inp[1]?.value.trim(), s = parseInt(inp[2]?.value || 0);
+      if (c || t) out.push({ color: c, talle: t, stock: s });
     }
   });
   return out;
@@ -6787,6 +7064,11 @@ function loadVariantsToEditor(type, variants) {
   cont.innerHTML = '';
   (variants || []).forEach(v => addVariantRow(type, v.talle || '', v.color || '', v.stock ?? ''));
   if (!(variants || []).length) recalcVariantTotal(type);
+}
+
+/* helper: carga variantes hogar sin filtrar por presencia de talle */
+function loadHogarVariants(variants) {
+  loadVariantsToEditor('hogar', (variants || []).filter(v => v.talle !== undefined || v.color !== undefined));
 }
 
 function openProductEditor(id) {
@@ -6817,8 +7099,8 @@ function openProductEditor(id) {
   if (document.getElementById('peGenero'))   document.getElementById('peGenero').value   = p?.genero || '';
   if (document.getElementById('peOportMotivo')) document.getElementById('peOportMotivo').value = p?.oportunidadMotivo || '';
   // Cargar variantes
-  loadVariantsToEditor('ropa',  (p?.variants || []).filter(v => v.talle !== undefined));
-  loadVariantsToEditor('hogar', (p?.variants || []).filter(v => v.talle === undefined));
+  loadVariantsToEditor('ropa',  (p?.variants || []).filter(v => v.talle !== undefined && p?.section === 'ropa'));
+  loadVariantsToEditor('hogar', (p?.variants || []).filter(v => p?.section !== 'ropa'));
 
   // Seleccionar tag
   const tagSel = document.getElementById('peTag');
@@ -6926,6 +7208,7 @@ function saveProductFromEditor() {
     const hv = getVariantsFromEditor('hogar');
     prod.variants = hv;
     prod.colores  = [...new Set(hv.map(v => v.color).filter(Boolean))];
+    prod.talles   = [...new Set(hv.map(v => v.talle).filter(Boolean))];
     if (hv.length) prod.stock = hv.reduce((s, v) => s + (v.stock || 0), 0);
   }
 
@@ -7624,13 +7907,22 @@ async function descontarStock(items) {
   let changed = false;
 
   for (const item of items) {
-    // Buscar producto por nombre (sin variante de color entre paréntesis)
+    // Buscar producto por nombre (sin variante entre paréntesis: "Nombre (Color · Talla)")
     const baseName = item.name.replace(/\s*\([^)]+\)\s*$/, '').trim();
     const idx = prods.findIndex(p => p.name === baseName || p.name === item.name);
     if (idx < 0) continue;
 
-    const prev = prods[idx].stock;
-    prods[idx].stock = Math.max(0, prev - item.qty);
+    // Descontar variante específica si existe
+    if (prods[idx].variants && prods[idx].variants.length && (item.variantColor || item.variantTalle)) {
+      const v = prods[idx].variants.find(v =>
+        (!item.variantColor || v.color === item.variantColor) &&
+        (!item.variantTalle || v.talle === item.variantTalle)
+      );
+      if (v) v.stock = Math.max(0, (v.stock || 0) - (item.qty || 1));
+      prods[idx].stock = prods[idx].variants.reduce((s, v) => s + (v.stock || 0), 0);
+    } else {
+      prods[idx].stock = Math.max(0, (prods[idx].stock || 0) - (item.qty || 1));
+    }
     changed = true;
 
     // Actualizar en Supabase si está disponible
