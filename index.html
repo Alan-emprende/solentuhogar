@@ -3265,22 +3265,66 @@ function dbClearSession() {
   localStorage.removeItem('sol_session');
 }
 
-// Cargar usuarios desde Supabase al iniciar (si está activo)
+// Cargar usuarios, pedidos y productos desde Supabase al iniciar
 async function syncFromSupabase() {
   if (!SUPABASE_ACTIVE) return;
   if (!dbClient) initSupabase();
   if (!dbClient) { console.warn('⚠️ syncFromSupabase: Supabase no disponible'); return; }
   try {
     console.log('🔄 Sincronizando desde Supabase...');
-    const { data: users, error: eu } = await dbClient.from('users').select('*');
-    const { data: orders, error: eo } = await dbClient.from('orders').select('*');
-    if (eu) console.error('❌ Error leyendo users:', eu.message);
-    if (eo) console.error('❌ Error leyendo orders:', eo.message);
-    if (users && users.length > 0) { localStorage.setItem('sol_users', JSON.stringify(users)); console.log('✅ Users sincronizados:', users.length); }
+    const { data: users,    error: eu } = await dbClient.from('users').select('*');
+    const { data: orders,   error: eo } = await dbClient.from('orders').select('*');
+    const { data: products, error: ep } = await dbClient.from('products').select('*');
+
+    if (eu) console.error('❌ Error leyendo users:',    eu.message);
+    if (eo) console.error('❌ Error leyendo orders:',   eo.message);
+    if (ep) console.error('❌ Error leyendo products:', ep.message);
+
+    if (users && users.length > 0) {
+      localStorage.setItem('sol_users', JSON.stringify(users));
+      console.log('✅ Users sincronizados:', users.length);
+    }
     if (orders && orders.length > 0) {
       const mapped = orders.map(o => ({ ...o, userId: o.user_id }));
-      localStorage.setItem('sol_orders', JSON.stringify(mapped)); console.log('✅ Orders sincronizados:', orders.length);
+      localStorage.setItem('sol_orders', JSON.stringify(mapped));
+      console.log('✅ Orders sincronizados:', orders.length);
     }
+    if (products && products.length > 0) {
+      // Mapear columnas snake_case → camelCase del código
+      const mapped = products.map(p => ({
+        id:                p.id,
+        section:           p.section,
+        name:              p.name,
+        cat:               p.cat        || '',
+        sub:               p.sub        || '',
+        price:             p.price,
+        priceOld:          p.price_old  || null,
+        stock:             p.stock,
+        stars:             p.stars      || 5,
+        tag:               p.tag        || '',
+        tagText:           p.tag_text   || '',
+        prox:              p.prox       || false,
+        img:               p.img        || '',
+        gallery:           p.gallery    || [],
+        videos:            p.videos     || [],
+        desc:              p.desc       || '',
+        variants:          p.variants   || [],
+        colores:           p.colores    || [],
+        talles:            p.talles     || [],
+        material:          p.material   || '',
+        genero:            p.genero     || '',
+        peso:              p.peso       || 0,
+        timerHours:        p.timer_hours || null,
+        oportunidadMotivo: p.oportunit_motivo || ''
+      }));
+      localStorage.setItem('sol_products', JSON.stringify(mapped));
+      console.log('✅ Productos sincronizados:', mapped.length);
+      // Re-renderizar grids con datos frescos de Supabase
+      renderProductGrid('hogar');
+      renderProductGrid('ropa');
+      if (typeof renderOportunidadesGrid === 'function') renderOportunidadesGrid();
+    }
+
     if (currentUser) {
       const fresh = (users || []).find(u => u.id === currentUser.id);
       if (fresh) { currentUser = fresh; dbSaveSession(fresh); updateNavAccount(); }
@@ -6677,12 +6721,63 @@ function dbGetProducts() {
   try {
     const s = localStorage.getItem('sol_products');
     if (s) return JSON.parse(s);
+    // Primera vez: cargar defaults y subirlos a Supabase
     localStorage.setItem('sol_products', JSON.stringify(DEFAULT_PRODUCTS));
+    DEFAULT_PRODUCTS.forEach(p => dbUpsertProduct(p));
     return DEFAULT_PRODUCTS;
   } catch(e) { return DEFAULT_PRODUCTS.slice(); }
 }
+
 function dbSaveProducts(prods) {
   localStorage.setItem('sol_products', JSON.stringify(prods));
+}
+
+// Subir UN producto a Supabase (upsert)
+async function dbUpsertProduct(p) {
+  if (!SUPABASE_ACTIVE) return;
+  if (!dbClient) initSupabase();
+  if (!dbClient) return;
+  try {
+    const { error } = await dbClient.from('products').upsert({
+      id:         p.id,
+      section:    p.section    || 'hogar',
+      name:       p.name       || '',
+      cat:        p.cat        || '',
+      sub:        p.sub        || '',
+      price:      parseInt(p.price) || 0,
+      price_old:  p.priceOld   || null,
+      stock:      parseInt(p.stock) || 0,
+      stars:      parseInt(p.stars) || 5,
+      tag:        p.tag        || '',
+      tag_text:   p.tagText    || '',
+      prox:       p.prox       ? true : false,
+      img:        p.img        || '',
+      gallery:    p.gallery    || [],
+      videos:     p.videos     || [],
+      desc:       p.desc       || '',
+      variants:   p.variants   || [],
+      colores:    p.colores    || [],
+      talles:     p.talles     || [],
+      material:   p.material   || '',
+      genero:     p.genero     || '',
+      peso:       parseFloat(p.peso) || 0,
+      timer_hours: p.timerHours || null,
+      oportunit_motivo: p.oportunidadMotivo || ''
+    }, { onConflict: 'id' });
+    if (error) console.error('❌ dbUpsertProduct error:', error.message);
+    else console.log('✅ Producto guardado en Supabase:', p.name);
+  } catch(e) { console.error('❌ dbUpsertProduct exception:', e); }
+}
+
+// Eliminar producto de Supabase
+async function dbDeleteProduct(id) {
+  if (!SUPABASE_ACTIVE) return;
+  if (!dbClient) initSupabase();
+  if (!dbClient) return;
+  try {
+    const { error } = await dbClient.from('products').delete().eq('id', id);
+    if (error) console.error('❌ dbDeleteProduct error:', error.message);
+  } catch(e) { console.error('❌ dbDeleteProduct exception:', e); }
 }
 
 /* ── Construye el HTML de una tarjeta de producto ── */
@@ -6986,6 +7081,7 @@ function deleteAdminProduct(id) {
   const p = prods.find(x => x.id === id);
   if (!p || !confirm(`¿Eliminar "${p.name}"? Esta acción no se puede deshacer.`)) return;
   dbSaveProducts(prods.filter(x => x.id !== id));
+  dbDeleteProduct(id); // ← eliminar de Supabase
   if (p.section === 'oportunidades') renderOportunidadesGrid();
   else renderProductGrid(p.section);
   renderAdminProducts(
@@ -7217,6 +7313,7 @@ function saveProductFromEditor() {
   if (idx > -1) prods[idx] = prod; else prods.push(prod);
 
   dbSaveProducts(prods);
+  dbUpsertProduct(prod); // ← sincronizar con Supabase
   if (prod.section === 'oportunidades') {
     renderOportunidadesGrid();
   } else {
@@ -7959,6 +8056,12 @@ async function descontarStock(items) {
 
   if (changed) {
     dbSaveProducts(prods);
+    // Sincronizar stock actualizado a Supabase para cada producto afectado
+    items.forEach(item => {
+      const baseName = item.name.replace(/\s*\([^)]+\)\s*$/, '').trim();
+      const p = prods.find(p => p.name === baseName || p.name === item.name);
+      if (p) dbUpsertProduct(p);
+    });
     console.log('✅ Stock actualizado para', items.length, 'producto(s)');
   }
 }
