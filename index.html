@@ -2076,6 +2076,7 @@ body.dark-mode .ap-tracking-box{background:rgba(61,107,74,.15);border-color:rgba
           <button onclick="testSupabaseConnection()" style="background:var(--clay);border:none;color:#fff;padding:.3rem .8rem;border-radius:4px;cursor:pointer;font-size:.68rem;font-family:var(--sans)">🔌 Probar conexión</button>
           <button onclick="testSupabaseWrite()" style="background:var(--leaf);border:none;color:#fff;padding:.3rem .8rem;border-radius:4px;cursor:pointer;font-size:.68rem;font-family:var(--sans)">💾 Probar escritura</button>
           <button onclick="forceSyncToSupabase()" style="background:#1565c0;border:none;color:#fff;padding:.3rem .8rem;border-radius:4px;cursor:pointer;font-size:.68rem;font-family:var(--sans)">📤 Forzar sincronización</button>
+          <button onclick="checkProductsTable()" style="background:#e65100;border:none;color:#fff;padding:.3rem .8rem;border-radius:4px;cursor:pointer;font-size:.68rem;font-family:var(--sans)">🔍 Verificar tabla de productos</button>
           <button id="adminPushBtn" onclick="adminEnablePush()" style="background:#6a1b9a;border:none;color:#fff;padding:.3rem .8rem;border-radius:4px;cursor:pointer;font-size:.68rem;font-family:var(--sans)">🔔 Activar notificaciones de pedidos</button>
         </div>
         <!-- Stats con filtros de fecha -->
@@ -7180,9 +7181,65 @@ async function dbUpsertProduct(p) {
       faq:      p.faq      || [],
       related:  p.related  || []
     }, { onConflict: 'id' });
-    if (error) console.error('❌ dbUpsertProduct error:', error.message);
-    else console.log('✅ Producto guardado en Supabase:', p.name);
+    if (error) {
+      console.error('❌ dbUpsertProduct error:', error.message);
+      // Avisar visiblemente si la tabla no existe — es el error más común
+      if (/relation|does not exist|table|column|schema/i.test(error.message)) {
+        _warnProductsTableMissing();
+      }
+    } else {
+      console.log('✅ Producto guardado en Supabase:', p.name);
+    }
   } catch(e) { console.error('❌ dbUpsertProduct exception:', e); }
+}
+
+let _warnedTableMissing = false;
+function _warnProductsTableMissing() {
+  if (_warnedTableMissing) return;
+  _warnedTableMissing = true;
+  showToast('⚠️ Los productos NO se están guardando en la nube. Falta crear la tabla en Supabase.');
+  console.warn('%c⚠️ FALTA CREAR LA TABLA "products" EN SUPABASE','color:#e65100;font-size:14px;font-weight:bold');
+  console.warn('Ejecutá el SQL del archivo supabase_products_table.sql en el SQL Editor de Supabase.');
+}
+
+/* Diagnóstico: verifica si la tabla products existe y guarda bien */
+async function checkProductsTable() {
+  if (!dbClient) { showToast('⚠️ Supabase no está conectado'); return; }
+  showToast('🔍 Verificando tabla de productos...');
+  try {
+    // 1. Intentar leer
+    const { data, error: readErr } = await dbClient.from('products').select('id').limit(1);
+    if (readErr) {
+      if (/relation|does not exist|table/i.test(readErr.message)) {
+        alert('❌ La tabla "products" NO existe en Supabase.\n\nTenés que ejecutar el SQL del archivo "supabase_products_table.sql" en el SQL Editor de Supabase.\n\nSin esa tabla, los productos que agregás solo se guardan en este navegador y se pierden al cambiar de dispositivo o limpiar el caché.');
+      } else {
+        alert('❌ Error al leer la tabla: ' + readErr.message);
+      }
+      return;
+    }
+    // 2. Verificar columnas nuevas haciendo un upsert de prueba
+    const testId = '_test_' + Date.now();
+    const { error: writeErr } = await dbClient.from('products').upsert({
+      id: testId, section:'hogar', name:'__test__', price:0, stock:0,
+      specs:[], faq:[], related:[]
+    }, { onConflict:'id' });
+    if (writeErr) {
+      if (/specs|faq|related|column/i.test(writeErr.message)) {
+        alert('⚠️ La tabla existe pero le faltan columnas nuevas (specs, faq, related).\n\nEjecutá este SQL en Supabase:\n\nalter table products add column if not exists specs jsonb default \'[]\';\nalter table products add column if not exists faq jsonb default \'[]\';\nalter table products add column if not exists related jsonb default \'[]\';');
+      } else {
+        alert('⚠️ La tabla existe pero hubo un error al escribir: ' + writeErr.message);
+      }
+      return;
+    }
+    // 3. Limpiar el test
+    await dbClient.from('products').delete().eq('id', testId);
+    // 4. Contar productos guardados
+    const { data: allProds } = await dbClient.from('products').select('id');
+    alert(`✅ ¡Todo correcto!\n\nLa tabla "products" existe y guarda bien.\nProductos guardados en la nube: ${allProds?.length || 0}\n\nLos productos que agregues desde ahora se guardarán permanentemente.`);
+    showToast('✅ Tabla de productos OK');
+  } catch(e) {
+    alert('❌ Error inesperado: ' + e.message);
+  }
 }
 
 // Eliminar producto de Supabase
@@ -7207,12 +7264,12 @@ function renderProductCard(p) {
   const gAttr    = (p.gallery && p.gallery.length) ? `data-gallery='${JSON.stringify(p.gallery)}'` : '';
   const vAttr    = (p.videos  && p.videos.length)  ? `data-videos='${JSON.stringify(p.videos)}'`   : '';
   const proxAttr = p.prox ? 'data-prox="1"' : '';
-  const clickAttr= p.prox ? '' : 'onclick="openProduct(this)"';
+  const clickAttr= p.prox ? '' : 'onclick="openProductPage(this)" style="cursor:pointer"';
   const proxOvl  = p.prox ? '<div class="pcard-prox"><div class="pcard-prox-badge">Próximamente</div><p class="pcard-prox-txt">Muy pronto disponible</p></div>' : '';
   const imgHtml  = p.img
     ? `<img src="${p.img}" alt="${p.name.replace(/"/g,'&quot;')}" loading="lazy" decoding="async">`
     : `<div style="width:100%;height:100%;display:flex;align-items:center;justify-content:center;background:#C4855A;color:rgba(255,255,255,.4);font-style:italic;font-size:.75rem">${p.name.split(' ')[0]}</div>`;
-  const ctaBtn   = p.prox ? '' : `<button class="pcard-cta" onclick="event.stopPropagation();openProduct(this.closest('.pcard'))">Ver producto</button>`;
+  const ctaBtn   = p.prox ? '' : `<button class="pcard-cta" onclick="event.stopPropagation();openProductPage(this.closest('.pcard'))">Ver producto</button>`;
   const safeDesc = (p.desc||'').replace(/"/g,'&quot;').replace(/\n/g,' ');
   const safeName = p.name.replace(/"/g,'&quot;');
   // Badge stock bajo (≤5 unidades activas)
@@ -8932,6 +8989,14 @@ function openProdPage(prod) {
   if (!prod) return;
   const url = location.origin + location.pathname + '#producto/' + slugify(prod.name);
   window.open(url, '_blank');
+}
+
+/* Abre la página del producto en pestaña nueva desde una tarjeta */
+function openProductPage(card) {
+  if (!card) return;
+  const name = card.dataset.name;
+  const prod = dbGetProducts().find(p => p.name === name);
+  if (prod) openProdPage(prod);
 }
 
 function _showProdPageInline(prod) {
