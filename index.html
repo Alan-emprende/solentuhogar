@@ -1430,84 +1430,170 @@ footer{background:var(--ink);color:rgba(255,255,255,.45);padding:5rem 2.5rem 2re
    PÁGINA DE PRODUCTO (URL #producto/slug)
    ══════════════════════════════════════════════════════ */
 /* Prod page: oculto por defecto, se muestra al detectar hash */
+/* ══ PÁGINA COMPLETA DE PRODUCTO ══ */
 .prod-page-overlay{display:none;background:var(--bg);min-height:100vh}
 .prod-page-overlay.open{display:block}
-/* Cuando la página carga en modo producto, ocultar la tienda pero mantener nav */
 body.prod-mode .store-content > *:not(#navbar){display:none!important}
 body.prod-mode #navbar{position:sticky;top:0;z-index:500}
 body.prod-mode .prod-page-overlay{display:block}
-/* Espaciado top en prod-mode para el navbar */
-body.prod-mode .prod-page-inner{padding-top:1.5rem}
-.prod-page-inner{max-width:1080px;margin:0 auto;padding:1.5rem 1.5rem 4rem}
-.prod-page-back{display:inline-flex;align-items:center;gap:.4rem;font-size:.78rem;color:var(--stone);border:none;background:none;cursor:pointer;padding:.4rem 0;margin-bottom:1.2rem;font-family:var(--sans)}
-.prod-page-back:hover{color:var(--clay)}
-.prod-page-grid{display:grid;grid-template-columns:1fr 1fr;gap:2.5rem;align-items:start}
-.prod-page-gallery{position:sticky;top:1rem}
-.prod-page-main-img{width:100%;aspect-ratio:1;object-fit:cover;border-radius:12px;background:var(--surface);margin-bottom:.6rem}
+/* Breadcrumb */
+.pp-breadcrumb{font-size:.72rem;color:var(--stone-light);padding:.8rem 0;border-bottom:1px solid var(--sand-deep);margin-bottom:1.5rem}
+.pp-breadcrumb a{color:var(--stone-light);text-decoration:none}.pp-breadcrumb a:hover{color:var(--clay)}
+.pp-breadcrumb span{color:var(--ink);font-weight:600}
+/* Layout */
+.prod-page-inner{max-width:1140px;margin:0 auto;padding:0 1.5rem 5rem}
+.prod-page-grid{display:grid;grid-template-columns:1fr 420px;gap:3rem;align-items:start;margin-bottom:3rem}
+/* Galería */
+.prod-page-gallery{position:sticky;top:80px}
+.pp-main-img-wrap{position:relative;border-radius:14px;overflow:hidden;background:var(--surface);margin-bottom:.7rem;cursor:zoom-in}
+.pp-main-img-wrap img{width:100%;display:block;transition:transform .4s ease}
+.pp-main-img-wrap:hover img{transform:scale(1.04)}
+/* Detección de formato de imagen */
+.pp-main-img-wrap.portrait  img{aspect-ratio:3/4;object-fit:contain;background:var(--surface)}
+.pp-main-img-wrap.landscape img{aspect-ratio:16/9;object-fit:contain;background:var(--surface)}
+.pp-main-img-wrap.square    img{aspect-ratio:1/1;object-fit:contain;background:var(--surface)}
+.pp-main-img-wrap.auto      img{max-height:520px;width:100%;object-fit:contain;background:var(--surface)}
+/* Zoom overlay */
+.pp-zoom-overlay{position:fixed;inset:0;background:rgba(0,0,0,.9);z-index:1200;display:none;align-items:center;justify-content:center;cursor:zoom-out}
+.pp-zoom-overlay.open{display:flex}
+.pp-zoom-overlay img{max-width:95vw;max-height:95vh;object-fit:contain;border-radius:8px}
+/* Thumbnails */
 .prod-page-thumbs{display:flex;gap:.5rem;flex-wrap:wrap}
-.prod-page-thumb{width:60px;height:60px;object-fit:cover;border-radius:7px;cursor:pointer;border:2px solid transparent;transition:border-color .15s;background:var(--surface)}
-.prod-page-thumb.active,.prod-page-thumb:hover{border-color:var(--clay)}
+.prod-page-thumb{width:70px;height:70px;object-fit:cover;border-radius:8px;cursor:pointer;border:2px solid transparent;transition:border-color .15s,box-shadow .15s;background:var(--surface)}
+.prod-page-thumb.active,.prod-page-thumb:hover{border-color:var(--clay);box-shadow:0 0 0 3px rgba(196,92,42,.15)}
 .prod-page-video-wrap{position:relative;padding-top:56.25%;border-radius:10px;overflow:hidden;background:#000;margin-top:.6rem}
 .prod-page-video-wrap iframe{position:absolute;inset:0;width:100%;height:100%}
-.prod-page-kicker{font-size:.65rem;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--clay);margin-bottom:.3rem}
-.prod-page-name{font-family:var(--serif);font-size:2rem;font-weight:700;color:var(--ink);line-height:1.2;margin-bottom:.6rem}
-.prod-page-stars{color:var(--gold);font-size:.85rem;margin-bottom:.7rem}
-.prod-page-price-wrap{display:flex;align-items:baseline;gap:.7rem;margin-bottom:1.2rem}
-.prod-page-price{font-size:2.2rem;font-weight:800;color:var(--clay);font-family:var(--serif)}
+/* Info panel */
+.prod-page-info{padding-top:.5rem}
+.pp-tag-badge{display:inline-block;font-size:.6rem;font-weight:800;letter-spacing:.1em;text-transform:uppercase;background:var(--clay);color:#fff;padding:.2rem .65rem;border-radius:20px;margin-bottom:.6rem}
+.prod-page-kicker{font-size:.65rem;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--stone-light);margin-bottom:.3rem}
+.prod-page-name{font-family:var(--serif);font-size:1.85rem;font-weight:800;color:var(--ink);line-height:1.2;margin-bottom:.7rem}
+/* Stars + reviews count */
+.pp-stars-row{display:flex;align-items:center;gap:.5rem;margin-bottom:.9rem;flex-wrap:wrap}
+.pp-stars{color:var(--gold);font-size:.95rem;letter-spacing:.05rem}
+.pp-review-count{font-size:.78rem;color:var(--stone-light);cursor:pointer;text-decoration:underline;text-underline-offset:2px}
+.pp-review-count:hover{color:var(--clay)}
+.pp-verified-badge{font-size:.65rem;background:rgba(61,107,74,.12);color:var(--leaf);border:1px solid rgba(61,107,74,.2);border-radius:20px;padding:.15rem .55rem;font-weight:600}
+/* Price */
+.prod-page-price-wrap{margin-bottom:1.2rem}
+.pp-price-discount{font-size:.78rem;font-weight:700;color:var(--leaf);background:rgba(61,107,74,.1);padding:.15rem .5rem;border-radius:4px;margin-bottom:.3rem;display:inline-block}
+.prod-page-price-row{display:flex;align-items:baseline;gap:.6rem}
+.prod-page-price{font-size:2.4rem;font-weight:800;color:var(--ink);font-family:var(--serif)}
 .prod-page-price-old{font-size:1rem;color:var(--stone-light);text-decoration:line-through}
-.prod-page-desc{font-size:.88rem;color:var(--stone);line-height:1.7;margin-bottom:1.2rem}
+.pp-installments{font-size:.82rem;color:var(--leaf);font-weight:600;margin-top:.3rem}
+/* Shipping badge */
+.pp-shipping-badge{display:flex;align-items:center;gap:.5rem;background:rgba(61,107,74,.08);border:1px solid rgba(61,107,74,.2);border-radius:8px;padding:.6rem .9rem;margin-bottom:1.2rem;font-size:.8rem;color:var(--leaf);font-weight:600}
+/* Stock indicator */
+.pp-stock-bar-wrap{margin-bottom:.8rem}
+.pp-stock-label{font-size:.72rem;color:var(--stone);margin-bottom:.3rem}
+.pp-stock-bar{height:4px;background:var(--sand-deep);border-radius:4px;overflow:hidden}
+.pp-stock-bar-fill{height:100%;border-radius:4px;transition:width .6s ease}
+.pp-stock-bar-fill.ok{background:var(--leaf)}
+.pp-stock-bar-fill.low{background:#f57f17}
+.pp-stock-bar-fill.out{background:#c62828}
+/* Variants */
 .prod-page-opts{margin-bottom:1.2rem}
 .prod-page-opt-lbl{font-size:.65rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--stone-light);margin-bottom:.5rem}
-.prod-page-swatches{display:flex;gap:.4rem;flex-wrap:wrap;margin-bottom:.9rem}
-.prod-page-add{width:100%;padding:1rem;font-size:.95rem;font-weight:700;background:var(--clay);color:#fff;border:none;border-radius:10px;cursor:pointer;font-family:var(--sans);transition:background .15s;margin-bottom:.7rem}
-.prod-page-add:hover{background:#b54e22}
-.prod-page-add:disabled{background:#ccc;cursor:not-allowed}
-.prod-page-wa{display:flex;align-items:center;justify-content:center;gap:.5rem;width:100%;padding:.75rem;font-size:.85rem;font-weight:700;background:#25D366;color:#fff;border:none;border-radius:10px;cursor:pointer;font-family:var(--sans);text-decoration:none}
-.prod-page-share{display:flex;align-items:center;gap:.5rem;background:none;border:1px solid var(--sand-deep);border-radius:8px;padding:.5rem .9rem;font-size:.75rem;color:var(--stone);cursor:pointer;font-family:var(--sans);margin-top:.5rem}
-.prod-page-share:hover{border-color:var(--clay);color:var(--clay)}
-/* Tabs del producto */
-.prod-page-tabs{margin-top:2.5rem;border-top:2px solid var(--sand-deep)}
-.prod-tabs-nav{display:flex;gap:0;overflow-x:auto;-webkit-overflow-scrolling:touch}
-.prod-tab-btn{background:none;border:none;border-bottom:2px solid transparent;padding:.9rem 1.2rem;font-size:.82rem;font-weight:600;color:var(--stone);cursor:pointer;font-family:var(--sans);white-space:nowrap;margin-bottom:-2px;transition:color .15s,border-color .15s}
+.prod-page-swatches{display:flex;gap:.45rem;flex-wrap:wrap;margin-bottom:.9rem}
+/* Qty */
+.pp-qty-row{display:flex;align-items:center;gap:1rem;margin-bottom:1rem}
+.pp-qty-lbl{font-size:.72rem;font-weight:700;color:var(--stone-light);text-transform:uppercase;letter-spacing:.08em;min-width:60px}
+.pp-qty-ctrl{display:flex;align-items:center;background:var(--surface);border:1.5px solid var(--sand-deep);border-radius:8px;overflow:hidden}
+.pp-qty-btn{width:40px;height:40px;border:none;background:none;font-size:1.1rem;cursor:pointer;color:var(--ink);transition:background .15s;display:flex;align-items:center;justify-content:center}
+.pp-qty-btn:hover{background:var(--sand-deep)}
+.pp-qty-num{min-width:36px;text-align:center;font-size:.95rem;font-weight:700;color:var(--ink)}
+/* CTA buttons */
+.pp-cta-stack{display:flex;flex-direction:column;gap:.65rem;margin-bottom:1rem}
+.prod-page-add{width:100%;padding:1rem 1.2rem;font-size:.95rem;font-weight:800;background:var(--clay);color:#fff;border:none;border-radius:10px;cursor:pointer;font-family:var(--sans);transition:background .15s,transform .1s;letter-spacing:.02em}
+.prod-page-add:hover{background:#b54e22;transform:translateY(-1px)}
+.prod-page-add:active{transform:translateY(0)}
+.prod-page-add:disabled{background:#ccc;cursor:not-allowed;transform:none}
+.pp-btn-secondary{width:100%;padding:.85rem 1.2rem;font-size:.88rem;font-weight:700;background:none;color:var(--clay);border:2px solid var(--clay);border-radius:10px;cursor:pointer;font-family:var(--sans);transition:background .15s}
+.pp-btn-secondary:hover{background:var(--clay-pale)}
+.prod-page-wa{display:flex;align-items:center;justify-content:center;gap:.5rem;width:100%;padding:.85rem;font-size:.88rem;font-weight:700;background:#25D366;color:#fff;border:none;border-radius:10px;cursor:pointer;font-family:var(--sans);text-decoration:none;transition:opacity .15s}
+.prod-page-wa:hover{opacity:.88}
+.pp-actions-row{display:flex;gap:.5rem;margin-top:.3rem}
+.pp-action-btn{flex:1;display:flex;align-items:center;justify-content:center;gap:.35rem;background:none;border:1px solid var(--sand-deep);border-radius:8px;padding:.5rem .7rem;font-size:.72rem;color:var(--stone);cursor:pointer;font-family:var(--sans);transition:border-color .15s,color .15s}
+.pp-action-btn:hover{border-color:var(--clay);color:var(--clay)}
+/* Garantías */
+.pp-guarantees{display:grid;grid-template-columns:1fr 1fr;gap:.5rem;margin-top:1.2rem;padding-top:1.2rem;border-top:1px solid var(--sand-deep)}
+.pp-guarantee{display:flex;align-items:center;gap:.5rem;font-size:.72rem;color:var(--stone)}
+.pp-guarantee-icon{font-size:1.1rem;flex-shrink:0}
+/* Tabs */
+.prod-page-tabs{border-top:2px solid var(--sand-deep);margin-bottom:2.5rem}
+.prod-tabs-nav{display:flex;overflow-x:auto;-webkit-overflow-scrolling:touch;scrollbar-width:none}
+.prod-tabs-nav::-webkit-scrollbar{display:none}
+.prod-tab-btn{background:none;border:none;border-bottom:2.5px solid transparent;padding:1rem 1.3rem;font-size:.83rem;font-weight:600;color:var(--stone);cursor:pointer;font-family:var(--sans);white-space:nowrap;margin-bottom:-2px;transition:color .15s,border-color .15s}
 .prod-tab-btn.active{color:var(--clay);border-bottom-color:var(--clay)}
 .prod-tab-btn:hover{color:var(--clay)}
-.prod-tab-panel{display:none;padding:1.5rem 0;animation:apFadeIn .2s ease}
+.prod-tab-panel{display:none;padding:2rem 0;animation:apFadeIn .2s ease}
 .prod-tab-panel.active{display:block}
-/* Specs table */
-.prod-specs-table{width:100%;border-collapse:collapse;font-size:.83rem}
+/* Specs */
+.prod-specs-table{width:100%;border-collapse:collapse;font-size:.84rem}
 .prod-specs-table tr{border-bottom:1px solid var(--sand-deep)}
 .prod-specs-table tr:last-child{border-bottom:none}
-.prod-specs-table td:first-child{color:var(--stone-light);padding:.55rem 1rem .55rem 0;width:40%;font-weight:600}
-.prod-specs-table td:last-child{color:var(--ink);padding:.55rem 0}
-/* FAQ del producto */
+.prod-specs-table td:first-child{color:var(--stone-light);padding:.65rem 1rem .65rem 0;width:38%;font-weight:600}
+.prod-specs-table td:last-child{color:var(--ink);padding:.65rem 0}
+/* FAQ */
 .prod-faq-item{border-bottom:1px solid var(--sand-deep);cursor:pointer}
-.prod-faq-q{display:flex;justify-content:space-between;align-items:center;padding:.9rem 0;font-size:.85rem;font-weight:600;color:var(--ink);gap:.5rem}
-.prod-faq-q-icon{font-size:.65rem;color:var(--stone-light);transition:transform .2s}
+.prod-faq-q{display:flex;justify-content:space-between;align-items:center;padding:.95rem 0;font-size:.86rem;font-weight:600;color:var(--ink);gap:.5rem}
+.prod-faq-q-icon{font-size:.65rem;color:var(--stone-light);transition:transform .2s;flex-shrink:0}
 .prod-faq-item.open .prod-faq-q-icon{transform:rotate(180deg);color:var(--clay)}
 .prod-faq-item.open .prod-faq-q{color:var(--clay)}
-.prod-faq-a{display:none;font-size:.82rem;color:var(--stone);line-height:1.65;padding-bottom:.9rem}
+.prod-faq-a{display:none;font-size:.83rem;color:var(--stone);line-height:1.7;padding-bottom:.9rem}
 .prod-faq-item.open .prod-faq-a{display:block;animation:apFadeIn .18s ease}
-/* Q&A de clientes */
-.prod-qa-form{background:var(--surface);border:1px solid var(--sand-deep);border-radius:10px;padding:1.2rem;margin-bottom:1.5rem}
-.prod-qa-form-title{font-size:.85rem;font-weight:700;color:var(--ink);margin-bottom:.8rem}
-.prod-qa-input{width:100%;background:#fff;border:1.5px solid var(--sand-deep);border-radius:7px;padding:.6rem .8rem;font-size:.82rem;font-family:var(--sans);color:var(--ink);outline:none;resize:vertical;min-height:68px;box-sizing:border-box}
+/* Q&A */
+.prod-qa-form{background:var(--surface);border:1px solid var(--sand-deep);border-radius:12px;padding:1.3rem;margin-bottom:1.8rem}
+.prod-qa-form-title{font-size:.88rem;font-weight:700;color:var(--ink);margin-bottom:.8rem}
+.prod-qa-input{width:100%;background:#fff;border:1.5px solid var(--sand-deep);border-radius:8px;padding:.65rem .85rem;font-size:.83rem;font-family:var(--sans);color:var(--ink);outline:none;resize:vertical;min-height:72px;box-sizing:border-box}
 .prod-qa-input:focus{border-color:var(--clay)}
 .prod-qa-name-row{display:flex;gap:.6rem;margin-bottom:.6rem}
-.prod-qa-name{flex:1;background:#fff;border:1.5px solid var(--sand-deep);border-radius:7px;padding:.55rem .7rem;font-size:.82rem;font-family:var(--sans);color:var(--ink);outline:none}
+.prod-qa-name{flex:1;background:#fff;border:1.5px solid var(--sand-deep);border-radius:8px;padding:.58rem .75rem;font-size:.83rem;font-family:var(--sans);color:var(--ink);outline:none}
 .prod-qa-name:focus{border-color:var(--clay)}
-.prod-qa-send-btn{background:var(--clay);color:#fff;border:none;border-radius:7px;padding:.55rem 1.1rem;font-size:.78rem;font-weight:700;cursor:pointer;font-family:var(--sans);white-space:nowrap}
+.prod-qa-send-btn{background:var(--clay);color:#fff;border:none;border-radius:8px;padding:.58rem 1.1rem;font-size:.8rem;font-weight:700;cursor:pointer;font-family:var(--sans);white-space:nowrap}
 .prod-qa-send-btn:hover{opacity:.85}
-.prod-qa-list{display:flex;flex-direction:column;gap:.9rem}
-.prod-qa-item{border-left:3px solid var(--sand-deep);padding-left:.9rem}
+.prod-qa-list{display:flex;flex-direction:column;gap:1rem}
+.prod-qa-item{border-left:3px solid var(--sand-deep);padding-left:1rem}
 .prod-qa-item.answered{border-left-color:var(--clay)}
-.prod-qa-question{font-size:.83rem;font-weight:600;color:var(--ink);margin-bottom:.3rem}
-.prod-qa-answer{font-size:.8rem;color:var(--stone);line-height:1.6;background:var(--surface);border-radius:6px;padding:.5rem .7rem;margin-top:.35rem}
+.prod-qa-question{font-size:.84rem;font-weight:600;color:var(--ink);margin-bottom:.3rem}
+.prod-qa-answer{font-size:.8rem;color:var(--stone);line-height:1.65;background:rgba(196,92,42,.06);border-radius:7px;padding:.55rem .75rem;margin-top:.4rem;border-left:3px solid var(--clay)}
 .prod-qa-answer::before{content:"💬 Sol en tu Hogar: ";font-weight:700;color:var(--clay)}
-.prod-qa-meta{font-size:.65rem;color:var(--stone-light);margin-top:.2rem}
-.prod-qa-empty{text-align:center;padding:2rem;color:var(--stone-light);font-size:.82rem}
-/* Related products */
-.prod-related-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(160px,1fr));gap:1rem;margin-top:.5rem}
-/* Admin Q&A panel */
+.prod-qa-meta{font-size:.65rem;color:var(--stone-light);margin-top:.25rem}
+.prod-qa-empty{text-align:center;padding:2.5rem;color:var(--stone-light);font-size:.84rem}
+/* Reviews con imagen */
+.pp-review-grid{display:grid;gap:1.2rem;margin-top:.5rem}
+.pp-review-card{background:var(--surface);border:1px solid var(--sand-deep);border-radius:12px;padding:1.2rem}
+.pp-review-head{display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:.7rem;gap:.5rem}
+.pp-review-author{font-size:.85rem;font-weight:700;color:var(--ink)}
+.pp-review-date{font-size:.65rem;color:var(--stone-light)}
+.pp-review-stars{color:var(--gold);font-size:.85rem;margin-bottom:.5rem}
+.pp-review-text{font-size:.83rem;color:var(--stone);line-height:1.65;margin-bottom:.7rem}
+.pp-review-imgs{display:flex;gap:.5rem;flex-wrap:wrap}
+.pp-review-img{width:80px;height:80px;object-fit:cover;border-radius:8px;cursor:pointer;border:1.5px solid var(--sand-deep);transition:border-color .15s}
+.pp-review-img:hover{border-color:var(--clay)}
+.pp-review-verified{font-size:.62rem;color:var(--leaf);font-weight:700;background:rgba(61,107,74,.1);border-radius:4px;padding:.1rem .4rem;display:inline-block}
+/* Formulario de review con imagen */
+.pp-write-review-wrap{background:var(--surface);border:1px solid var(--sand-deep);border-radius:12px;padding:1.3rem;margin-bottom:1.8rem}
+.pp-write-review-title{font-size:.9rem;font-weight:700;color:var(--ink);margin-bottom:1rem}
+.pp-star-selector{display:flex;gap:.3rem;margin-bottom:.8rem;font-size:1.6rem;cursor:pointer}
+.pp-star-selector span{color:var(--sand-deep);transition:color .1s;line-height:1}
+.pp-star-selector span.active,.pp-star-selector span:hover{color:var(--gold)}
+.pp-review-img-upload{display:flex;align-items:center;gap:.7rem;margin:.7rem 0}
+.pp-review-img-preview{display:flex;gap:.4rem;flex-wrap:wrap;margin-top:.4rem}
+.pp-review-img-thumb{width:64px;height:64px;object-fit:cover;border-radius:7px;border:1.5px solid var(--sand-deep);position:relative}
+.pp-upload-btn{background:var(--surface);border:1.5px dashed var(--sand-deep);border-radius:8px;padding:.5rem 1rem;font-size:.78rem;color:var(--stone);cursor:pointer;font-family:var(--sans);transition:border-color .15s,color .15s;white-space:nowrap}
+.pp-upload-btn:hover{border-color:var(--clay);color:var(--clay)}
+.pp-review-submit-btn{width:100%;padding:.85rem;background:var(--clay);color:#fff;border:none;border-radius:9px;font-size:.85rem;font-weight:700;cursor:pointer;font-family:var(--sans);margin-top:.7rem;transition:background .15s}
+.pp-review-submit-btn:hover{background:#b54e22}
+/* Relacionados */
+.prod-related-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(170px,1fr));gap:1rem;margin-top:.5rem}
+.pp-rel-card{background:var(--surface);border:1.5px solid var(--sand-deep);border-radius:10px;overflow:hidden;cursor:pointer;transition:border-color .15s,box-shadow .15s}
+.pp-rel-card:hover{border-color:var(--clay);box-shadow:0 4px 16px rgba(196,92,42,.12)}
+.pp-rel-img{width:100%;height:130px;object-fit:cover}
+.pp-rel-info{padding:.65rem}
+.pp-rel-name{font-size:.78rem;font-weight:600;color:var(--ink);margin-bottom:.2rem;line-height:1.3}
+.pp-rel-price{font-size:.88rem;font-weight:700;color:var(--clay)}
+/* Admin Q&A */
 .qa-mgmt-item{background:rgba(255,255,255,.03);border:1px solid rgba(255,255,255,.07);border-radius:8px;padding:.8rem 1rem;margin-bottom:.6rem}
 .qa-mgmt-prod{font-size:.6rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--gold);margin-bottom:.3rem}
 .qa-mgmt-q{font-size:.8rem;font-weight:600;color:#fff;margin-bottom:.3rem}
@@ -1516,6 +1602,40 @@ body.prod-mode .prod-page-inner{padding-top:1.5rem}
 .qa-mgmt-actions{display:flex;gap:.5rem}
 .qa-mgmt-save{background:var(--clay);color:#fff;border:none;border-radius:6px;padding:.4rem .9rem;font-size:.72rem;font-weight:700;cursor:pointer;font-family:var(--sans)}
 .qa-mgmt-del{background:rgba(255,255,255,.08);color:rgba(255,255,255,.5);border:1px solid rgba(255,255,255,.1);border-radius:6px;padding:.4rem .8rem;font-size:.72rem;cursor:pointer;font-family:var(--sans)}
+/* Dark mode prod page */
+body.dark-mode .prod-page-overlay{background:var(--ink)}
+body.dark-mode .pp-breadcrumb{border-color:rgba(255,255,255,.08)}
+body.dark-mode .prod-page-name,.dark-mode .pp-review-author,.dark-mode .prod-faq-q{color:rgba(255,255,255,.9)}
+body.dark-mode .pp-qty-ctrl{background:#2A1E10;border-color:#3C2E1A}
+body.dark-mode .pp-qty-btn:hover{background:#3C2E1A}
+body.dark-mode .pp-qty-num{color:rgba(255,255,255,.85)}
+body.dark-mode .pp-main-img-wrap{background:#2A1E10}
+body.dark-mode .pp-guarantees{border-top-color:rgba(255,255,255,.08)}
+body.dark-mode .pp-review-card{background:#2A1E10;border-color:#3C2E1A}
+body.dark-mode .pp-write-review-wrap{background:#2A1E10;border-color:#3C2E1A}
+body.dark-mode .pp-upload-btn{background:#2A1E10;border-color:#3C2E1A;color:rgba(255,255,255,.5)}
+body.dark-mode .pp-shipping-badge{background:rgba(61,107,74,.15);border-color:rgba(61,107,74,.3)}
+body.dark-mode .prod-page-tabs{border-top-color:rgba(255,255,255,.08)}
+body.dark-mode .prod-specs-table tr{border-color:rgba(255,255,255,.07)}
+body.dark-mode .prod-faq-item{border-color:rgba(255,255,255,.08)}
+body.dark-mode .prod-qa-form{background:#2A1E10;border-color:#3C2E1A}
+body.dark-mode .prod-qa-input,.dark-mode .prod-qa-name{background:#1A1208;border-color:#3C2E1A;color:rgba(255,255,255,.85)}
+body.dark-mode .prod-qa-answer{background:rgba(196,92,42,.1)}
+body.dark-mode .pp-rel-card{background:#2A1E10;border-color:#3C2E1A}
+body.dark-mode .pp-rel-name{color:rgba(255,255,255,.85)}
+/* Mobile prod page */
+@media(max-width:860px){
+  .prod-page-grid{grid-template-columns:1fr;gap:1.5rem}
+  .prod-page-gallery{position:static}
+}
+@media(max-width:520px){
+  .prod-page-inner{padding:0 .9rem 4rem}
+  .prod-page-name{font-size:1.4rem}
+  .prod-page-price{font-size:1.9rem}
+  .pp-guarantees{grid-template-columns:1fr}
+  .prod-related-grid{grid-template-columns:repeat(2,1fr)}
+  .pp-review-img{width:65px;height:65px}
+}
 /* Section toggle admin */
 .sec-toggle-row{display:flex;align-items:center;justify-content:space-between;background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.07);border-radius:9px;padding:.7rem 1rem;margin-bottom:.5rem}
 .sec-toggle-info{display:flex;align-items:center;gap:.7rem}
@@ -1557,6 +1677,27 @@ body.dark-mode .prod-faq-q,.prod-page-name,.prod-page-desc{color:var(--ink)}
   .prod-page-price{font-size:1.7rem}
   .prod-page-inner{padding:1rem 1rem 3rem}
 }
+/* ══ BANNER DE COOKIES ══ */
+.cookie-banner{position:fixed;bottom:0;left:0;right:0;z-index:600;background:var(--ink);color:#fff;padding:1rem 1.5rem;display:none;align-items:center;justify-content:space-between;gap:1.5rem;box-shadow:0 -4px 24px rgba(0,0,0,.25);flex-wrap:wrap}
+.cookie-banner.show{display:flex;animation:cookieUp .4s ease}
+@keyframes cookieUp{from{transform:translateY(100%)}to{transform:translateY(0)}}
+.cookie-text{font-size:.8rem;line-height:1.55;flex:1;min-width:240px;color:rgba(255,255,255,.85)}
+.cookie-text a{color:var(--gold);text-decoration:underline}
+.cookie-actions{display:flex;gap:.6rem;flex-shrink:0}
+.cookie-btn-reject{background:none;border:1px solid rgba(255,255,255,.25);color:rgba(255,255,255,.7);border-radius:7px;padding:.6rem 1.1rem;font-size:.78rem;font-weight:600;cursor:pointer;font-family:var(--sans);transition:border-color .15s}
+.cookie-btn-reject:hover{border-color:rgba(255,255,255,.5)}
+.cookie-btn-accept{background:var(--clay);border:none;color:#fff;border-radius:7px;padding:.6rem 1.3rem;font-size:.78rem;font-weight:700;cursor:pointer;font-family:var(--sans);transition:background .15s}
+.cookie-btn-accept:hover{background:#b54e22}
+@media(max-width:540px){.cookie-banner{padding:.9rem 1rem;flex-direction:column;align-items:stretch;text-align:center}.cookie-actions{justify-content:center}.cookie-btn-reject,.cookie-btn-accept{flex:1}}
+
+/* ══ Mejoras Mi Cuenta ══ */
+.ap-tracking-box{background:rgba(61,107,74,.08);border:1px solid rgba(61,107,74,.2);border-radius:8px;padding:.6rem .8rem;margin-top:.6rem;font-size:.76rem;color:var(--leaf);line-height:1.5}
+.ap-order-repeat{background:var(--clay);color:#fff;border:none;border-radius:7px;padding:.55rem .9rem;font-size:.75rem;font-weight:700;cursor:pointer;font-family:var(--sans);white-space:nowrap;transition:background .15s}
+.ap-order-repeat:hover{background:#b54e22}
+.ap-order-status.status-en-preparación,.ap-order-status.status-en-preparacion{background:rgba(21,101,192,.12);color:#1565c0}
+.ap-order-status.status-cancelado{background:rgba(198,40,40,.12);color:#c62828}
+body.dark-mode .ap-tracking-box{background:rgba(61,107,74,.15);border-color:rgba(61,107,74,.3)}
+
 </style>
 
 <!-- ══ Preconnect ══ -->
@@ -4098,7 +4239,7 @@ function _apFillPedidos() {
     return;
   }
 
-  const iconMap = { Pendiente:'⏳', Enviado:'🚚', Entregado:'✅' };
+  const iconMap = { Pendiente:'⏳', 'En preparación':'📦', Enviado:'🚚', Entregado:'✅', Cancelado:'❌' };
   el.innerHTML = orders.map(o => {
     const subtotal = o.items.reduce((s, i) => s + (i.price * i.qty), 0);
     const itemsDetail = o.items.map(i => `
@@ -4110,6 +4251,10 @@ function _apFillPedidos() {
         <div class="ap-order-detail-price">${formatPrice(i.price * i.qty)}</div>
       </div>`).join('');
     const waMsg = encodeURIComponent(`Hola! Quiero consultar sobre mi pedido ${o.id} del ${o.fecha}`);
+    // Bloque de seguimiento si el pedido fue enviado y tiene nota (tracking)
+    const trackingBlock = (o.estado === 'Enviado' && o.nota)
+      ? `<div class="ap-tracking-box">🚚 <strong>Seguimiento:</strong> ${o.nota}<br><a href="https://www.correoargentino.com.ar/formularios/e-commerce" target="_blank" rel="noopener" onclick="event.stopPropagation()" style="color:var(--clay);font-size:.72rem">Rastrear en Correo Argentino →</a></div>`
+      : '';
     return `
     <div class="ap-order" onclick="toggleOrderDetail(this)">
       <div class="ap-order-summary">
@@ -4120,7 +4265,7 @@ function _apFillPedidos() {
         </div>
         <div class="ap-order-right">
           <div class="ap-order-total">${formatPrice(o.total)}</div>
-          <div><span class="ap-order-status status-${o.estado.toLowerCase()}">${o.estado}</span></div>
+          <div><span class="ap-order-status status-${(o.estado||'').toLowerCase().replace(/\s/g,'-')}">${o.estado}</span></div>
         </div>
       </div>
       <div class="ap-order-detail">
@@ -4129,12 +4274,33 @@ function _apFillPedidos() {
           <span class="ap-order-detail-label">Total del pedido</span>
           <span class="ap-order-detail-total">${formatPrice(o.total)}</span>
         </div>
-        <a class="ap-order-wa" href="https://wa.me/5491131496246?text=${waMsg}" target="_blank" onclick="event.stopPropagation()">
-          💬 Consultar este pedido
-        </a>
+        ${trackingBlock}
+        <div style="display:flex;gap:.5rem;margin-top:.6rem;flex-wrap:wrap">
+          <button class="ap-order-repeat" onclick="event.stopPropagation();repeatOrder('${o.id}')">🔁 Volver a comprar</button>
+          <a class="ap-order-wa" href="https://wa.me/5491131496246?text=${waMsg}" target="_blank" onclick="event.stopPropagation()" style="flex:1">
+            💬 Consultar este pedido
+          </a>
+        </div>
       </div>
     </div>`;
   }).join('');
+}
+
+/* Volver a comprar — agrega todos los productos del pedido al carrito */
+function repeatOrder(orderId) {
+  const order = dbGetOrders().find(o => o.id === orderId);
+  if (!order) return;
+  let added = 0;
+  order.items.forEach(item => {
+    const existing = cartItems.find(i => i.name === item.name);
+    if (existing) existing.qty += item.qty;
+    else cartItems.push({ name:item.name, price:item.price, qty:item.qty, bg:item.bg||'#C45C2A', imgSrc:item.imgSrc||null, peso:item.peso||0, variantColor:item.variantColor||null, variantTalle:item.variantTalle||null });
+    added++;
+  });
+  updateCart();
+  closeAccountPanel();
+  toggleCart();
+  showToast(`✅ ${added} producto${added!==1?'s':''} agregado${added!==1?'s':''} al carrito`);
 }
 
 function toggleOrderDetail(el) {
@@ -7044,7 +7210,7 @@ function renderProductCard(p) {
   const clickAttr= p.prox ? '' : 'onclick="openProduct(this)"';
   const proxOvl  = p.prox ? '<div class="pcard-prox"><div class="pcard-prox-badge">Próximamente</div><p class="pcard-prox-txt">Muy pronto disponible</p></div>' : '';
   const imgHtml  = p.img
-    ? `<img src="${p.img}" alt="${p.name.replace(/"/g,'&quot;')}">`
+    ? `<img src="${p.img}" alt="${p.name.replace(/"/g,'&quot;')}" loading="lazy" decoding="async">`
     : `<div style="width:100%;height:100%;display:flex;align-items:center;justify-content:center;background:#C4855A;color:rgba(255,255,255,.4);font-style:italic;font-size:.75rem">${p.name.split(' ')[0]}</div>`;
   const ctaBtn   = p.prox ? '' : `<button class="pcard-cta" onclick="event.stopPropagation();openProduct(this.closest('.pcard'))">Ver producto</button>`;
   const safeDesc = (p.desc||'').replace(/"/g,'&quot;').replace(/\n/g,' ');
@@ -7108,6 +7274,7 @@ function renderProductGrid(section) {
   if (section === 'ropa') rebuildRopaFilters();
   initGridCounts();
   if (typeof patchProductCardsForRouting === 'function') patchProductCardsForRouting();
+  if (typeof applySmartImageFormat === 'function') applySmartImageFormat();
 }
 
 // Muestra/oculta cards según _gridVisible y maneja el botón Ver más
@@ -8670,6 +8837,8 @@ document.addEventListener('keydown', e => {
   initGridCounts();
   applySectionsConfig(); // ← Aplicar secciones activas/inactivas
   patchProductCardsForRouting(); // ← Agregar links de URL a tarjetas
+  applySmartImageFormat(); // ← Detección de formato de imagen en tarjetas
+  initCookieBanner(); // ← Banner de cookies
   populateReviewProductSelect();
   await renderReviews();
   await loadWishlist();
@@ -8838,30 +9007,146 @@ function patchProductCardsForRouting(){
   });
 }
 function _renderProdPage(p) {
-  const mainImg=document.getElementById('ppMainImg');
-  mainImg.src=p.img||''; mainImg.alt=p.name;
-  const allImgs=[p.img,...(p.gallery||[])].filter(Boolean);
-  document.getElementById('ppThumbs').innerHTML=allImgs.map((src,i)=>`<img class="prod-page-thumb ${i===0?'active':''}" src="${src}" alt="${p.name}" onclick="_ppSetImg(this,'${src}')">`).join('');
-  const vw=document.getElementById('ppVideoWrap');
-  const vids=p.videos||[];
+  // Breadcrumb
+  const secLabel = {hogar:'Hogar',tecnologia:'Tecnología',ropa:'Ropa',oportunidades:'Oportunidades'};
+  const bs = document.getElementById('ppBreadSection'), bn = document.getElementById('ppBreadName');
+  if(bs) bs.textContent = secLabel[p.section] || p.section;
+  if(bn) bn.textContent = p.name;
+
+  // Imagen principal con detección de formato
+  const mainImg = document.getElementById('ppMainImg');
+  const imgWrap = document.getElementById('ppMainImgWrap');
+  mainImg.src = p.img || ''; mainImg.alt = p.name;
+  if(p.img) {
+    const probe = new Image();
+    probe.onload = () => {
+      const r = probe.naturalWidth / probe.naturalHeight;
+      imgWrap.className = 'pp-main-img-wrap ' + (r > 1.2 ? 'landscape' : r < 0.85 ? 'portrait' : 'square');
+    };
+    probe.src = p.img;
+  }
+
+  // Thumbnails
+  const allImgs = [p.img,...(p.gallery||[])].filter(Boolean);
+  document.getElementById('ppThumbs').innerHTML = allImgs.length > 1
+    ? allImgs.map((src,i) => `<img class="prod-page-thumb${i===0?' active':''}" src="${src}" alt="${p.name}" onclick="_ppSetImg(this,'${src}')">`).join('')
+    : '';
+
+  // Video
+  const vw = document.getElementById('ppVideoWrap');
+  const vids = p.videos||[];
   if(vids.length){
     vw.style.display='';
-    const yt=vids[0].match(/(?:youtube\.com\/watch\?v=|youtu\.be\/)([^&\s]+)/);
-    vw.innerHTML=yt?`<div class="prod-page-video-wrap"><iframe src="https://www.youtube.com/embed/${yt[1]}" frameborder="0" allowfullscreen loading="lazy"></iframe></div>`:`<video src="${vids[0]}" controls style="width:100%;border-radius:10px;margin-top:.6rem"></video>`;
+    const yt = vids[0].match(/(?:youtube\.com\/watch\?v=|youtu\.be\/)([^&\s]+)/);
+    vw.innerHTML = yt
+      ? `<div class="prod-page-video-wrap"><iframe src="https://www.youtube.com/embed/${yt[1]}" frameborder="0" allowfullscreen loading="lazy"></iframe></div>`
+      : `<video src="${vids[0]}" controls style="width:100%;border-radius:10px;margin-top:.6rem"></video>`;
   } else { vw.style.display='none'; vw.innerHTML=''; }
-  document.getElementById('ppKicker').textContent=p.cat||'';
-  document.getElementById('ppName').textContent=p.name;
-  document.getElementById('ppStars').textContent='★'.repeat(p.stars||5)+'☆'.repeat(5-(p.stars||5))+` (${p.stars||5})`;
-  document.getElementById('ppPrice').textContent=formatPrice(p.price);
-  document.getElementById('ppPriceOld').textContent=(p.priceOld&&p.priceOld>p.price)?formatPrice(p.priceOld):'';
-  document.getElementById('ppDesc').textContent=p.desc||'';
+
+  // Tag badge
+  const tagEl = document.getElementById('ppTagBadge');
+  if(tagEl) tagEl.innerHTML = p.tagText ? `<div class="pp-tag-badge">${p.tagText}</div>` : '';
+
+  // Kicker y nombre
+  document.getElementById('ppKicker').textContent = p.cat || '';
+  document.getElementById('ppName').textContent = p.name;
+
+  // Stars — se actualizan con reviews reales luego
+  const starsEl = document.getElementById('ppStars');
+  const rcEl    = document.getElementById('ppReviewCount');
+  if(starsEl) starsEl.textContent = '★'.repeat(p.stars||5)+'☆'.repeat(5-(p.stars||5));
+  if(rcEl) rcEl.textContent = 'Ver opiniones';
+
+  // Precio con descuento
+  document.getElementById('ppPrice').textContent = formatPrice(p.price);
+  const oldEl = document.getElementById('ppPriceOld');
+  if(oldEl) oldEl.textContent = (p.priceOld && p.priceOld > p.price) ? formatPrice(p.priceOld) : '';
+  const discEl = document.getElementById('ppDiscountBadge');
+  if(discEl && p.priceOld && p.priceOld > p.price) {
+    const pct = Math.round((1 - p.price/p.priceOld)*100);
+    discEl.innerHTML = `<div class="pp-price-discount">-${pct}% OFF</div>`;
+  } else if(discEl) discEl.innerHTML='';
+  const instEl = document.getElementById('ppInstallments');
+  if(instEl) instEl.textContent = p.price >= 5000 ? `12 cuotas sin interés de ${formatPrice(Math.round(p.price/12))}` : '';
+
+  // Descripción
+  document.getElementById('ppDesc').textContent = p.desc || '';
+
+  // Variantes
   _renderPpOpts(p);
+
+  // Stock bar + inline
   _ppUpdateStock();
-  const waMsg=encodeURIComponent(`Hola! Me interesa el producto: *${p.name}* (${formatPrice(p.price)}). ¿Tienen disponibilidad?`);
-  document.getElementById('ppWaBtn').href=`https://wa.me/5491131496246?text=${waMsg}`;
-  document.getElementById('ppQtyNum').textContent='1';
-  _ppQty=1;
+
+  // WA
+  const waMsg = encodeURIComponent(`Hola! Me interesa el producto: *${p.name}* (${formatPrice(p.price)}). ¿Tienen disponibilidad?`);
+  document.getElementById('ppWaBtn').href = `https://wa.me/5491131496246?text=${waMsg}`;
+
+  // Qty reset
+  document.getElementById('ppQtyNum').textContent = '1';
+  _ppQty = 1;
+
+  // Wishlist state
+  _ppSyncWishBtn(p.id);
+
+  // Tabs
   _renderPpTabs(p);
+}
+
+function _ppSetImg(el, src) {
+  const mainImg = document.getElementById('ppMainImg');
+  const imgWrap = document.getElementById('ppMainImgWrap');
+  mainImg.src = src;
+  document.querySelectorAll('.prod-page-thumb').forEach(t => t.classList.remove('active'));
+  el.classList.add('active');
+  // Re-detectar formato
+  const probe = new Image();
+  probe.onload = () => {
+    const r = probe.naturalWidth / probe.naturalHeight;
+    imgWrap.className = 'pp-main-img-wrap ' + (r > 1.2 ? 'landscape' : r < 0.85 ? 'portrait' : 'square');
+  };
+  probe.src = src;
+}
+
+function ppOpenZoom() {
+  const src = document.getElementById('ppMainImg')?.src;
+  if(!src) return;
+  const zo = document.getElementById('ppZoomOverlay');
+  const zi = document.getElementById('ppZoomImg');
+  if(zo && zi) { zi.src = src; zo.classList.add('open'); document.body.style.overflow='hidden'; }
+}
+function ppCloseZoom() {
+  const zo = document.getElementById('ppZoomOverlay');
+  if(zo) { zo.classList.remove('open'); document.body.style.overflow=''; }
+}
+
+function ppBuyNow() {
+  ppAddToCart();
+  setTimeout(() => { closeProdPage(); openCheckout(); }, 200);
+}
+
+function ppGoToReviews() {
+  const tabs = document.getElementById('ppTabsNav');
+  const reviewBtn = tabs?.querySelector('[data-tab="reviews"]');
+  if(reviewBtn) {
+    reviewBtn.click();
+    document.getElementById('ppTabsSection')?.scrollIntoView({behavior:'smooth'});
+  }
+}
+
+function _ppSyncWishBtn(prodId) {
+  const btn = document.getElementById('ppWishBtn');
+  if(!btn) return;
+  const wl = JSON.parse(localStorage.getItem('sol_wishlist')||'[]');
+  const inWish = wl.some(w => w.id === prodId || w.product_id === prodId);
+  btn.textContent = inWish ? '♥ Favorito' : '♡ Favorito';
+  btn.style.color = inWish ? 'var(--clay)' : '';
+}
+function ppToggleWishlist() {
+  if(!_ppProd) return;
+  if(currentUser) toggleWishlistItem(_ppProd.id, _ppProd.name, _ppProd.price, _ppProd.img);
+  else { showToast('Iniciá sesión para guardar favoritos'); openLogin(); }
+  setTimeout(() => _ppSyncWishBtn(_ppProd?.id), 300);
 }
 function _ppSetImg(el,src){document.getElementById('ppMainImg').src=src;document.querySelectorAll('.prod-page-thumb').forEach(t=>t.classList.remove('active'));el.classList.add('active');}
 function _renderPpOpts(p){
@@ -8896,19 +9181,43 @@ function _renderPpOpts(p){
   }
 }
 function _ppUpdateStock(){
-  if(!_ppProd)return;
-  let stock=_ppProd.stock||0;
-  if(_ppVariants.length&&(_ppSelColor||_ppSelTalle)){
+  if(!_ppProd) return;
+  let stock = _ppProd.stock || 0;
+  if(_ppVariants.length && (_ppSelColor || _ppSelTalle)){
     let m=null;
-    if(_ppSelColor&&_ppSelTalle)m=_ppVariants.find(v=>v.color===_ppSelColor&&v.talle===_ppSelTalle);
+    if(_ppSelColor&&_ppSelTalle) m=_ppVariants.find(v=>v.color===_ppSelColor&&v.talle===_ppSelTalle);
     else if(_ppSelColor){const g=_ppVariants.filter(v=>v.color===_ppSelColor);if(g.length)m={stock:g.reduce((s,v)=>s+(v.stock||0),0)};}
     else if(_ppSelTalle){const g=_ppVariants.filter(v=>v.talle===_ppSelTalle);if(g.length)m={stock:g.reduce((s,v)=>s+(v.stock||0),0)};}
-    if(m)stock=m.stock??0;
+    if(m) stock=m.stock??0;
   }
-  const el=document.getElementById('ppStock');
-  if(el){if(stock===0)el.innerHTML='<span class="pdModal-stock out">Sin stock</span>';else if(stock<=5)el.innerHTML=`<span class="pdModal-stock low">¡Últimas ${stock} unidades!</span>`;else el.innerHTML=`<span class="pdModal-stock ok">${stock} disponibles</span>`;}
-  const btn=document.getElementById('ppAddBtn');
-  if(btn){btn.disabled=stock===0;btn.textContent=stock===0?'😕 Sin stock':'🛒 Agregar al carrito';}
+
+  // Stock bar
+  const barWrap = document.getElementById('ppStockBar');
+  if(barWrap) {
+    const totalStock = _ppProd.stock || 20; // aproximación si no hay total
+    const pct = Math.min(100, Math.round(stock/totalStock*100));
+    const cls = stock===0?'out':stock<=5?'low':'ok';
+    const lbl = stock===0?'Sin stock disponible':stock<=5?`¡Solo quedan ${stock} unidades!`:`${stock} unidades disponibles`;
+    barWrap.innerHTML = `
+      <div class="pp-stock-label">${lbl}</div>
+      <div class="pp-stock-bar"><div class="pp-stock-bar-fill ${cls}" style="width:${pct}%"></div></div>`;
+  }
+
+  // Inline label
+  const inlineEl = document.getElementById('ppStockInline');
+  if(inlineEl) {
+    if(stock===0) inlineEl.textContent='Sin stock';
+    else if(stock<=5) inlineEl.style.color='#f57f17';
+    else inlineEl.textContent='';
+  }
+
+  // Botón
+  const btn = document.getElementById('ppAddBtn');
+  if(btn){ btn.disabled=stock===0; btn.textContent=stock===0?'😕 Sin stock':'🛒 Agregar al carrito'; }
+
+  // Botón "Comprar ahora"
+  const buyBtn = document.querySelector('.pp-btn-secondary');
+  if(buyBtn) buyBtn.disabled = stock===0;
 }
 function ppChangeQty(d){_ppQty=Math.max(1,_ppQty+d);const el=document.getElementById('ppQtyNum');if(el)el.textContent=_ppQty;}
 function ppAddToCart(){
@@ -8932,7 +9241,8 @@ function _renderPpTabs(p){
   const tabs=[];
   if(p.specs&&p.specs.length)tabs.push({id:'specs',label:'📋 Especificaciones'});
   if(p.faq&&p.faq.length)tabs.push({id:'faq',label:'❓ Preguntas frecuentes'});
-  tabs.push({id:'qa',label:'💬 Preguntas de clientes'});
+  tabs.push({id:'reviews',label:'⭐ Opiniones'});
+  tabs.push({id:'qa',label:'💬 Preguntas'});
   if(p.related&&p.related.length)tabs.push({id:'related',label:'🔗 Relacionados'});
   tabs.forEach((tab,i)=>{
     const btn=document.createElement('button'); btn.className='prod-tab-btn'+(i===0?' active':'');
@@ -8943,10 +9253,32 @@ function _renderPpTabs(p){
     panel.innerHTML=_buildTabContent(tab.id,p); content.appendChild(panel);
   });
   loadProdQa(p.id);
+  loadProdPageReviews(p.id);
 }
 function _buildTabContent(tabId,p){
   if(tabId==='specs'){if(!p.specs||!p.specs.length)return'<div class="prod-qa-empty">Sin especificaciones cargadas.</div>';return`<table class="prod-specs-table">${p.specs.map(s=>`<tr><td>${s.k}</td><td>${s.v}</td></tr>`).join('')}</table>`;}
   if(tabId==='faq'){if(!p.faq||!p.faq.length)return'<div class="prod-qa-empty">Sin preguntas frecuentes.</div>';return p.faq.map((item,i)=>`<div class="prod-faq-item" id="ppFaq${i}"><div class="prod-faq-q" onclick="this.parentElement.classList.toggle('open')">${item.q}<span class="prod-faq-q-icon">▾</span></div><div class="prod-faq-a">${item.a}</div></div>`).join('');}
+  if(tabId==='reviews'){return`
+    <div class="pp-write-review-wrap" id="ppWriteReviewWrap">
+      <div class="pp-write-review-title">⭐ Dejar una opinión</div>
+      <div class="pp-star-selector" id="ppStarSelector">
+        <span onclick="ppSetStar(1)">★</span>
+        <span onclick="ppSetStar(2)">★</span>
+        <span onclick="ppSetStar(3)">★</span>
+        <span onclick="ppSetStar(4)">★</span>
+        <span onclick="ppSetStar(5)">★</span>
+      </div>
+      <input class="prod-qa-name" id="ppRevName" placeholder="Tu nombre" style="width:100%;margin-bottom:.6rem;box-sizing:border-box">
+      <textarea class="prod-qa-input" id="ppRevText" placeholder="Contanos tu experiencia con el producto..." rows="3" style="margin-bottom:.6rem"></textarea>
+      <div class="pp-review-img-upload">
+        <button type="button" class="pp-upload-btn" onclick="ppUploadReviewImg()">📷 Subir fotos (opcional)</button>
+        <span style="font-size:.72rem;color:var(--stone-light)">Máx. 3 fotos</span>
+      </div>
+      <div class="pp-review-img-preview" id="ppRevImgPreview"></div>
+      <button class="pp-review-submit-btn" onclick="ppSubmitReview('${p.id}','${p.name.replace(/'/g,"\\'")}')">Publicar opinión</button>
+    </div>
+    <div id="ppReviewList"><div class="prod-qa-empty">Cargando opiniones...</div></div>
+  `;}
   if(tabId==='qa'){return`<div class="prod-qa-form"><div class="prod-qa-form-title">¿Tenés alguna pregunta sobre este producto?</div><div class="prod-qa-name-row"><input class="prod-qa-name" id="ppQaName" placeholder="Tu nombre"><button class="prod-qa-send-btn" onclick="submitProdQuestion('${p.id}')">Enviar</button></div><textarea class="prod-qa-input" id="ppQaText" placeholder="Escribí tu pregunta..." rows="3"></textarea></div><div class="prod-qa-list" id="ppQaList"><div class="prod-qa-empty">Cargando preguntas...</div></div>`;}
   if(tabId==='related'){const all=dbGetProducts();const rel=(p.related||[]).map(name=>all.find(x=>x.name===name)).filter(Boolean);if(!rel.length)return'<div class="prod-qa-empty">Sin productos relacionados.</div>';return`<div class="prod-related-grid">${rel.map(r=>`<div style="cursor:pointer;background:var(--surface);border-radius:9px;overflow:hidden;border:1.5px solid var(--sand-deep)" onclick="openProdPage(dbGetProducts().find(p=>p.id==='${r.id}'))"><img src="${r.img}" style="width:100%;height:120px;object-fit:cover" alt="${r.name}"><div style="padding:.6rem"><div style="font-size:.78rem;font-weight:600;color:var(--ink);margin-bottom:.2rem">${r.name}</div><div style="font-size:.85rem;font-weight:700;color:var(--clay)">${formatPrice(r.price)}</div></div></div>`).join('')}</div>`;}
   return'';
@@ -8998,53 +9330,320 @@ function peGetRelated(){return Array.from(document.querySelectorAll('#peRelatedR
 function peClearDynamicFields(){['peSpecRows','peFaqRows','peRelatedRows'].forEach(id=>{const el=document.getElementById(id);if(el)el.innerHTML='';});}
 function peLoadDynamicFields(p){peClearDynamicFields();(p?.specs||[]).forEach(s=>peAddSpecRow(s.k,s.v));(p?.faq||[]).forEach(f=>peAddFaqRow(f.q,f.a));(p?.related||[]).forEach(r=>peAddRelatedRow(r));}
 
+/* ══════════════════════════════════════════════════════════════
+   REVIEWS CON IMAGEN EN PÁGINA DE PRODUCTO
+   ══════════════════════════════════════════════════════════════ */
+let _ppReviewStars = 0;
+let _ppReviewImgs  = []; // array de URLs (Cloudinary)
+
+function ppSetStar(n) {
+  _ppReviewStars = n;
+  const stars = document.querySelectorAll('#ppStarSelector span');
+  stars.forEach((s, i) => s.classList.toggle('active', i < n));
+}
+
+function ppUploadReviewImg() {
+  if(_ppReviewImgs.length >= 3) { showToast('Máximo 3 fotos por opinión'); return; }
+  const input = document.createElement('input');
+  input.type = 'file'; input.accept = 'image/*'; input.multiple = true;
+  input.onchange = async () => {
+    const files = Array.from(input.files).slice(0, 3 - _ppReviewImgs.length);
+    for(const file of files) {
+      try {
+        const url = await _cloudinaryUploadFile(file);
+        if(url) {
+          _ppReviewImgs.push(url);
+          _ppRenderReviewImgPreview();
+        }
+      } catch(e) { showToast('Error al subir imagen'); }
+    }
+  };
+  input.click();
+}
+
+async function _cloudinaryUploadFile(file) {
+  const fd = new FormData();
+  fd.append('file', file);
+  fd.append('upload_preset', CLOUDINARY_UPLOAD_PRESET);
+  const res = await fetch(`https://api.cloudinary.com/v1_1/${CLOUDINARY_CLOUD_NAME}/image/upload`, { method:'POST', body:fd });
+  const data = await res.json();
+  return data.secure_url || null;
+}
+
+function _ppRenderReviewImgPreview() {
+  const wrap = document.getElementById('ppRevImgPreview');
+  if(!wrap) return;
+  wrap.innerHTML = _ppReviewImgs.map((url, i) => `
+    <div style="position:relative;display:inline-block">
+      <img class="pp-review-img-thumb" src="${url}" alt="foto ${i+1}">
+      <button onclick="_ppRemoveReviewImg(${i})" style="position:absolute;top:-5px;right:-5px;width:18px;height:18px;border-radius:50%;background:var(--clay);color:#fff;border:none;cursor:pointer;font-size:.6rem;display:flex;align-items:center;justify-content:center;padding:0">✕</button>
+    </div>`).join('');
+}
+
+function _ppRemoveReviewImg(i) {
+  _ppReviewImgs.splice(i, 1);
+  _ppRenderReviewImgPreview();
+}
+
+async function ppSubmitReview(prodId, prodName) {
+  const name  = document.getElementById('ppRevName')?.value.trim();
+  const text  = document.getElementById('ppRevText')?.value.trim();
+  if(!_ppReviewStars) { showToast('⚠️ Elegí una cantidad de estrellas'); return; }
+  if(!text)           { showToast('⚠️ Escribí tu opinión'); return; }
+  if(!name)           { showToast('⚠️ Escribí tu nombre'); return; }
+
+  const review = {
+    prod:   prodName,
+    name,
+    stars:  _ppReviewStars,
+    text,
+    fecha:  new Date().toLocaleDateString('es-AR'),
+    visible: true,
+    imgs:   _ppReviewImgs
+  };
+
+  await dbSaveReview(review);
+  showToast('✅ ¡Gracias por tu opinión!');
+
+  // Reset form
+  _ppReviewStars = 0; _ppReviewImgs = [];
+  document.querySelectorAll('#ppStarSelector span').forEach(s => s.classList.remove('active'));
+  if(document.getElementById('ppRevName')) document.getElementById('ppRevName').value = '';
+  if(document.getElementById('ppRevText')) document.getElementById('ppRevText').value = '';
+  if(document.getElementById('ppRevImgPreview')) document.getElementById('ppRevImgPreview').innerHTML = '';
+
+  loadProdPageReviews(prodId);
+}
+
+async function loadProdPageReviews(prodId) {
+  const list = document.getElementById('ppReviewList');
+  if(!list) return;
+
+  // Buscar el nombre del producto
+  const prod = dbGetProducts().find(p => p.id === prodId);
+  if(!prod) return;
+
+  let reviews = [];
+  try {
+    const all = await dbGetReviews();
+    reviews = (all || []).filter(r => r.prod === prod.name);
+  } catch(e) {}
+
+  // Actualizar contador de stars en header
+  if(reviews.length) {
+    const avg = Math.round(reviews.reduce((s,r) => s+(r.stars||5), 0) / reviews.length);
+    const starsEl = document.getElementById('ppStars');
+    const rcEl    = document.getElementById('ppReviewCount');
+    if(starsEl) starsEl.textContent = '★'.repeat(avg)+'☆'.repeat(5-avg);
+    if(rcEl) rcEl.textContent = `${reviews.length} opinión${reviews.length !== 1?'es':''}`;
+  }
+
+  if(!reviews.length) {
+    list.innerHTML = '<div class="prod-qa-empty">Todavía no hay opiniones. ¡Sé el primero!</div>';
+    return;
+  }
+
+  list.innerHTML = `<div class="pp-review-grid">${reviews.map(r => {
+    const stars = '★'.repeat(r.stars||5)+'☆'.repeat(5-(r.stars||5));
+    const imgs = (r.imgs||[]).map(url => {
+      // Detectar formato para mostrar bien
+      return `<img class="pp-review-img" src="${url}" alt="Foto del cliente"
+        onclick="ppOpenZoom();document.getElementById('ppZoomImg').src='${url}'"
+        onload="this.style.aspectRatio=(this.naturalWidth>this.naturalHeight?'16/9':this.naturalWidth===this.naturalHeight?'1/1':'3/4')"
+        style="object-fit:cover">`;
+    }).join('');
+    return `<div class="pp-review-card">
+      <div class="pp-review-head">
+        <div>
+          <div class="pp-review-author">${r.name}</div>
+          <div class="pp-review-date">${r.fecha||''}</div>
+        </div>
+        ${r.verified ? '<span class="pp-review-verified">✓ Compra verificada</span>' : ''}
+      </div>
+      <div class="pp-review-stars">${stars}</div>
+      <div class="pp-review-text">${r.text}</div>
+      ${imgs ? `<div class="pp-review-imgs">${imgs}</div>` : ''}
+    </div>`;
+  }).join('')}</div>`;
+}
+
+/* ══ Smart image format detection para tarjetas de producto ══ */
+function applySmartImageFormat() {
+  document.querySelectorAll('.pcard-img img').forEach(img => {
+    const applyRatio = () => {
+      const r = img.naturalWidth / img.naturalHeight;
+      const wrap = img.closest('.pcard-img');
+      if(!wrap) return;
+      if(r > 1.35)      wrap.style.aspectRatio = '16/9';
+      else if(r < 0.75) wrap.style.aspectRatio = '3/4';
+      else              wrap.style.aspectRatio = '1/1';
+    };
+    if(img.complete && img.naturalWidth) applyRatio();
+    else img.addEventListener('load', applyRatio);
+  });
+}
+
+/* Keyboard: Escape cierra zoom */
+document.addEventListener('keydown', e => {
+  if(e.key === 'Escape') {
+    const zo = document.getElementById('ppZoomOverlay');
+    if(zo?.classList.contains('open')) ppCloseZoom();
+  }
+});
+
+/* ══ BANNER DE COOKIES ══ */
+function setCookieConsent(acceptAll) {
+  localStorage.setItem('sol_cookie_consent', acceptAll ? 'all' : 'essential');
+  localStorage.setItem('sol_cookie_date', new Date().toISOString());
+  const banner = document.getElementById('cookieBanner');
+  if(banner) banner.classList.remove('show');
+  // Si acepta todas, Google Analytics ya está cargado; si solo esenciales, se podría desactivar GA aquí
+  if(!acceptAll && window.gtag) {
+    window['ga-disable-G-PR5GWDZ5M2'] = true;
+  }
+}
+function initCookieBanner() {
+  const consent = localStorage.getItem('sol_cookie_consent');
+  if(!consent) {
+    setTimeout(() => {
+      const banner = document.getElementById('cookieBanner');
+      if(banner) banner.classList.add('show');
+    }, 1500);
+  } else if(consent === 'essential' && window.gtag) {
+    window['ga-disable-G-PR5GWDZ5M2'] = true;
+  }
+}
+
 </script>
 </div><!-- /store-content -->
 
 <!-- ═══════════════════════════════════════════════════════════
      PÁGINA DE PRODUCTO (URL #producto/slug)
      ═══════════════════════════════════════════════════════════ -->
+<!-- ═══════════════════════════════════════════════════════════
+     PÁGINA COMPLETA DE PRODUCTO
+     ═══════════════════════════════════════════════════════════ -->
 <div class="prod-page-overlay" id="prodPageOverlay">
   <div class="prod-page-inner">
-    <button class="prod-page-back" onclick="closeProdPage()">← Volver a la tienda</button>
+
+    <!-- Breadcrumb -->
+    <div class="pp-breadcrumb">
+      <a href="/" onclick="closeProdPage();return false;">Sol en tu Hogar</a>
+      &nbsp;/&nbsp;
+      <span id="ppBreadSection"></span>
+      &nbsp;/&nbsp;
+      <span id="ppBreadName"></span>
+    </div>
+
+    <!-- Grid galería + info -->
     <div class="prod-page-grid">
-      <!-- Galería -->
+
+      <!-- ── Galería ── -->
       <div class="prod-page-gallery">
-        <img class="prod-page-main-img" id="ppMainImg" src="" alt="">
+        <div class="pp-main-img-wrap auto" id="ppMainImgWrap" onclick="ppOpenZoom()">
+          <img id="ppMainImg" src="" alt="">
+        </div>
         <div class="prod-page-thumbs" id="ppThumbs"></div>
         <div id="ppVideoWrap" style="display:none"></div>
       </div>
-      <!-- Info -->
+
+      <!-- ── Info ── -->
       <div class="prod-page-info">
+        <div id="ppTagBadge"></div>
         <div class="prod-page-kicker" id="ppKicker"></div>
         <div class="prod-page-name" id="ppName"></div>
-        <div class="prod-page-stars" id="ppStars"></div>
-        <div class="prod-page-price-wrap">
-          <div class="prod-page-price" id="ppPrice"></div>
-          <div class="prod-page-price-old" id="ppPriceOld"></div>
+
+        <!-- Estrellas -->
+        <div class="pp-stars-row">
+          <div class="pp-stars" id="ppStars"></div>
+          <span class="pp-review-count" onclick="ppGoToReviews()" id="ppReviewCount"></span>
+          <span class="pp-verified-badge" id="ppVerified" style="display:none">✓ Compra verificada</span>
         </div>
+
+        <!-- Precio -->
+        <div class="prod-page-price-wrap">
+          <div id="ppDiscountBadge"></div>
+          <div class="prod-page-price-row">
+            <div class="prod-page-price" id="ppPrice"></div>
+            <div class="prod-page-price-old" id="ppPriceOld"></div>
+          </div>
+          <div class="pp-installments" id="ppInstallments"></div>
+        </div>
+
+        <!-- Envío -->
+        <div class="pp-shipping-badge">
+          🚚 <span>Envío a todo el país · Retiro gratis en Morón / San Justo</span>
+        </div>
+
+        <!-- Descripción -->
         <div class="prod-page-desc" id="ppDesc"></div>
+
         <!-- Variantes -->
         <div class="prod-page-opts" id="ppOpts"></div>
+
+        <!-- Stock bar -->
+        <div class="pp-stock-bar-wrap" id="ppStockBar"></div>
+
         <!-- Cantidad -->
-        <div class="pdModal-qty-ctrl" style="margin-bottom:1rem">
-          <button class="pdModal-qty-btn" onclick="ppChangeQty(-1)">−</button>
-          <span class="pdModal-qty-num" id="ppQtyNum">1</span>
-          <button class="pdModal-qty-btn" onclick="ppChangeQty(1)">+</button>
+        <div class="pp-qty-row">
+          <div class="pp-qty-lbl">Cantidad</div>
+          <div class="pp-qty-ctrl">
+            <button class="pp-qty-btn" onclick="ppChangeQty(-1)">−</button>
+            <span class="pp-qty-num" id="ppQtyNum">1</span>
+            <button class="pp-qty-btn" onclick="ppChangeQty(1)">+</button>
+          </div>
+          <div id="ppStockInline" style="font-size:.75rem;color:var(--stone-light)"></div>
         </div>
-        <!-- Stock -->
-        <div id="ppStock" style="margin-bottom:1rem"></div>
-        <button class="prod-page-add" id="ppAddBtn" onclick="ppAddToCart()">🛒 Agregar al carrito</button>
-        <a class="prod-page-wa" id="ppWaBtn" href="#" target="_blank" rel="noopener">💬 Consultar por WhatsApp</a>
-        <button class="prod-page-share" onclick="ppShare()">🔗 Compartir producto</button>
-        <div id="ppVariantNotice" style="display:none;margin-top:.6rem;padding:.5rem .8rem;background:#fff3e0;border:1.5px solid var(--clay);border-radius:7px;font-size:.78rem;color:var(--clay);font-weight:600"></div>
+
+        <!-- CTAs -->
+        <div class="pp-cta-stack">
+          <button class="prod-page-add" id="ppAddBtn" onclick="ppAddToCart()">🛒 Agregar al carrito</button>
+          <button class="pp-btn-secondary" onclick="ppBuyNow()">⚡ Comprar ahora</button>
+          <a class="prod-page-wa" id="ppWaBtn" href="#" target="_blank" rel="noopener">💬 Consultar por WhatsApp</a>
+        </div>
+
+        <!-- Acciones secundarias -->
+        <div class="pp-actions-row">
+          <button class="pp-action-btn" onclick="ppToggleWishlist()" id="ppWishBtn">♡ Favorito</button>
+          <button class="pp-action-btn" onclick="ppShare()">🔗 Compartir</button>
+        </div>
+        <div id="ppVariantNotice" style="display:none;margin-top:.7rem;padding:.5rem .85rem;background:#fff3e0;border:1.5px solid var(--clay);border-radius:8px;font-size:.78rem;color:var(--clay);font-weight:600"></div>
+
+        <!-- Garantías -->
+        <div class="pp-guarantees">
+          <div class="pp-guarantee"><span class="pp-guarantee-icon">🔒</span><span>Pago 100% seguro</span></div>
+          <div class="pp-guarantee"><span class="pp-guarantee-icon">↩️</span><span>Devolución en 30 días</span></div>
+          <div class="pp-guarantee"><span class="pp-guarantee-icon">⭐</span><span>Productos verificados</span></div>
+          <div class="pp-guarantee"><span class="pp-guarantee-icon">🇦🇷</span><span>Vendemos en todo el país</span></div>
+        </div>
       </div>
     </div>
-    <!-- Tabs: Specs / FAQ / Q&A / Relacionados -->
-    <div class="prod-page-tabs">
+
+    <!-- Tabs -->
+    <div class="prod-page-tabs" id="ppTabsSection">
       <div class="prod-tabs-nav" id="ppTabsNav"></div>
       <div id="ppTabsContent"></div>
     </div>
+
+  </div>
+</div>
+
+<!-- Zoom overlay -->
+<div class="pp-zoom-overlay" id="ppZoomOverlay" onclick="ppCloseZoom()">
+  <img id="ppZoomImg" src="" alt="">
+</div>
+
+<!-- ═══════════════════════════════════════════════════════════
+     BANNER DE COOKIES
+     ═══════════════════════════════════════════════════════════ -->
+<div class="cookie-banner" id="cookieBanner">
+  <div class="cookie-text">
+    🍪 Usamos cookies para mejorar tu experiencia, analizar el tráfico y recordar tus preferencias.
+    Al continuar navegando aceptás nuestra <a href="#" onclick="openInfoModal('privacidad');return false;">política de privacidad</a>.
+  </div>
+  <div class="cookie-actions">
+    <button class="cookie-btn-reject" onclick="setCookieConsent(false)">Solo esenciales</button>
+    <button class="cookie-btn-accept" onclick="setCookieConsent(true)">Aceptar todas</button>
   </div>
 </div>
 
