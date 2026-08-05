@@ -1495,6 +1495,30 @@ body.dark-mode .pd-talle-note b{color:#FFE9AE}
 .pd-talle-wa:hover{color:#25D366}
 body.dark-mode .pd-talle-wa{color:#7BD99B}
 
+/* ── Vista 360° y carrusel de medios ── */
+.pdModal-media{border-top:1px solid var(--sand-deep);padding-top:1rem}
+.pdmedia-title{font-family:var(--serif);font-size:1.05rem;font-weight:700;color:var(--ink);margin-bottom:.12rem}
+.pdmedia-sub{font-size:.72rem;color:var(--stone);margin-bottom:.7rem}
+
+.pd360{position:relative;background:var(--surface);border:1px solid var(--sand-deep);border-radius:12px;overflow:hidden;aspect-ratio:4/3;display:flex;align-items:center;justify-content:center;cursor:grab;touch-action:pan-y;user-select:none;-webkit-user-select:none}
+.pd360.is-dragging{cursor:grabbing}
+.pd360-img{width:100%;height:100%;object-fit:contain;pointer-events:none;-webkit-user-drag:none}
+.pd360-hint{position:absolute;bottom:.7rem;left:50%;transform:translateX(-50%);background:rgba(26,18,9,.78);color:#fff;font-size:.7rem;font-weight:600;padding:.35rem .8rem;border-radius:20px;display:flex;align-items:center;gap:.35rem;pointer-events:none;transition:opacity .35s}
+.pd360-hint span{font-size:.9rem}
+.pd360-hint.oculto{opacity:0}
+.pd360-count{position:absolute;top:.6rem;right:.7rem;background:rgba(26,18,9,.6);color:#fff;font-size:.64rem;font-weight:700;padding:.18rem .5rem;border-radius:20px;pointer-events:none}
+.pd360-loading{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;background:var(--surface);color:var(--stone);font-size:.75rem}
+.pd360-range{width:100%;margin-top:.6rem;accent-color:var(--clay);cursor:pointer}
+
+.pdmedia-row{display:flex;gap:.6rem;overflow-x:auto;padding:.15rem .1rem .6rem;scroll-snap-type:x mandatory;-webkit-overflow-scrolling:touch;scrollbar-width:thin;scrollbar-color:var(--sand-deep) transparent}
+.pdmedia-row::-webkit-scrollbar{height:6px}
+.pdmedia-row::-webkit-scrollbar-thumb{background:var(--sand-deep);border-radius:3px}
+.pdmedia-item{flex:0 0 108px;height:108px;scroll-snap-align:start;position:relative;padding:0;border:1px solid var(--sand-deep);border-radius:10px;overflow:hidden;background:var(--sand);cursor:pointer;transition:transform .2s,border-color .2s,box-shadow .2s}
+.pdmedia-item:hover{transform:translateY(-3px);border-color:var(--clay);box-shadow:0 8px 20px rgba(26,18,9,.13)}
+.pdmedia-item img,.pdmedia-item video{width:100%;height:100%;object-fit:cover;display:block}
+.pdmedia-play{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;background:rgba(0,0,0,.32);color:#fff;font-size:1.5rem;text-shadow:0 2px 8px rgba(0,0,0,.5)}
+@media(max-width:680px){.pdmedia-item{flex:0 0 92px;height:92px}.pd360{aspect-ratio:1}}
+
 /* ── Opiniones del producto dentro de la ficha ── */
 .pdModal-reviews-box{border-top:1px solid var(--sand-deep);padding-top:1rem}
 .pdrev-head{display:flex;align-items:center;gap:.8rem;margin-bottom:.8rem}
@@ -1754,6 +1778,9 @@ body.dark-mode .pdModal-save{background:rgba(61,107,74,.28);color:#81c784}
 
       <!-- Características -->
       <div class="pdModal-features" id="pdModalFeatures"></div>
+
+      <!-- Vista 360° y carrusel de fotos/videos -->
+      <div class="pdModal-media" id="pdModalMedia" style="display:none"></div>
 
       <!-- Opiniones de este producto -->
       <div class="pdModal-reviews-box" id="pdModalReviewsBox"></div>
@@ -3261,6 +3288,22 @@ body.dark-mode .pdModal-save{background:rgba(61,107,74,.28);color:#81c784}
         </div>
       </div>
 
+      <div class="pe-row">
+        <div class="pe-group">
+          <label class="pe-label">Vista 360° <span style="font-size:.6rem;text-transform:none;letter-spacing:0;opacity:.5">(secuencia de fotos girando el producto)</span></label>
+          <div class="pe-gallery-mgr">
+            <div class="pe-gallery-thumbs" id="peSpinThumbs">
+              <span class="pe-gallery-empty" id="peSpinEmpty">Sin vista 360° aún</span>
+            </div>
+            <div style="display:flex;gap:.5rem;flex-wrap:wrap">
+              <button type="button" class="pe-gallery-add-btn" onclick="spinAddFrames()">🔄 Subir fotos del giro</button>
+              <button type="button" class="pe-gallery-add-btn" onclick="spinClearFrames()" style="border-color:rgba(239,83,80,.4);color:#ef5350">🗑 Vaciar</button>
+            </div>
+          </div>
+          <p class="pe-hint">Poné el producto sobre una superficie que gire, sacale entre <b>24 y 36 fotos</b> dando una vuelta completa (una cada 10-15°) sin mover la cámara, y subilas todas juntas. Se ordenan solas por nombre de archivo. Con menos de 8 fotos la vista 360° no se muestra.</p>
+        </div>
+      </div>
+
       <div class="pe-row" style="max-width:220px">
         <div class="pe-group">
           <label class="pe-label">Estrellas</label>
@@ -3574,6 +3617,7 @@ async function syncFromSupabase() {
         img:               p.img        || '',
         gallery:           p.gallery    || [],
         videos:            p.videos     || [],
+        spin360:           p.spin360    || [],
         desc:              p.desc       || '',
         variants:          p.variants   || [],
         colores:           p.colores    || [],
@@ -6125,7 +6169,8 @@ function openProduct(card) {
   addBtn.disabled = _pdStock === 0;
   addBtn.textContent = _pdStock === 0 ? '😕 Sin stock' : '🛒 Agregar al carrito';
 
-  // Opiniones de este producto + relacionados (ambos automáticos)
+  // Medios (360° + carrusel), opiniones y relacionados
+  renderPdMedia(card.dataset.id);
   renderPdReviews(card.dataset.name);
   renderPdRelated(card.dataset.id);
 
@@ -7541,6 +7586,7 @@ async function dbUpsertProduct(p) {
       img:        p.img        || '',
       gallery:    p.gallery    || [],
       videos:     p.videos     || [],
+      spin360:    p.spin360    || [],
       desc:       p.desc       || '',
       variants:   p.variants   || [],
       colores:    p.colores    || [],
@@ -9242,6 +9288,163 @@ async function loadRatingMap() {
     Object.keys(map).forEach(k => { map[k].avg = map[k].sum / map[k].count; });
     _ratingMap = map;
   } catch (e) { _ratingMap = {}; }
+}
+
+/* ══════════════════════════════════════════════════════
+   VISTA 360° + CARRUSEL DE MEDIOS (debajo de la descripción)
+   El 360° no es un modelo 3D: es una secuencia de fotos del producto girando.
+   Al arrastrar, se cambia el cuadro. Es la misma técnica que usan las tiendas
+   grandes, y solo necesita fotos — no hace falta modelar nada.
+   ══════════════════════════════════════════════════════ */
+let _spinFrames = [], _spinIdx = 0, _spinBound = false;
+
+function renderPdMedia(prodId) {
+  const box = document.getElementById('pdModalMedia');
+  if (!box) return;
+  const p = (typeof dbGetProducts === 'function')
+    ? (dbGetProducts() || []).find(x => x.id === prodId) : null;
+  if (!p) { box.style.display = 'none'; box.innerHTML = ''; return; }
+
+  const frames = Array.isArray(p.spin360) ? p.spin360.filter(Boolean) : [];
+  const fotos  = [p.img, ...(Array.isArray(p.gallery) ? p.gallery : [])].filter(Boolean);
+  const videos = Array.isArray(p.videos) ? p.videos.filter(Boolean) : [];
+  const tieneSpin = frames.length >= 8;
+  const tieneCarrusel = (fotos.length + videos.length) > 1;
+
+  if (!tieneSpin && !tieneCarrusel) { box.style.display = 'none'; box.innerHTML = ''; return; }
+  box.style.display = '';
+
+  let html = '';
+
+  // ── Visor 360° ──
+  if (tieneSpin) {
+    html += `
+      <div class="pdmedia-title">Mirá el producto en 360°</div>
+      <div class="pdmedia-sub">Arrastrá sobre la foto (o deslizá con el dedo) para girarlo.</div>
+      <div class="pd360" id="pd360">
+        <img class="pd360-img" id="pd360Img" src="${esc(cldOpt(frames[0], 800))}" alt="${esc(p.name)} en 360 grados" draggable="false">
+        <div class="pd360-hint" id="pd360Hint"><span>↔</span> Arrastrá para girar</div>
+        <div class="pd360-count"><span id="pd360Num">1</span>/${frames.length}</div>
+        <div class="pd360-loading" id="pd360Loading">Cargando vista 360°…</div>
+      </div>
+      <input class="pd360-range" id="pd360Range" type="range" min="0" max="${frames.length - 1}" value="0"
+             aria-label="Girar el producto" oninput="spinGoTo(parseInt(this.value))">`;
+  }
+
+  // ── Carrusel de fotos y videos ──
+  if (tieneCarrusel) {
+    html += `
+      <div class="pdmedia-title" style="margin-top:${tieneSpin ? '1.4rem' : '0'}">Más fotos y videos</div>
+      <div class="pdmedia-row">
+        ${fotos.map((src, i) => `
+          <button type="button" class="pdmedia-item" onclick="pdMediaOpen('img', ${i})" aria-label="Ver foto ${i + 1}">
+            <img src="${esc(cldOpt(src, 400))}" alt="${esc(p.name)} foto ${i + 1}" loading="lazy">
+          </button>`).join('')}
+        ${videos.map((src, i) => `
+          <button type="button" class="pdmedia-item is-video" onclick="pdMediaOpen('video', ${i})" aria-label="Ver video ${i + 1}">
+            <video src="${esc(src)}" muted playsinline preload="metadata"></video>
+            <span class="pdmedia-play">▶</span>
+          </button>`).join('')}
+      </div>`;
+  }
+
+  box.innerHTML = html;
+
+  // Guardamos las listas para poder abrirlas en grande
+  window._pdMediaFotos  = fotos;
+  window._pdMediaVideos = videos;
+
+  if (tieneSpin) _initSpin(frames);
+}
+
+// Precarga los cuadros y engancha el arrastre
+function _initSpin(frames) {
+  _spinFrames = frames.map(f => cldOpt(f, 800));
+  _spinIdx = 0;
+  const cont = document.getElementById('pd360');
+  const img  = document.getElementById('pd360Img');
+  const load = document.getElementById('pd360Loading');
+  if (!cont || !img) return;
+
+  // Precarga en segundo plano para que el giro sea fluido
+  let listas = 0;
+  _spinFrames.forEach(src => {
+    const im = new Image();
+    im.onload = im.onerror = () => {
+      listas++;
+      if (listas === _spinFrames.length && load) load.style.display = 'none';
+    };
+    im.src = src;
+  });
+  setTimeout(() => { if (load) load.style.display = 'none'; }, 6000); // por las dudas
+
+  let arrastrando = false, xIni = 0, idxIni = 0;
+  const px = 6; // píxeles de arrastre por cuadro
+
+  const empezar = x => { arrastrando = true; xIni = x; idxIni = _spinIdx; cont.classList.add('is-dragging'); _ocultarHint(); };
+  const mover = x => {
+    if (!arrastrando) return;
+    const delta = Math.round((x - xIni) / px);
+    spinGoTo(idxIni + delta);
+  };
+  const terminar = () => { arrastrando = false; cont.classList.remove('is-dragging'); };
+
+  cont.addEventListener('mousedown', e => { e.preventDefault(); empezar(e.clientX); });
+  window.addEventListener('mousemove', e => mover(e.clientX));
+  window.addEventListener('mouseup', terminar);
+  cont.addEventListener('touchstart', e => empezar(e.touches[0].clientX), { passive: true });
+  cont.addEventListener('touchmove', e => {
+    if (!arrastrando) return;
+    e.preventDefault(); // evita que la página scrollee mientras gira
+    mover(e.touches[0].clientX);
+  }, { passive: false });
+  cont.addEventListener('touchend', terminar, { passive: true });
+
+  // Giro de bienvenida: muestra que se puede mover
+  let auto = 0;
+  const demo = setInterval(() => {
+    if (arrastrando || auto >= _spinFrames.length) { clearInterval(demo); return; }
+    spinGoTo(_spinIdx + 1); auto++;
+  }, 60);
+}
+
+function _ocultarHint() {
+  const h = document.getElementById('pd360Hint');
+  if (h) h.classList.add('oculto');
+}
+
+function spinGoTo(i) {
+  if (!_spinFrames.length) return;
+  const n = _spinFrames.length;
+  _spinIdx = ((i % n) + n) % n; // gira en círculo
+  const img = document.getElementById('pd360Img');
+  const num = document.getElementById('pd360Num');
+  const rng = document.getElementById('pd360Range');
+  if (img) img.src = _spinFrames[_spinIdx];
+  if (num) num.textContent = _spinIdx + 1;
+  if (rng && document.activeElement !== rng) rng.value = _spinIdx;
+}
+
+// Abre una foto o video del carrusel en grande, reusando el visor de la galería
+function pdMediaOpen(tipo, i) {
+  if (tipo === 'img') {
+    const src = (window._pdMediaFotos || [])[i];
+    if (!src) return;
+    const ov = document.getElementById('imgZoomOverlay');
+    const im = document.getElementById('imgZoomImg');
+    if (ov && im) { im.src = cldOpt(src, 1400); im.alt = ''; ov.classList.add('open'); document.body.style.overflow = 'hidden'; }
+  } else {
+    const src = (window._pdMediaVideos || [])[i];
+    if (!src) return;
+    // Llevamos la galería de arriba a ese video y lo reproducimos ahí
+    const idx = _pdGallery.findIndex(g => g.type === 'video' && g.src === src);
+    if (idx >= 0) {
+      pdGalleryGo(idx);
+      document.getElementById('pdModalImg')?.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    } else {
+      window.open(src, '_blank', 'noopener');
+    }
+  }
 }
 
 // ── Reseñas del producto DENTRO de la ficha ──
