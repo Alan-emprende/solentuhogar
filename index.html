@@ -1605,9 +1605,23 @@ body.dark-mode .pdModal-save{background:rgba(61,107,74,.28);color:#81c784}
 /* ── Botón de compra siempre visible en celular ──
    Sin esto el CTA se pierde apenas el cliente scrollea a leer la descripción. */
 @media(max-width:680px){
-  /* La ficha es una columna: la foto arriba, el contenido scrollea en el medio
-     y la barra de compra queda anclada abajo, siempre a la vista. */
-  .pdModal{display:flex;flex-direction:column}
+  /* En el celular la ficha ocupa TODA la pantalla y se comporta como una
+     página aparte, no como un recuadro con el sitio asomando detrás.
+     La foto arriba, el contenido scrollea en el medio y el botón de compra
+     queda anclado abajo, siempre a la vista. */
+  .pdModal-overlay{align-items:stretch;padding:0;background:rgba(26,18,9,.35)}
+  .pdModal{
+    display:flex;flex-direction:column;
+    width:100%;max-width:100%;
+    height:100dvh;max-height:100dvh;
+    margin:0;border-radius:0;
+    transform:translateY(100%);
+  }
+  .pdModal-overlay.open .pdModal{transform:translateY(0)}
+  .pdModal::before{display:none} /* el "asa" ya no corresponde: es una pantalla, no un panel */
+  .pdModal-img{width:100%;height:42dvh;min-height:250px;flex:0 0 auto}
+  /* Respetar la muesca y la barra de gestos del teléfono */
+  .pdModal-close,.pdModal-share-btn{top:calc(.6rem + env(safe-area-inset-top,0px))}
   .pdModal-body{flex:1 1 auto;min-height:0;overflow-y:auto;padding-bottom:1rem}
   .pdModal-qty-row{
     flex:0 0 auto;
@@ -6198,6 +6212,7 @@ function openProduct(card) {
   document.body.style.overflow = 'hidden';
   document.body.classList.add('pd-open'); // sube el botón de WhatsApp en mobile
   _pdPlaceBuyBar();       // barra de compra anclada al pie en celular
+  _pdPushHistorial();     // el botón "atrás" del celular cierra la ficha
   // Reiniciar el scroll del panel al principio al abrir otro producto
   const _bodyEl = _ov.querySelector('.pdModal-body');
   if (_bodyEl) _bodyEl.scrollTop = 0;
@@ -6289,10 +6304,27 @@ function pdConsultarTalle() {
   window.open('https://wa.me/5491131496246?text=' + encodeURIComponent(msg), '_blank', 'noopener');
 }
 
-function closePdModal() {
+// ── El botón "atrás" del teléfono cierra la ficha en vez de salir del sitio ──
+// Es lo que hace que se sienta una página y no un recuadro encima.
+let _pdHistorial = false;
+function _pdPushHistorial() {
+  if (_pdHistorial) return;                                    // ya empujamos uno
+  if (!window.matchMedia('(max-width:680px)').matches) return; // solo en celular
+  try { history.pushState({ pd: 1 }, ''); _pdHistorial = true; } catch (e) {}
+}
+window.addEventListener('popstate', () => {
+  const ov = document.getElementById('pdModalOverlay');
+  if (ov && ov.classList.contains('open')) closePdModal(true);
+});
+
+function closePdModal(desdeAtras) {
+  const habiaHistorial = _pdHistorial;
+  _pdHistorial = false;
   document.getElementById('pdModalOverlay').classList.remove('open');
   document.body.style.overflow = '';
   document.body.classList.remove('pd-open');
+  // Si cerramos con la X o con Escape, deshacemos el paso que agregamos
+  if (habiaHistorial && !desdeAtras) { try { history.back(); } catch (e) {} }
   _pdCard     = null;
   _pdVariants = [];
   _pdSelectedColor = null;
