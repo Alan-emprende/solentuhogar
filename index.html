@@ -1544,6 +1544,43 @@ body.dark-mode .pd-talle-wa{color:#7BD99B}
 .pdrev-cta{margin-top:.6rem;align-self:flex-start;background:none;border:1.5px solid var(--clay);color:var(--clay);font-family:var(--sans);font-size:.73rem;font-weight:700;padding:.45rem 1rem;border-radius:20px;cursor:pointer;transition:background .18s,color .18s}
 .pdrev-cta:hover{background:var(--clay);color:#fff}
 
+/* ── Ficha a pantalla completa también en escritorio ──
+   La foto ocupa la izquierda y el contenido la derecha, sin recuadro flotante.
+   El texto no se estira de lado a lado: los márgenes crecen con la pantalla
+   para que las líneas sigan siendo cómodas de leer. */
+@media(min-width:681px){
+  .pdModal-overlay{align-items:stretch;justify-content:stretch;padding:0}
+  .pdModal{
+    width:100%;max-width:100%;
+    height:100dvh;max-height:100dvh;
+    border-radius:0;margin:0;
+    transform:translateY(18px);
+  }
+  .pdModal-overlay.open .pdModal{transform:none}
+  .pdModal-img{flex:0 0 46%;max-width:900px;height:100dvh}
+  .pdModal-body{
+    flex:1 1 auto;min-width:0;
+    /* Tope de ancho para que las líneas de texto no se estiren de punta a
+       punta en monitores grandes: se centra en el espacio disponible. */
+    max-width:920px;margin-inline:auto;
+    padding:2.4rem clamp(2rem,5vw,5.5rem) 0;
+    overflow-y:auto;
+  }
+  /* El botón de compra queda pegado abajo aunque bajes leyendo */
+  .pdModal-body .pdModal-qty-row{
+    position:sticky;bottom:0;z-index:5;
+    background:var(--white);
+    margin:0 clamp(-5.5rem,-5vw,-2rem);
+    padding:1rem clamp(2rem,5vw,5.5rem);
+    border-top:1px solid var(--sand-deep);
+    box-shadow:0 -6px 18px rgba(26,18,9,.08);
+  }
+  body.dark-mode .pdModal-body .pdModal-qty-row{background:#201810;border-top-color:#2C2010}
+  /* Cerrar y compartir, sobre la foto */
+  .pdModal-close{top:1rem;right:1rem}
+  .pdModal-share-btn{top:1rem;right:3.4rem}
+}
+
 /* ── Productos relacionados (dentro del modal, automático) ── */
 .pdModal-related{border-top:1px solid var(--sand-deep);padding-top:1.1rem;margin-top:.2rem}
 .pdModal-related-title{font-family:var(--serif);font-size:1.05rem;font-weight:700;color:var(--ink);margin-bottom:.15rem}
@@ -6308,8 +6345,9 @@ function pdConsultarTalle() {
 // Es lo que hace que se sienta una página y no un recuadro encima.
 let _pdHistorial = false;
 function _pdPushHistorial() {
-  if (_pdHistorial) return;                                    // ya empujamos uno
-  if (!window.matchMedia('(max-width:680px)').matches) return; // solo en celular
+  if (_pdHistorial) return; // ya empujamos uno (p. ej. al saltar a un relacionado)
+  // La ficha ocupa toda la pantalla en cualquier dispositivo, así que se comporta
+  // como una página: "atrás" vuelve al catálogo en vez de salir del sitio.
   try { history.pushState({ pd: 1 }, ''); _pdHistorial = true; } catch (e) {}
 }
 window.addEventListener('popstate', () => {
