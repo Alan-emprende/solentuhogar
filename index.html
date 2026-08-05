@@ -8,11 +8,11 @@
 <link rel="preconnect" href="https://fonts.googleapis.com"/>
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
 <link rel="preconnect" href="https://www.googletagmanager.com"/>
-<title>Sol en tu Hogar — Artículos del Hogar y Ropa Online | Morón, Buenos Aires</title>
+<title>Sol en tu Hogar — Artículos del Hogar, Camisetas Retro y Tecnología | Argentina</title>
 
 <!-- ══ SEO ══ -->
-<meta name="description" content="Tienda online argentina de artículos para el hogar y ropa. Botellas Stanley, licuadoras portátiles, organizadores y más. Envío a todo el país. Retiro en Morón y San Justo. 12 cuotas sin interés."/>
-<meta name="keywords" content="artículos del hogar, ropa online argentina, botella stanley, licuadora portátil, organizadores, tienda online moron, envío argentina, san justo, comprar online argentina"/>
+<meta name="description" content="Artículos para el hogar, organizadores y cocina. Además, camisetas y conjuntos de fútbol retro y tecnología. Envío a todo el país. Retiro en Morón y San Justo."/>
+<meta name="keywords" content="camiseta futbol retro, conjunto futbol retro, camiseta barcelona retro, camiseta psg, camiseta atletico madrid, ropa deportiva argentina, artículos del hogar, organizadores, canastos, tupper hermeticos, teclado mouse inalambrico, tienda online moron, san justo, comprar online argentina, envío a todo el país"/>
 <meta name="robots" content="index, follow"/>
 <meta name="author" content="Sol en tu Hogar"/>
 <meta name="geo.region" content="AR-B"/>
@@ -22,8 +22,8 @@
 <!-- ══ Open Graph (WhatsApp, Facebook, Instagram) ══ -->
 <meta property="og:type" content="website"/>
 <meta property="og:url" content="https://solentuhogar.com/"/>
-<meta property="og:title" content="Sol en tu Hogar — Artículos del Hogar y Ropa Online"/>
-<meta property="og:description" content="Artículos para el hogar y ropa de calidad a precios justos. Envío a todo el país, 12 cuotas sin interés."/>
+<meta property="og:title" content="Sol en tu Hogar — Hogar, Fútbol Retro y Tecnología"/>
+<meta property="og:description" content="Artículos para el hogar y organización. Además, camisetas de fútbol retro y tecnología. Envío a todo el país, 6 cuotas sin interés."/>
 <meta property="og:image" content="https://solentuhogar.com/caja-carrito.jpeg"/>
 <meta property="og:image:width" content="1200"/>
 <meta property="og:image:height" content="630"/>
@@ -33,8 +33,8 @@
 
 <!-- ══ Twitter/X Card ══ -->
 <meta name="twitter:card" content="summary_large_image"/>
-<meta name="twitter:title" content="Sol en tu Hogar — Artículos del Hogar y Ropa Online"/>
-<meta name="twitter:description" content="Artículos para el hogar y ropa de calidad a precios justos. Envío a todo el país."/>
+<meta name="twitter:title" content="Sol en tu Hogar — Hogar, Fútbol Retro y Tecnología"/>
+<meta name="twitter:description" content="Artículos para el hogar y organización. Además, camisetas de fútbol retro y tecnología. Envío a todo el país."/>
 <meta name="twitter:image" content="https://solentuhogar.com/caja-carrito.jpeg"/>
 
 <!-- ══ Favicon emoji SVG ══ -->
@@ -1444,6 +1444,167 @@ textarea:focus-visible,[tabindex]:focus-visible,.pcard:focus-visible,
   border-radius:3px;
 }
 
+/* ══════════════════════════════════════════════════════
+   PULIDO UX — transición de tema, modal y relacionados
+   ══════════════════════════════════════════════════════ */
+
+/* ── Transición suave al cambiar de tema (claro ⇄ oscuro) ── */
+body.theme-transition,
+body.theme-transition *,
+body.theme-transition *::before,
+body.theme-transition *::after{
+  transition: background-color .45s ease, color .45s ease,
+              border-color .45s ease, box-shadow .45s ease, fill .45s ease !important;
+}
+/* Botón de tema con giro suave al pulsar */
+.dark-toggle-btn{transition:transform .3s cubic-bezier(.34,1.56,.64,1), color var(--trans)}
+.dark-toggle-btn:hover{transform:scale(1.12)}
+.dark-toggle-btn.spin{animation:themeSpin .55s cubic-bezier(.34,1.56,.64,1)}
+@keyframes themeSpin{from{transform:rotate(-160deg) scale(.5)}to{transform:rotate(0) scale(1)}}
+
+/* ── Modal de producto: entrada más pulida ── */
+.pdModal-overlay{backdrop-filter:blur(4px);-webkit-backdrop-filter:blur(4px)}
+.pdModal{transition:transform .4s cubic-bezier(.34,1.3,.5,1),opacity .3s ease}
+.pdModal-img img{transition:transform .6s cubic-bezier(.4,0,.2,1)}
+.pdModal-img{cursor:zoom-in}
+.pdModal-img:hover img{transform:scale(1.06)}
+/* Aparición escalonada del contenido al abrir */
+.pdModal-overlay.open .pdModal-body > *{animation:pdFadeUp .5s both cubic-bezier(.2,.7,.3,1)}
+.pdModal-overlay.open .pdModal-body > *:nth-child(1){animation-delay:.04s}
+.pdModal-overlay.open .pdModal-body > *:nth-child(2){animation-delay:.08s}
+.pdModal-overlay.open .pdModal-body > *:nth-child(3){animation-delay:.12s}
+.pdModal-overlay.open .pdModal-body > *:nth-child(4){animation-delay:.16s}
+.pdModal-overlay.open .pdModal-body > *:nth-child(5){animation-delay:.20s}
+.pdModal-overlay.open .pdModal-body > *:nth-child(6){animation-delay:.24s}
+.pdModal-overlay.open .pdModal-body > *:nth-child(7){animation-delay:.28s}
+.pdModal-overlay.open .pdModal-body > *:nth-child(8){animation-delay:.32s}
+@keyframes pdFadeUp{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:none}}
+/* Botón agregar con relieve */
+.pdModal-add-btn{box-shadow:0 4px 14px rgba(196,92,42,.28);transition:background .2s,transform .18s,box-shadow .2s}
+.pdModal-add-btn:hover{transform:translateY(-2px);box-shadow:0 8px 22px rgba(196,92,42,.4)}
+.pdModal-add-btn:active{transform:translateY(0)}
+.pdModal-close:hover,.pdModal-share-btn:hover{transform:scale(1.12) rotate(90deg)}
+.pdModal-close{transition:background .2s,transform .25s}
+
+/* ── Aviso de calce de talle (camisetas importadas) ── */
+.pd-talle-note{display:flex;gap:.5rem;align-items:flex-start;background:#FFF8E1;border:1px solid #F0DFA8;border-radius:9px;padding:.6rem .75rem;margin-top:.6rem;font-size:.74rem;line-height:1.5;color:#6B5518}
+.pd-talle-note b{color:#4A3A08}
+body.dark-mode .pd-talle-note{background:rgba(196,150,42,.14);border-color:rgba(196,150,42,.35);color:#E8D5A0}
+body.dark-mode .pd-talle-note b{color:#FFE9AE}
+.pd-talle-wa{display:block;margin-top:.45rem;background:none;border:none;padding:0;color:#1F7A3D;font-family:var(--sans);font-size:.73rem;font-weight:700;text-decoration:underline;cursor:pointer}
+.pd-talle-wa:hover{color:#25D366}
+body.dark-mode .pd-talle-wa{color:#7BD99B}
+
+/* ── Opiniones del producto dentro de la ficha ── */
+.pdModal-reviews-box{border-top:1px solid var(--sand-deep);padding-top:1rem}
+.pdrev-head{display:flex;align-items:center;gap:.8rem;margin-bottom:.8rem}
+.pdrev-score{font-family:var(--serif);font-size:1.9rem;font-weight:700;color:var(--ink);line-height:1}
+.pdrev-score span{font-size:.85rem;color:var(--stone);font-weight:400}
+.pdrev-stars{color:var(--gold);font-size:.9rem;letter-spacing:1px}
+.pdrev-count{font-size:.72rem;color:var(--stone)}
+.pdrev-item{border-top:1px solid var(--sand-deep);padding:.7rem 0}
+.pdrev-item-top{display:flex;align-items:center;justify-content:space-between;gap:.5rem}
+.pdrev-name{font-size:.78rem;font-weight:600;color:var(--ink)}
+.pdrev-item-stars{color:var(--gold);font-size:.72rem;letter-spacing:1px}
+.pdrev-text{font-size:.79rem;color:var(--stone);line-height:1.55;margin:.25rem 0}
+.pdrev-date{font-size:.66rem;color:var(--stone-light)}
+.pdrev-empty{background:var(--surface);border:1px dashed var(--sand-deep);border-radius:10px;padding:.9rem 1rem;display:flex;flex-direction:column;gap:.25rem}
+.pdrev-empty b{font-size:.8rem;color:var(--ink);font-weight:600}
+.pdrev-empty span{font-size:.73rem;color:var(--stone);line-height:1.45}
+.pdrev-cta{margin-top:.6rem;align-self:flex-start;background:none;border:1.5px solid var(--clay);color:var(--clay);font-family:var(--sans);font-size:.73rem;font-weight:700;padding:.45rem 1rem;border-radius:20px;cursor:pointer;transition:background .18s,color .18s}
+.pdrev-cta:hover{background:var(--clay);color:#fff}
+
+/* ── Productos relacionados (dentro del modal, automático) ── */
+.pdModal-related{border-top:1px solid var(--sand-deep);padding-top:1.1rem;margin-top:.2rem}
+.pdModal-related-title{font-family:var(--serif);font-size:1.05rem;font-weight:700;color:var(--ink);margin-bottom:.15rem}
+.pdModal-related-sub{font-size:.72rem;color:var(--stone);margin-bottom:.8rem}
+.pdModal-related-row{display:flex;gap:.7rem;overflow-x:auto;padding:.2rem .1rem .6rem;scroll-snap-type:x mandatory;-webkit-overflow-scrolling:touch;scrollbar-width:thin;scrollbar-color:var(--sand-deep) transparent}
+.pdModal-related-row::-webkit-scrollbar{height:6px}
+.pdModal-related-row::-webkit-scrollbar-track{background:transparent}
+.pdModal-related-row::-webkit-scrollbar-thumb{background:var(--sand-deep);border-radius:3px}
+.pdrel-card{flex:0 0 132px;scroll-snap-align:start;background:var(--surface);border:1px solid var(--sand-deep);border-radius:11px;overflow:hidden;cursor:pointer;text-align:left;padding:0;font-family:var(--sans);transition:transform .2s cubic-bezier(.34,1.3,.5,1),box-shadow .2s,border-color .2s}
+.pdrel-card:hover{transform:translateY(-4px);box-shadow:0 10px 24px rgba(26,18,9,.14);border-color:var(--clay)}
+.pdrel-img{width:100%;aspect-ratio:1;background:var(--sand);display:flex;align-items:center;justify-content:center;font-size:1.7rem;overflow:hidden}
+.pdrel-img img{width:100%;height:100%;object-fit:cover;transition:transform .4s ease}
+.pdrel-card:hover .pdrel-img img{transform:scale(1.08)}
+.pdrel-body{padding:.55rem .6rem .7rem}
+.pdrel-name{font-size:.73rem;font-weight:600;color:var(--ink);line-height:1.3;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;min-height:1.9em;margin-bottom:.25rem}
+.pdrel-price{font-size:.85rem;font-weight:700;color:var(--clay)}
+.pdrel-old{font-size:.68rem;color:var(--stone-light);text-decoration:line-through;margin-left:.3rem;font-weight:400}
+@media(max-width:680px){.pdrel-card{flex:0 0 120px}}
+
+/* ══════════════════════════════════════════════════════
+   PATRONES DE CONVERSIÓN (cuotas, confianza, envío)
+   ══════════════════════════════════════════════════════ */
+
+/* ── Cuotas: el dato que más convierte en Argentina ── */
+.pdModal-cuotas{font-size:.92rem;color:var(--leaf);font-weight:600;margin-top:-.35rem;display:flex;align-items:center;gap:.4rem;flex-wrap:wrap}
+.pdModal-cuotas strong{font-weight:700}
+.pdModal-cuotas .cuota-chip{background:rgba(61,107,74,.12);border-radius:4px;padding:.1rem .4rem;font-size:.68rem;letter-spacing:.02em}
+.pcard-cuotas{font-size:.68rem;color:var(--leaf);font-weight:600;margin-top:.15rem;line-height:1.25}
+.ocard-cuotas{font-size:.7rem;color:var(--leaf);font-weight:600;margin-top:.2rem}
+
+/* ── Envío: barra de progreso hacia el envío gratis ── */
+.pdModal-ship{display:flex;align-items:flex-start;gap:.55rem;background:var(--surface);border:1px solid var(--sand-deep);border-radius:9px;padding:.65rem .8rem;font-size:.78rem;line-height:1.45}
+.pdModal-ship.free{background:rgba(61,107,74,.1);border-color:rgba(61,107,74,.35)}
+.pdModal-ship-ico{font-size:1rem;line-height:1.2;flex-shrink:0}
+.pdModal-ship b{color:var(--ink)}
+.pdModal-ship .ship-free-txt{color:var(--leaf);font-weight:700}
+.ship-bar{margin-top:.4rem;height:5px;background:var(--sand-deep);border-radius:3px;overflow:hidden}
+.ship-bar-fill{height:100%;background:linear-gradient(90deg,var(--clay),var(--leaf));border-radius:3px;transition:width .5s cubic-bezier(.4,0,.2,1)}
+
+/* ── Bloque de garantías junto al botón de compra ── */
+.pdModal-assure{display:grid;grid-template-columns:1fr 1fr;gap:.45rem .8rem;border-top:1px solid var(--sand-deep);padding-top:.85rem}
+.pdModal-assure-item{display:flex;align-items:flex-start;gap:.45rem;font-size:.73rem;color:var(--stone);line-height:1.35;background:none;border:none;padding:.3rem;margin:-.3rem;text-align:left;font-family:var(--sans);cursor:pointer;border-radius:6px;transition:background .18s}
+.pdModal-assure-item:hover{background:var(--surface)}
+.pdModal-assure-item:hover b{color:var(--clay)}
+.pdModal-assure-item span{font-size:.9rem;line-height:1.1;flex-shrink:0}
+.pdModal-assure-item b{color:var(--ink);font-weight:600;display:block;font-size:.75rem}
+@media(max-width:680px){.pdModal-assure{grid-template-columns:1fr}}
+
+/* Cantidad de reseñas reales junto a las estrellas de la tarjeta */
+.pcard-rcount{color:var(--stone);font-size:.62rem;font-weight:600;letter-spacing:0}
+
+/* Bajada de cada sección: dice en una línea qué va a encontrar el cliente */
+.sec-sub{font-size:.82rem;color:var(--stone);margin-top:.35rem;line-height:1.5;max-width:52ch}
+
+/* Ahorro en pesos dentro de la ficha */
+.pdModal-save{background:#e8f5e9;color:#2e7d32;font-size:.72rem;font-weight:700;padding:.22rem .6rem;border-radius:20px;white-space:nowrap}
+body.dark-mode .pdModal-save{background:rgba(61,107,74,.28);color:#81c784}
+
+/* ── Botón de compra siempre visible en celular ──
+   Sin esto el CTA se pierde apenas el cliente scrollea a leer la descripción. */
+@media(max-width:680px){
+  /* La ficha es una columna: la foto arriba, el contenido scrollea en el medio
+     y la barra de compra queda anclada abajo, siempre a la vista. */
+  .pdModal{display:flex;flex-direction:column}
+  .pdModal-body{flex:1 1 auto;min-height:0;overflow-y:auto;padding-bottom:1rem}
+  .pdModal-qty-row{
+    flex:0 0 auto;
+    background:var(--white);
+    margin:0;padding:.7rem 1.2rem calc(.7rem + env(safe-area-inset-bottom,0px));
+    border-top:1px solid var(--sand-deep);
+    box-shadow:0 -6px 18px rgba(26,18,9,.10);
+  }
+  body.dark-mode .pdModal-qty-row{background:#201810;border-top-color:#2C2010}
+  /* Que el botón flotante de WhatsApp no tape el CTA mientras la ficha está abierta */
+  body.pd-open .wa-btn{bottom:92px}
+}
+
+/* ── Aparición de tarjetas al entrar en pantalla (scroll reveal) ── */
+.io-ok .pcard.reveal-init,.io-ok .ocard.reveal-init{
+  opacity:0;transform:translateY(28px);
+  transition:opacity .6s cubic-bezier(.2,.7,.3,1),transform .6s cubic-bezier(.2,.7,.3,1);
+  will-change:opacity,transform;
+}
+.io-ok .pcard.reveal-in,.io-ok .ocard.reveal-in{opacity:1;transform:none}
+
+/* ── Elevación premium de la tarjeta al pasar el mouse ── */
+.pcard{transition:transform .32s cubic-bezier(.34,1.2,.5,1),box-shadow .32s ease}
+.pcard:hover{transform:translateY(-6px);box-shadow:0 18px 40px rgba(26,18,9,.18);z-index:5}
+.ocard{transition:transform .32s cubic-bezier(.34,1.2,.5,1),box-shadow .32s ease}
+.ocard:hover{transform:translateY(-5px);box-shadow:0 16px 36px rgba(26,18,9,.16);z-index:5}
+
 /* ══ Respeta "reducir movimiento" del sistema ══ */
 @media(prefers-reduced-motion:reduce){
   *,*::before,*::after{
@@ -1452,18 +1613,19 @@ textarea:focus-visible,[tabindex]:focus-visible,.pcard:focus-visible,
     transition-duration:.01ms!important;
     scroll-behavior:auto!important;
   }
+  .io-ok .pcard.reveal-init,.io-ok .ocard.reveal-init{opacity:1!important;transform:none!important}
 }
 </style>
 
 <link rel="preconnect" href="https://api.emailjs.com"/>
 
-<!-- ══ JSON-LD — LocalBusiness ══ -->
+<!-- ══ JSON-LD — Tienda (OnlineStore + Store local) ══ -->
 <script type="application/ld+json">
 {
   "@context": "https://schema.org",
-  "@type": "OnlineStore",
+  "@type": ["OnlineStore", "Store"],
   "name": "Sol en tu Hogar",
-  "description": "Tienda online argentina de artículos para el hogar y ropa. Envío a todo el país, 12 cuotas sin interés.",
+  "description": "Tienda online argentina: camisetas y conjuntos de fútbol retro, artículos para el hogar, organización y tecnología. Envío a todo el país y retiro en Morón / San Justo. Hasta 12 cuotas.",
   "url": "https://solentuhogar.com/",
   "logo": "https://solentuhogar.com/caja-carrito.jpeg",
   "image": "https://solentuhogar.com/caja-carrito.jpeg",
@@ -1475,32 +1637,18 @@ textarea:focus-visible,[tabindex]:focus-visible,.pcard:focus-visible,
     "addressRegion": "Buenos Aires",
     "addressCountry": "AR"
   },
-  "areaServed": {
-    "@type": "Country",
-    "name": "Argentina"
-  },
+  "areaServed": { "@type": "Country", "name": "Argentina" },
   "priceRange": "$$",
   "currenciesAccepted": "ARS",
-  "paymentAccepted": "Tarjeta de crédito, Transferencia bancaria, Efectivo",
-  "sameAs": [
-    "https://wa.me/5491131496246"
-  ],
+  "paymentAccepted": "Tarjeta de crédito, Tarjeta de débito, Transferencia bancaria, Efectivo",
+  "sameAs": [ "https://wa.me/5491131496246" ],
   "hasOfferCatalog": {
     "@type": "OfferCatalog",
-    "name": "Artículos del hogar y ropa",
+    "name": "Catálogo Sol en tu Hogar",
     "itemListElement": [
-      {
-        "@type": "Offer",
-        "itemOffered": { "@type": "Product", "name": "Licuadora Portátil USB", "category": "Electrodomésticos" }
-      },
-      {
-        "@type": "Offer",
-        "itemOffered": { "@type": "Product", "name": "Botella Stanley 700ml", "category": "Hogar" }
-      },
-      {
-        "@type": "Offer",
-        "itemOffered": { "@type": "Product", "name": "Caja Organizadora con Ruedas", "category": "Organización" }
-      }
+      { "@type": "OfferCatalog", "name": "Camisetas y conjuntos de fútbol retro" },
+      { "@type": "OfferCatalog", "name": "Artículos para el hogar y organización" },
+      { "@type": "OfferCatalog", "name": "Tecnología y accesorios" }
     ]
   }
 }
@@ -1514,7 +1662,25 @@ textarea:focus-visible,[tabindex]:focus-visible,.pcard:focus-visible,
   "itemListElement": [
     { "@type": "ListItem", "position": 1, "name": "Inicio", "item": "https://solentuhogar.com/" },
     { "@type": "ListItem", "position": 2, "name": "Hogar", "item": "https://solentuhogar.com/#hogar" },
-    { "@type": "ListItem", "position": 3, "name": "Ropa", "item": "https://solentuhogar.com/#ropa" }
+    { "@type": "ListItem", "position": 3, "name": "Ropa deportiva", "item": "https://solentuhogar.com/#ropa" },
+    { "@type": "ListItem", "position": 4, "name": "Tecnología", "item": "https://solentuhogar.com/#tecnologia" }
+  ]
+}
+</script>
+
+<!-- ══ JSON-LD — Preguntas frecuentes (rich snippet FAQ) ══ -->
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": [
+    { "@type": "Question", "name": "¿Cuánto tarda mi pedido en llegar?", "acceptedAnswer": { "@type": "Answer", "text": "CABA y GBA: 1-2 días hábiles. Interior del país: 3-7 días hábiles desde el despacho, que ocurre dentro de las 48hs de confirmado el pago." } },
+    { "@type": "Question", "name": "¿Cómo pago?", "acceptedAnswer": { "@type": "Answer", "text": "Aceptamos tarjetas de crédito y débito (hasta 12 cuotas, las primeras 6 sin interés), transferencia bancaria y efectivo." } },
+    { "@type": "Question", "name": "¿Puedo cambiar o devolver un producto?", "acceptedAnswer": { "@type": "Answer", "text": "Sí, tenés 30 días desde la recepción. Si el producto tiene defecto, el retiro es sin costo. Por arrepentimiento, el costo de envío de devolución está a cargo del comprador." } },
+    { "@type": "Question", "name": "¿El envío es gratis?", "acceptedAnswer": { "@type": "Answer", "text": "Sí, en compras superiores a $30.000 el envío es gratuito a todo el país." } },
+    { "@type": "Question", "name": "¿Cómo sigo mi pedido?", "acceptedAnswer": { "@type": "Answer", "text": "Una vez despachado tu pedido, te enviamos el número de seguimiento por email. También podés consultarnos por WhatsApp con tu número de pedido (#SOL-XXXX)." } },
+    { "@type": "Question", "name": "¿Los productos tienen garantía?", "acceptedAnswer": { "@type": "Answer", "text": "Sí. Todos los productos tienen garantía legal de 6 meses por defectos de fabricación, conforme a la Ley 24.240 de Defensa del Consumidor." } },
+    { "@type": "Question", "name": "¿Puedo modificar o cancelar un pedido?", "acceptedAnswer": { "@type": "Answer", "text": "Podés cancelar dentro de las 2 horas de realizado el pedido escribiéndonos por WhatsApp. Pasado ese tiempo, el pedido puede estar en preparación." } }
   ]
 }
 </script>
@@ -1554,7 +1720,14 @@ textarea:focus-visible,[tabindex]:focus-visible,.pcard:focus-visible,
       <div class="pdModal-price-row">
         <span class="pdModal-price" id="pdModalPrice"></span>
         <span class="pdModal-price-old" id="pdModalPriceOld" style="display:none"></span>
+        <span class="pdModal-save" id="pdModalSave" style="display:none"></span>
       </div>
+
+      <!-- Cuotas: lo que más pesa en la decisión de compra en Argentina -->
+      <div class="pdModal-cuotas" id="pdModalCuotas" style="display:none"></div>
+
+      <!-- Envío: gratis o cuánto falta para conseguirlo -->
+      <div class="pdModal-ship" id="pdModalShip" style="display:none"></div>
 
       <p class="pdModal-desc" id="pdModalDesc"></p>
 
@@ -1562,7 +1735,7 @@ textarea:focus-visible,[tabindex]:focus-visible,.pcard:focus-visible,
       <div class="pdModal-opts" id="pdModalOpts"></div>
 
       <!-- Cantidad + Agregar -->
-      <div class="pdModal-qty-row">
+      <div class="pdModal-qty-row" id="pdModalQtyRow">
         <div class="pdModal-qty-ctrl">
           <button class="pdModal-qty-btn" onclick="pdQty(-1)">−</button>
           <span class="pdModal-qty-num" id="pdModalQtyNum">1</span>
@@ -1571,8 +1744,22 @@ textarea:focus-visible,[tabindex]:focus-visible,.pcard:focus-visible,
         <button class="pdModal-add-btn" id="pdModalAddBtn" onclick="pdAddToCart()">🛒 Agregar al carrito</button>
       </div>
 
+      <!-- Garantías: reducen el miedo justo al momento de decidir -->
+      <div class="pdModal-assure">
+        <button type="button" class="pdModal-assure-item" onclick="openInfoModal('devoluciones')"><span>↩️</span><div><b>Cambios y devoluciones</b>Tenés 30 días · ver cómo</div></button>
+        <button type="button" class="pdModal-assure-item" onclick="openInfoModal('terminos')"><span>🛡️</span><div><b>Garantía 6 meses</b>Por defectos de fábrica</div></button>
+        <button type="button" class="pdModal-assure-item" onclick="openInfoModal('seguimiento')"><span>🚚</span><div><b>Despacho 24–48hs</b>Envío a todo el país</div></button>
+        <button type="button" class="pdModal-assure-item" onclick="openInfoModal('faq')"><span>📍</span><div><b>Retiro sin cargo</b>Morón y San Justo</div></button>
+      </div>
+
       <!-- Características -->
       <div class="pdModal-features" id="pdModalFeatures"></div>
+
+      <!-- Opiniones de este producto -->
+      <div class="pdModal-reviews-box" id="pdModalReviewsBox"></div>
+
+      <!-- Productos relacionados (se cargan solos) -->
+      <div class="pdModal-related" id="pdModalRelated" style="display:none"></div>
     </div>
   </div>
 </div>
@@ -2020,7 +2207,7 @@ textarea:focus-visible,[tabindex]:focus-visible,.pcard:focus-visible,
       <div class="pay-total-row">
         <div>
           <div class="pay-total-lbl">Total a pagar</div>
-          <div class="pay-cuotas" id="payCuotas">Hasta 12 cuotas sin interés</div>
+          <div class="pay-cuotas" id="payCuotas">6 cuotas sin interés</div>
         </div>
         <div class="pay-total-amt" id="payTotalAmt">$0</div>
       </div>
@@ -2175,7 +2362,7 @@ textarea:focus-visible,[tabindex]:focus-visible,.pcard:focus-visible,
             <span class="pay-method-icon">💳</span>
             <div class="pay-method-info">
               <div class="pay-method-name">Tarjeta de crédito / débito</div>
-              <div class="pay-method-desc">Hasta 12 cuotas sin interés</div>
+              <div class="pay-method-desc">6 cuotas sin interés · hasta 12 con interés</div>
             </div>
             <div class="pay-method-badges">
               <span class="pay-badge pb-visa">VISA</span>
@@ -2373,7 +2560,7 @@ textarea:focus-visible,[tabindex]:focus-visible,.pcard:focus-visible,
     <!-- Barra de búsqueda -->
     <div class="search-input-row">
       <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
-      <input class="search-input" id="searchInput" type="text" placeholder="Buscá un producto... ej: licuadora, stanley" aria-label="Buscar productos" oninput="doSearch(this.value)" onkeydown="searchKeyNav(event)">
+      <input class="search-input" id="searchInput" type="text" placeholder="Buscá un producto... ej: camiseta retro, tupper, organizador" aria-label="Buscar productos" oninput="doSearch(this.value)" onkeydown="searchKeyNav(event)">
       <button class="search-close-btn" onclick="closeSearch()">✕ cerrar</button>
     </div>
     <!-- Filtros rápidos -->
@@ -2403,11 +2590,11 @@ textarea:focus-visible,[tabindex]:focus-visible,.pcard:focus-visible,
     <div class="search-results" id="searchResults">
       <div class="search-suggest">
         <span class="search-suggest-lbl">Búsquedas populares</span>
-        <span class="search-suggest-chip" onclick="quickSearch('licuadora')">licuadora</span>
-        <span class="search-suggest-chip" onclick="quickSearch('stanley')">stanley</span>
-        <span class="search-suggest-chip" onclick="quickSearch('organización')">organización</span>
-        <span class="search-suggest-chip" onclick="quickSearch('cocina')">cocina</span>
-        <span class="search-suggest-chip" onclick="quickSearch('tapper')">tapper</span>
+        <span class="search-suggest-chip" onclick="quickSearch('camiseta')">camiseta fútbol</span>
+        <span class="search-suggest-chip" onclick="quickSearch('conjunto')">conjunto</span>
+        <span class="search-suggest-chip" onclick="quickSearch('organizador')">organizador</span>
+        <span class="search-suggest-chip" onclick="quickSearch('tupper')">tupper</span>
+        <span class="search-suggest-chip" onclick="quickSearch('teclado')">teclado</span>
       </div>
     </div>
   </div>
@@ -2439,7 +2626,8 @@ textarea:focus-visible,[tabindex]:focus-visible,.pcard:focus-visible,
   </div>
   <div class="mobile-nav-sep">Tienda</div>
   <a href="#hogar" data-section="hogar" onclick="closeMobileNav()">🏠 Hogar</a>
-  <a href="#ropa" data-section="ropa" onclick="closeMobileNav()">👗 Ropa</a>
+  <a href="#ropa" data-section="ropa" onclick="closeMobileNav()">⚽ Camisetas retro</a>
+  <a href="#tecnologia" data-section="tecnologia" onclick="closeMobileNav()">💻 Tecnología</a>
   <a href="#oportunidades" data-section="oportunidades" onclick="closeMobileNav()">🔥 Oportunidades</a>
   <div class="mobile-nav-sep">Ayuda</div>
   <a href="#" onclick="closeMobileNav();openInfoModal('faq');return false">❓ Preguntas frecuentes</a>
@@ -2465,14 +2653,14 @@ textarea:focus-visible,[tabindex]:focus-visible,.pcard:focus-visible,
     <div class="cart-line"><span>Envío</span><span style="color:var(--leaf);font-weight:600">Gratis</span></div>
     <div class="cart-line total"><span>Total</span><span id="cartTotal">$0</span></div>
     <button class="btn-primary" style="width:100%;justify-content:center;border-radius:4px;margin-top:1rem" onclick="openCheckout()">Finalizar compra</button>
-    <p class="cart-secure">🔒 Compra segura · SSL · Hasta 12 cuotas sin interés</p>
+    <p class="cart-secure">🔒 Sitio seguro (SSL) · 6 cuotas sin interés · Coordinamos el pago con vos</p>
   </div>
 </div>
 
 
 <!-- Barra de anuncio -->
 <!-- ✏️ EDITAR: Cambiá el texto de esta barra de anuncio -->
-<div class="announce">Envío gratis desde $30.000 &nbsp;·&nbsp; <span>Hasta 12 cuotas sin interés</span> &nbsp;·&nbsp; Devoluciones sin cargo en 30 días</div>
+<div class="announce">Envío gratis desde $30.000 &nbsp;·&nbsp; <span>6 cuotas sin interés</span> &nbsp;·&nbsp; Cambios y devoluciones en 30 días</div>
 
 <!-- Navegación -->
 <nav id="navbar">
@@ -2483,7 +2671,8 @@ textarea:focus-visible,[tabindex]:focus-visible,.pcard:focus-visible,
       </button>
       <div class="nav-links">
         <a href="#hogar" class="nav-link" data-section="hogar">Hogar</a>
-        <a href="#ropa" class="nav-link" data-section="ropa">Ropa</a>
+        <a href="#ropa" class="nav-link" data-section="ropa">Camisetas retro</a>
+        <a href="#tecnologia" class="nav-link" data-section="tecnologia">Tecnología</a>
         <a href="#oportunidades" class="nav-link" data-section="oportunidades">Oportunidades</a>
       </div>
     </div>
@@ -2521,40 +2710,25 @@ textarea:focus-visible,[tabindex]:focus-visible,.pcard:focus-visible,
   <div class="hero-wrap">
     <div>
       <!-- ✏️ EDITAR: Texto de la colección actual -->
-      <div class="hero-eyebrow">Productos para tu hogar · Nueva temporada</div>
+      <div class="hero-eyebrow">Hogar · Camisetas retro · Tecnología</div>
       <!-- ✏️ EDITAR: Título principal -->
       <h1 class="hero-title">Tu hogar,<br>con más <em>estilo</em></h1>
       <!-- ✏️ EDITAR: Subtítulo/descripción -->
-      <p class="hero-body">Artículos de cocina, termos, licuadoras y más. Y ropa de calidad en oportunidades únicas, todo con la atención que merecés.</p>
+      <p class="hero-body">Organización, cocina y decoración para tu casa. Y además, camisetas de fútbol retro y tecnología. Envío a todo el país y atención por WhatsApp.</p>
       <div class="hero-actions">
-        <a href="#hogar" class="btn-primary" data-section="hogar">Ver Hogar</a>
-        <a href="#oportunidades" class="btn-ghost" data-section="oportunidades">Ver Oportunidades</a>
+        <a href="#hogar" class="btn-primary" data-section="hogar">Ver productos del hogar</a>
+        <a href="#ropa" class="btn-ghost" data-section="ropa">Ver camisetas retro</a>
       </div>
       <div class="hero-trust">
         <div class="ht-item"><span class="ht-icon">🚚</span><div class="ht-text"><strong>Envío gratis</strong>desde $30.000</div></div>
-        <div class="ht-item"><span class="ht-icon">💳</span><div class="ht-text"><strong>12 cuotas</strong>sin interés</div></div>
-        <div class="ht-item"><span class="ht-icon">↩</span><div class="ht-text"><strong>30 días</strong>devolución gratis</div></div>
+        <div class="ht-item"><span class="ht-icon">💳</span><div class="ht-text"><strong>6 cuotas</strong>sin interés</div></div>
+        <div class="ht-item"><span class="ht-icon">↩</span><div class="ht-text"><strong>30 días</strong>para cambios</div></div>
       </div>
     </div>
     <div class="hero-visual">
       <div class="hero-badge">Hasta 40% OFF</div>
-      <div class="hero-mosaic">
-        <div class="hm-cell" onclick="document.getElementById('hogar').scrollIntoView({behavior:'smooth'})">
-          <div class="hm-badge">⭐ Más vendido</div>
-          <div class="hm-img hm-c1"></div>
-          <div class="hm-overlay"><strong>Caja Organizadora con Ruedas</strong><span>Con tapa · Hasta 50kg · $11.900</span></div>
-        </div>
-        <div class="hm-cell" onclick="document.getElementById('hogar').scrollIntoView({behavior:'smooth'})">
-          <div class="hm-badge">🔥 Popular</div>
-          <div class="hm-img hm-c2"></div>
-          <div class="hm-overlay"><strong>Botella Stanley 700ml</strong><span>Acero inox · 24hs fría · $13.999</span></div>
-        </div>
-        <div class="hm-cell" onclick="document.getElementById('hogar').scrollIntoView({behavior:'smooth'})">
-          <div class="hm-badge">💥 −15% OFF</div>
-          <div class="hm-img hm-c3"></div>
-          <div class="hm-overlay"><strong>Placa Silicona Para Horno</strong><span>Antes $6.500 · Ahora $4.500</span></div>
-        </div>
-      </div>
+      <!-- Mosaico dinámico: se llena con productos REALES desde renderHeroMosaic() -->
+      <div class="hero-mosaic" id="heroMosaic"></div>
     </div>
   </div>
 </div>
@@ -2564,17 +2738,17 @@ textarea:focus-visible,[tabindex]:focus-visible,.pcard:focus-visible,
   <div class="marquee-track">
     <!-- ✏️ EDITAR: Cambiá los textos del marquee -->
     <span class="mi">Envío gratis desde $30.000 <span class="mi-sep">·</span></span>
-    <span class="mi">Hasta 12 cuotas sin interés <span class="mi-sep">·</span></span>
-    <span class="mi">Liquidación hasta 40% OFF <span class="mi-sep">·</span></span>
-    <span class="mi">Devoluciones sin cargo en 30 días <span class="mi-sep">·</span></span>
-    <span class="mi">+2.400 clientes satisfechos <span class="mi-sep">·</span></span>
-    <span class="mi">Entrega en 24–48hs a todo el país <span class="mi-sep">·</span></span>
+    <span class="mi">6 cuotas sin interés · hasta 12 con interés <span class="mi-sep">·</span></span>
+    <span class="mi">Camisetas de fútbol retro <span class="mi-sep">·</span></span>
+    <span class="mi">Cambios y devoluciones en 30 días <span class="mi-sep">·</span></span>
+    <span class="mi">Retiro en Morón y San Justo <span class="mi-sep">·</span></span>
+    <span class="mi">Despacho en 24–48hs hábiles <span class="mi-sep">·</span></span>
     <span class="mi">Envío gratis desde $30.000 <span class="mi-sep">·</span></span>
-    <span class="mi">Hasta 12 cuotas sin interés <span class="mi-sep">·</span></span>
-    <span class="mi">Liquidación hasta 40% OFF <span class="mi-sep">·</span></span>
-    <span class="mi">Devoluciones sin cargo en 30 días <span class="mi-sep">·</span></span>
-    <span class="mi">+2.400 clientes satisfechos <span class="mi-sep">·</span></span>
-    <span class="mi">Entrega en 24–48hs a todo el país <span class="mi-sep">·</span></span>
+    <span class="mi">6 cuotas sin interés · hasta 12 con interés <span class="mi-sep">·</span></span>
+    <span class="mi">Camisetas de fútbol retro <span class="mi-sep">·</span></span>
+    <span class="mi">Cambios y devoluciones en 30 días <span class="mi-sep">·</span></span>
+    <span class="mi">Retiro en Morón y San Justo <span class="mi-sep">·</span></span>
+    <span class="mi">Despacho en 24–48hs hábiles <span class="mi-sep">·</span></span>
   </div>
 </div>
 
@@ -2590,16 +2764,17 @@ textarea:focus-visible,[tabindex]:focus-visible,.pcard:focus-visible,
     <div>
       <div class="sec-kicker leaf">Artículos del Hogar</div>
       <h2 class="sec-h2 leaf">Equipá tu casa con <em>estilo</em></h2>
+      <p class="sec-sub">Organización, cocina y decoración a precios que cierran.</p>
     </div>
-    <a href="#" class="sec-all">Ver todo el hogar</a>
+    <a href="#hogar" class="sec-all" onclick="verTodo('hogar');return false">Ver todo el hogar</a>
   </div>
   <!-- Filtros de grilla -->
   <div class="grid-filters" id="hogarFilters">
     <span class="gf-label">Categoría:</span>
-    <button class="gf-btn active" onclick="filterGrid('hogar','all',this)">Todos</button>
-    <button class="gf-btn" onclick="filterGrid('hogar','Cocina',this)">Cocina</button>
-    <button class="gf-btn" onclick="filterGrid('hogar','Dormitorio',this)">Dormitorio</button>
-    <button class="gf-btn" onclick="filterGrid('hogar','Organización',this)">Organización</button>
+    <!-- Los botones de categoría se generan solos según los productos reales -->
+    <span id="hogarCatChips" style="display:contents">
+      <button class="gf-btn active" onclick="filterGrid('hogar','all',this)">Todos</button>
+    </span>
     <div class="gf-sep"></div>
     <span class="gf-label">Ordenar:</span>
     <select class="gf-sort" onchange="sortGrid('hogar',this.value)">
@@ -2613,6 +2788,45 @@ textarea:focus-visible,[tabindex]:focus-visible,.pcard:focus-visible,
 </div><!-- fin section hogar -->
 
 
+<!-- ══════════════════════════════════════════════════════════
+     SECCIÓN CAMISETAS RETRO
+     ══════════════════════════════════════════════════════════ -->
+<div id="ropa"></div>
+<div class="section">
+  <div class="sec-head">
+    <div>
+      <div class="sec-kicker">Fútbol retro</div>
+      <h2 class="sec-h2">Camisetas que ya no se <em>consiguen</em></h2>
+      <p class="sec-sub">Conjuntos completos de las temporadas que marcaron una época. Talles S a XXL.</p>
+    </div>
+    <a href="#ropa" class="sec-all" onclick="verTodo('ropa');return false">Ver todas</a>
+  </div>
+  <!-- Filtros de grilla -->
+  <div class="grid-filters" id="ropaFilters" style="flex-wrap:wrap;row-gap:.5rem">
+    <span class="gf-label">Estado:</span>
+    <button class="gf-btn active" onclick="filterRopa('estado','all',this)">Todos</button>
+    <button class="gf-btn" onclick="filterRopa('estado','disponible',this)">Disponibles</button>
+    <button class="gf-btn" onclick="filterRopa('estado','proximamente',this)">Próximamente</button>
+    <div class="gf-sep"></div>
+    <span class="gf-label" id="ropaTalleLbl" style="display:none">Talle:</span>
+    <span id="ropaTalleChips" style="display:contents"></span>
+    <span class="gf-label" id="ropaColorLbl" style="display:none">Color:</span>
+    <span id="ropaColorChips" style="display:contents"></span>
+    <span class="gf-label" id="ropaGeneroLbl" style="display:none">Género:</span>
+    <span id="ropaGeneroChips" style="display:contents"></span>
+    <div class="gf-sep"></div>
+    <span class="gf-label">Ordenar:</span>
+    <select class="gf-sort" onchange="sortGrid('ropa',this.value)">
+      <option value="">Relevancia</option>
+      <option value="price-asc">Menor precio</option>
+      <option value="price-desc">Mayor precio</option>
+    </select>
+    <span class="gf-count" id="ropaCount"></span>
+  </div>
+  <div class="pgrid" id="ropaGrid"><!-- productos dinámicos desde admin --></div>
+</div><!-- fin section ropa -->
+
+
 <!-- Midband -->
 <div class="midband">
   <div class="midband-inner">
@@ -2621,7 +2835,7 @@ textarea:focus-visible,[tabindex]:focus-visible,.pcard:focus-visible,
         <span class="mb-feat-icon">🚚</span>
         <div>
           <div class="mb-feat-title">Envío a todo el país</div>
-          <div class="mb-feat-desc">En 24–48hs hábiles. Gratis desde $30.000.</div>
+          <div class="mb-feat-desc">Despacho en 24–48hs hábiles. Gratis desde $30.000.</div>
         </div>
       </div>
       <div class="mb-feat" style="margin-top:1.5rem">
@@ -2641,7 +2855,7 @@ textarea:focus-visible,[tabindex]:focus-visible,.pcard:focus-visible,
       <div class="mb-feat">
         <span class="mb-feat-icon">💳</span>
         <div>
-          <div class="mb-feat-title">12 cuotas sin interés</div>
+          <div class="mb-feat-title">6 cuotas sin interés</div>
           <div class="mb-feat-desc">Visa, Mastercard, Naranja y más.</div>
         </div>
       </div>
@@ -2670,39 +2884,32 @@ textarea:focus-visible,[tabindex]:focus-visible,.pcard:focus-visible,
        - Cambiá data-stock="0"
        - Cambiá la etiqueta a <span class="pcard-tag tag-agotado">Agotado</span>
      ══════════════════════════════════════════════════════════ -->
-<div id="ropa"></div>
-<div class="section">
+
+
+<!-- ══════════════════════════════════════════════════════════
+     SECCIÓN TECNOLOGÍA
+     Se oculta sola si no hay productos con section="tecnologia"
+     ══════════════════════════════════════════════════════════ -->
+<div id="tecnologia"></div>
+<div class="section" id="tecnologiaSection" style="display:none">
   <div class="sec-head">
     <div>
-      <div class="sec-kicker">Ropa &amp; Oportunidades</div>
-      <h2 class="sec-h2">Prendas únicas a precios <em>increíbles</em></h2>
+      <div class="sec-kicker">Tecnología</div>
+      <h2 class="sec-h2">Accesorios que te <em>simplifican</em> el día</h2>
     </div>
-    <a href="#" class="sec-all">Ver toda la ropa</a>
+    <a href="#tecnologia" class="sec-all" onclick="verTodo('tecnologia');return false">Ver toda la tecnología</a>
   </div>
-  <!-- Filtros de grilla -->
-  <div class="grid-filters" id="ropaFilters" style="flex-wrap:wrap;row-gap:.5rem">
-    <span class="gf-label">Estado:</span>
-    <button class="gf-btn active" onclick="filterRopa('estado','all',this)">Todos</button>
-    <button class="gf-btn" onclick="filterRopa('estado','disponible',this)">Disponibles</button>
-    <button class="gf-btn" onclick="filterRopa('estado','proximamente',this)">Próximamente</button>
-    <div class="gf-sep"></div>
-    <span class="gf-label" id="ropaTalleLbl" style="display:none">Talle:</span>
-    <span id="ropaTalleChips" style="display:contents"></span>
-    <span class="gf-label" id="ropaColorLbl" style="display:none">Color:</span>
-    <span id="ropaColorChips" style="display:contents"></span>
-    <span class="gf-label" id="ropaGeneroLbl" style="display:none">Género:</span>
-    <span id="ropaGeneroChips" style="display:contents"></span>
-    <div class="gf-sep"></div>
+  <div class="grid-filters" id="tecnologiaFilters">
     <span class="gf-label">Ordenar:</span>
-    <select class="gf-sort" onchange="sortGrid('ropa',this.value)">
+    <select class="gf-sort" onchange="sortGrid('tecnologia',this.value)">
       <option value="">Relevancia</option>
       <option value="price-asc">Menor precio</option>
       <option value="price-desc">Mayor precio</option>
     </select>
-    <span class="gf-count" id="ropaCount"></span>
+    <span class="gf-count" id="tecnologiaCount"></span>
   </div>
-  <div class="pgrid" id="ropaGrid"><!-- productos dinámicos desde admin --></div>
-</div><!-- fin section ropa -->
+  <div class="pgrid" id="tecnologiaGrid"></div>
+</div><!-- fin section tecnologia -->
 
 
 
@@ -2719,7 +2926,7 @@ textarea:focus-visible,[tabindex]:focus-visible,.pcard:focus-visible,
         <div class="sec-kicker gold">Ofertas del día</div>
         <h2 class="sec-h2 gold">Oportunidades por <em>tiempo limitado</em></h2>
       </div>
-      <a href="#" class="sec-all">Ver todas las ofertas</a>
+      <a href="#oportunidades" class="sec-all" onclick="document.getElementById('oportunidades').scrollIntoView({behavior:'smooth'});return false">Ver todas las ofertas</a>
     </div>
     <div class="ogrid" id="oportunidadesGrid"><!-- productos dinámicos desde admin --></div>
   </div>
@@ -2730,7 +2937,7 @@ textarea:focus-visible,[tabindex]:focus-visible,.pcard:focus-visible,
 <div class="trust">
   <div class="trust-inner">
     <div class="titem"><span class="ticon">🚚</span><div><div class="ttitle">Envío a todo el país</div><div class="tdesc">24–48hs hábiles. Gratis desde $30.000.</div></div></div>
-    <div class="titem"><span class="ticon">💳</span><div><div class="ttitle">12 cuotas sin interés</div><div class="tdesc">Visa, Mastercard, Naranja y más.</div></div></div>
+    <div class="titem"><span class="ticon">💳</span><div><div class="ttitle">6 cuotas sin interés</div><div class="tdesc">Hasta 12 con interés, según tu banco.</div></div></div>
     <div class="titem"><span class="ticon">🔒</span><div><div class="ttitle">Compra segura</div><div class="tdesc">SSL · Pago encriptado 100%.</div></div></div>
     <div class="titem"><span class="ticon">🔄</span><div><div class="ttitle">30 días de devolución</div><div class="tdesc">Sin preguntas, sin costo.</div></div></div>
   </div>
@@ -2760,7 +2967,7 @@ textarea:focus-visible,[tabindex]:focus-visible,.pcard:focus-visible,
     <div class="reviews-head">
       <div>
         <div class="sec-kicker">Lo que dicen nuestros clientes</div>
-        <h2 class="sec-h2">Reseñas <em>verificadas</em></h2>
+        <h2 class="sec-h2">Opiniones de <em>clientes</em></h2>
       </div>
       <div style="display:flex;gap:.5rem;align-items:center">
         <select id="reviewProductFilter" class="gf-sort" onchange="renderReviews()">
@@ -2828,7 +3035,8 @@ textarea:focus-visible,[tabindex]:focus-visible,.pcard:focus-visible,
         <h4>Tienda</h4>
         <ul>
           <li><a href="#hogar" data-section="hogar">Hogar</a></li>
-          <li><a href="#ropa" data-section="ropa">Ropa</a></li>
+          <li><a href="#ropa" data-section="ropa">Camisetas retro</a></li>
+          <li><a href="#tecnologia" data-section="tecnologia">Tecnología</a></li>
           <li><a href="#oportunidades" data-section="oportunidades">Oportunidades</a></li>
           <li><a href="#resenas">Reseñas</a></li>
         </ul>
@@ -3381,7 +3589,10 @@ async function syncFromSupabase() {
       // Re-renderizar grids con datos frescos de Supabase
       renderProductGrid('hogar');
       renderProductGrid('ropa');
+      renderProductGrid('tecnologia');
       if (typeof renderOportunidadesGrid === 'function') renderOportunidadesGrid();
+      if (typeof toggleSeccionesVacias === 'function') toggleSeccionesVacias();
+      if (typeof renderHeroMosaic === 'function') renderHeroMosaic();
     }
 
     if (currentUser) {
@@ -4360,6 +4571,7 @@ const SECTIONS_CONFIG = [
   { id: 'hogar',        label: 'Hogar',        icon: '🏠', navIds: ['navLinkHogar','mobileNavHogar'], footerIds: ['footerLinkHogar'] },
   { id: 'ropa',         label: 'Ropa',          icon: '👗', navIds: ['navLinkRopa','mobileNavRopa'],   footerIds: ['footerLinkRopa'] },
   { id: 'oportunidades',label: 'Oportunidades', icon: '🔥', navIds: ['navLinkOport','mobileNavOport'], footerIds: ['footerLinkOport'] },
+  { id: 'tecnologia',   label: 'Tecnología',    icon: '💻', navIds: [], footerIds: [] },
 ];
 
 function dbGetSections() {
@@ -5017,7 +5229,7 @@ function updateCart() {
       const el = document.createElement('div');
       el.className = 'citem';
       const thumbHtml = item.imgSrc
-        ? `<img src="${item.imgSrc}" alt="${item.name}" style="width:100%;height:100%;object-fit:cover;border-radius:4px">`
+        ? `<img src="${cldOpt(item.imgSrc, 160)}" alt="${item.name}" loading="lazy" style="width:100%;height:100%;object-fit:cover;border-radius:4px">`
         : `<span style="font-size:.55rem;font-style:italic;color:rgba(255,255,255,.4);text-align:center;padding:.3rem">${item.name.split(' ')[0]}</span>`;
       el.innerHTML = `
         <div class="citem-img" style="background:${item.bg||'#C45C2A'};overflow:hidden;display:flex;align-items:center;justify-content:center">${thumbHtml}</div>
@@ -5483,7 +5695,7 @@ function _apFillFavoritos() {
   el.innerHTML = '<div class="ap-wish-grid">' + _wishItems.map(w => `
     <div class="ap-wish-item">
       <button class="ap-wish-rm" onclick="removeWishByName('${w.name.replace(/'/g,"\\'")}')">✕</button>
-      ${w.imgSrc ? `<img class="ap-wish-img" src="${w.imgSrc}" alt="${w.name}">` : '<div class="ap-wish-img"></div>'}
+      ${w.imgSrc ? `<img class="ap-wish-img" src="${cldOpt(w.imgSrc, 200)}" loading="lazy" alt="${w.name}">` : '<div class="ap-wish-img"></div>'}
       <div class="ap-wish-name">${w.name}</div>
       <div class="ap-wish-price">${formatPrice(w.price)}</div>
     </div>`).join('') + '</div>';
@@ -5562,6 +5774,12 @@ async function suscribir() {
 let adminKeyBuffer = '';
 document.addEventListener('keydown', e => {
   if (e.key === 'Escape') {
+    // Si está abierto el zoom de la foto, Escape cierra SOLO el zoom.
+    // Antes cerraba también la ficha del producto y el cliente perdía el producto.
+    if (document.getElementById('imgZoomOverlay')?.classList.contains('open')) {
+      closeImgZoom();
+      return;
+    }
     closePayment();
     closeAuth();
     closeAdmin();
@@ -5569,6 +5787,16 @@ document.addEventListener('keydown', e => {
     closeSearch();
     closeSidebars();
     return;
+  }
+  // Flechas ← → para moverse por la galería de fotos del producto
+  if (document.getElementById('pdModalOverlay')?.classList.contains('open')
+      && (e.key === 'ArrowLeft' || e.key === 'ArrowRight')) {
+    const tag = document.activeElement?.tagName;
+    if (tag !== 'INPUT' && tag !== 'TEXTAREA' && tag !== 'SELECT' && _pdGallery.length > 1) {
+      e.preventDefault();
+      pdGalleryGo(_pdGalleryIndex + (e.key === 'ArrowRight' ? 1 : -1));
+      return;
+    }
   }
   // Admin shortcut: escribí "admin" sin tener foco en un input
   const tag = document.activeElement?.tagName;
@@ -5631,6 +5859,44 @@ function _pdUpdateVariantStock() {
   }
 }
 
+// ── Cuotas en la ficha: el comprador argentino decide por la cuota ──
+function _pdFillCuotas(price) {
+  const el = document.getElementById('pdModalCuotas');
+  if (!el) return;
+  const n = CUOTAS_SIN_INTERES;
+  if (!price || price <= 0 || !n) { el.style.display = 'none'; return; }
+  const cuota = Math.ceil(price / n);
+  el.style.display = '';
+  el.innerHTML = `<span>${n} cuotas sin interés de <strong>${formatPrice(cuota)}</strong></span>
+    <span class="cuota-chip">SIN INTERÉS</span>`;
+}
+
+// ── Envío: mostrar si ya es gratis o cuánto falta (empuja a sumar al carrito) ──
+function _pdFillShipping(price) {
+  const el = document.getElementById('pdModalShip');
+  if (!el) return;
+  const min = (typeof ENVIO_GRATIS_DESDE === 'number' && ENVIO_GRATIS_DESDE > 0) ? ENVIO_GRATIS_DESDE : 30000;
+  if (!price || price <= 0) { el.style.display = 'none'; return; }
+  el.style.display = '';
+  // Considera lo que ya hay en el carrito para que el mensaje sea realista
+  const yaEnCarrito = (typeof cartTotal === 'number' && cartTotal > 0) ? cartTotal : 0;
+  const total = price + yaEnCarrito;
+  if (total >= min) {
+    el.className = 'pdModal-ship free';
+    el.innerHTML = `<span class="pdModal-ship-ico">🚚</span>
+      <div><span class="ship-free-txt">¡Envío gratis a todo el país!</span><br>
+      Despachamos en 24–48hs · o retiralo sin cargo en Morón / San Justo</div>`;
+  } else {
+    const falta = min - total;
+    const pct = Math.max(6, Math.min(100, Math.round((total / min) * 100)));
+    el.className = 'pdModal-ship';
+    el.innerHTML = `<span class="pdModal-ship-ico">📦</span>
+      <div style="flex:1">Te faltan <b>${formatPrice(falta)}</b> para el <b>envío gratis</b>
+        <div class="ship-bar"><div class="ship-bar-fill" style="width:${pct}%"></div></div>
+      </div>`;
+  }
+}
+
 function openProduct(card) {
   _pdCard = card;
   _pdQty = 1;
@@ -5668,9 +5934,38 @@ function openProduct(card) {
     document.getElementById('pdModalPriceOld').style.display = 'none';
   }
 
-  // Estrellas
-  const stars = card.querySelector('.pcard-stars');
-  document.getElementById('pdModalStars').textContent = stars ? stars.textContent : '★★★★★';
+  // Estrellas y cantidad de reseñas — solo si son REALES
+  const _rt = getProdRating(card.dataset.name);
+  const _starsEl = document.getElementById('pdModalStars');
+  const _revEl   = document.getElementById('pdModalReviews');
+  if (_rt) {
+    const r = Math.round(_rt.avg);
+    _starsEl.textContent = '★'.repeat(r) + '☆'.repeat(5 - r);
+    _starsEl.style.display = '';
+    if (_revEl) _revEl.textContent = `${_rt.avg.toFixed(1)} · ${_rt.count} reseña${_rt.count !== 1 ? 's' : ''}`;
+  } else {
+    _starsEl.textContent = '';
+    _starsEl.style.display = 'none';
+    if (_revEl) _revEl.textContent = 'Sé el primero en opinar';
+  }
+
+  // Ahorro en pesos: "$9.000" convence más que un "20%" abstracto
+  const _saveEl = document.getElementById('pdModalSave');
+  if (_saveEl) {
+    const _old = Number(_pDb && _pDb.priceOld) || 0;
+    if (_old > _pdPrice && _pdPrice > 0) {
+      const ahorro = _old - _pdPrice;
+      const pct = Math.round((1 - _pdPrice / _old) * 100);
+      _saveEl.textContent = `Ahorrás ${formatPrice(ahorro)} (${pct}%)`;
+      _saveEl.style.display = '';
+    } else {
+      _saveEl.style.display = 'none';
+    }
+  }
+
+  // Cuotas + envío (los dos datos que más influyen en la decisión de compra)
+  _pdFillCuotas(_pdPrice);
+  _pdFillShipping(_pdPrice);
 
   // Stock badge
   const stockEl = document.getElementById('pdModalStock');
@@ -5801,6 +6096,18 @@ function openProduct(card) {
       talleRow.appendChild(el);
     });
     div.appendChild(talleRow);
+
+    // Aviso de calce + consulta directa: errar el talle es la razón nº1 por la
+    // que alguien mira una camiseta y no la compra.
+    if (card.dataset.section === 'ropa' || _pDb?.section === 'ropa') {
+      const aviso = document.createElement('div');
+      aviso.className = 'pd-talle-note';
+      aviso.innerHTML = `<span>📏</span><div>Los talles vienen de origen asiático y calzan <b>más chicos</b> que el talle argentino.
+        Si usás M en remeras de acá, pedí L. Entre dos talles, quedate con el más grande.
+        <button type="button" class="pd-talle-wa" onclick="pdConsultarTalle()">¿Dudas con el talle? Consultanos por WhatsApp</button></div>`;
+      div.appendChild(aviso);
+    }
+
     optsContainer.appendChild(div);
     const lbl0t = document.getElementById('pdOptSelTalle');
     if (lbl0t && uniqueTalles[0]) lbl0t.textContent = '— ' + uniqueTalles[0];
@@ -5818,14 +6125,111 @@ function openProduct(card) {
   addBtn.disabled = _pdStock === 0;
   addBtn.textContent = _pdStock === 0 ? '😕 Sin stock' : '🛒 Agregar al carrito';
 
+  // Opiniones de este producto + relacionados (ambos automáticos)
+  renderPdReviews(card.dataset.name);
+  renderPdRelated(card.dataset.id);
+
   // Abrir modal
-  document.getElementById('pdModalOverlay').classList.add('open');
+  const _ov = document.getElementById('pdModalOverlay');
+  _ov.classList.add('open');
   document.body.style.overflow = 'hidden';
+  document.body.classList.add('pd-open'); // sube el botón de WhatsApp en mobile
+  _pdPlaceBuyBar();       // barra de compra anclada al pie en celular
+  // Reiniciar el scroll del panel al principio al abrir otro producto
+  const _bodyEl = _ov.querySelector('.pdModal-body');
+  if (_bodyEl) _bodyEl.scrollTop = 0;
+}
+
+// ── Renderiza "También te puede gustar" dentro del modal ──
+function renderPdRelated(currentId) {
+  const cont = document.getElementById('pdModalRelated');
+  if (!cont) return;
+  const all = (typeof dbGetProducts === 'function') ? (dbGetProducts() || []) : [];
+  const cur = all.find(p => p.id === currentId);
+  const pool = all.filter(p => p && p.id !== currentId && !p.prox && Number(p.stock) > 0);
+  if (!cur || !pool.length) { cont.style.display = 'none'; cont.innerHTML = ''; return; }
+
+  // Priorizar: misma sección (+2) y misma categoría (+1); desempatar al azar estable
+  const score = p => (p.section === cur.section ? 2 : 0) + (p.cat && cur.cat && p.cat === cur.cat ? 1 : 0);
+  const picks = pool
+    .map((p, i) => ({ p, s: score(p), i }))
+    .sort((a, b) => (b.s - a.s) || (a.i - b.i))
+    .slice(0, 8)
+    .map(x => x.p);
+
+  cont.style.display = '';
+  cont.innerHTML = `
+    <div class="pdModal-related-title">También te puede gustar</div>
+    <div class="pdModal-related-sub">Otros productos que combinan con este</div>
+    <div class="pdModal-related-row">
+      ${picks.map(p => {
+        const hasSale = p.priceOld && p.priceOld > p.price;
+        return `
+        <div class="pdrel-card" role="button" tabindex="0" data-id="${esc(p.id)}">
+          <div class="pdrel-img">${p.img ? `<img src="${esc(cldOpt(p.img, 300))}" alt="${esc(p.name)}" loading="lazy">` : '🛍'}</div>
+          <div class="pdrel-body">
+            <div class="pdrel-name">${esc(p.name)}</div>
+            <div class="pdrel-price">${formatPrice(p.price)}${hasSale ? `<span class="pdrel-old">${formatPrice(p.priceOld)}</span>` : ''}</div>
+          </div>
+        </div>`;
+      }).join('')}
+    </div>`;
+
+  // Un solo listener delegado para abrir el producto elegido
+  cont.querySelector('.pdModal-related-row').onclick = e => {
+    const c = e.target.closest('.pdrel-card');
+    if (c) openProductById(c.dataset.id);
+  };
+  cont.querySelector('.pdModal-related-row').onkeydown = e => {
+    if (e.key === 'Enter' || e.key === ' ') {
+      const c = e.target.closest('.pdrel-card');
+      if (c) { e.preventDefault(); openProductById(c.dataset.id); }
+    }
+  };
+}
+
+// ── Abre un producto por su ID (usado por los relacionados) ──
+function openProductById(id) {
+  let card = null;
+  try { card = document.querySelector('.pcard[data-id="' + (window.CSS && CSS.escape ? CSS.escape(id) : id) + '"]'); } catch(e) {}
+  if (!card) card = Array.from(document.querySelectorAll('.pcard')).find(el => el.dataset.id === id);
+  if (card) { openProduct(card); }
+}
+
+// En celular la barra de compra se saca del área que scrollea y se ancla al pie
+// de la ficha, para que el botón "Agregar al carrito" no se pierda nunca.
+// En pantallas grandes vuelve a su lugar natural dentro del contenido.
+function _pdPlaceBuyBar() {
+  const row  = document.getElementById('pdModalQtyRow');
+  const body = document.querySelector('.pdModal-body');
+  const modal= document.getElementById('pdModal');
+  if (!row || !body || !modal) return;
+  const esMobile = window.matchMedia('(max-width:680px)').matches;
+  if (esMobile) {
+    if (row.parentElement !== modal) modal.appendChild(row);
+  } else {
+    // Volver a su posición original: justo antes del bloque de garantías
+    const ancla = body.querySelector('.pdModal-assure');
+    if (row.parentElement !== body) {
+      if (ancla) body.insertBefore(row, ancla); else body.appendChild(row);
+    }
+  }
+}
+window.addEventListener('resize', () => {
+  if (document.getElementById('pdModalOverlay')?.classList.contains('open')) _pdPlaceBuyBar();
+});
+
+// Consulta de talle por WhatsApp con el producto ya escrito en el mensaje
+function pdConsultarTalle() {
+  const nombre = _pdCard ? (_pdCard.dataset.name || '') : '';
+  const msg = `Hola! Tengo una duda con el talle de "${nombre}". ¿Me ayudan a elegir?`;
+  window.open('https://wa.me/5491131496246?text=' + encodeURIComponent(msg), '_blank', 'noopener');
 }
 
 function closePdModal() {
   document.getElementById('pdModalOverlay').classList.remove('open');
   document.body.style.overflow = '';
+  document.body.classList.remove('pd-open');
   _pdCard     = null;
   _pdVariants = [];
   _pdSelectedColor = null;
@@ -5975,11 +6379,11 @@ function closeSearch() {
   document.getElementById('searchResults').innerHTML = `
     <div class="search-suggest">
       <span class="search-suggest-lbl">Búsquedas populares</span>
-      <span class="search-suggest-chip" onclick="quickSearch('licuadora')">licuadora</span>
-      <span class="search-suggest-chip" onclick="quickSearch('stanley')">stanley</span>
-      <span class="search-suggest-chip" onclick="quickSearch('organización')">organización</span>
-      <span class="search-suggest-chip" onclick="quickSearch('cocina')">cocina</span>
-      <span class="search-suggest-chip" onclick="quickSearch('tapper')">tapper</span>
+      <span class="search-suggest-chip" onclick="quickSearch('camiseta')">camiseta fútbol</span>
+      <span class="search-suggest-chip" onclick="quickSearch('conjunto')">conjunto</span>
+      <span class="search-suggest-chip" onclick="quickSearch('organizador')">organizador</span>
+      <span class="search-suggest-chip" onclick="quickSearch('tupper')">tupper</span>
+      <span class="search-suggest-chip" onclick="quickSearch('teclado')">teclado</span>
     </div>`;
 }
 
@@ -6014,11 +6418,11 @@ function doSearch(query) {
     resultsEl.innerHTML = `
       <div class="search-suggest">
         <span class="search-suggest-lbl">Búsquedas populares</span>
-        <span class="search-suggest-chip" onclick="quickSearch('licuadora')">licuadora</span>
-        <span class="search-suggest-chip" onclick="quickSearch('stanley')">stanley</span>
-        <span class="search-suggest-chip" onclick="quickSearch('organización')">organización</span>
-        <span class="search-suggest-chip" onclick="quickSearch('cocina')">cocina</span>
-        <span class="search-suggest-chip" onclick="quickSearch('tapper')">tapper</span>
+        <span class="search-suggest-chip" onclick="quickSearch('camiseta')">camiseta fútbol</span>
+        <span class="search-suggest-chip" onclick="quickSearch('conjunto')">conjunto</span>
+        <span class="search-suggest-chip" onclick="quickSearch('organizador')">organizador</span>
+        <span class="search-suggest-chip" onclick="quickSearch('tupper')">tupper</span>
+        <span class="search-suggest-chip" onclick="quickSearch('teclado')">teclado</span>
       </div>`;
     document.getElementById('searchOverlay').classList.add('open');
     return;
@@ -6080,7 +6484,7 @@ function doSearch(query) {
 
     return `<div class="search-result-item" onclick="srGoToProduct('${p.id}')">
       <div class="sri-img">
-        ${p.imgSrc ? `<img src="${p.imgSrc}" style="width:100%;height:100%;object-fit:cover" alt="${p.name}">` : `<span style="font-size:1.2rem">📦</span>`}
+        ${p.imgSrc ? `<img src="${cldOpt(p.imgSrc, 200)}" loading="lazy" style="width:100%;height:100%;object-fit:cover" alt="${p.name}">` : `<span style="font-size:1.2rem">📦</span>`}
       </div>
       <div class="sri-info">
         <div class="sri-name">${nameHighlighted}${tagHtml}</div>
@@ -6445,8 +6849,64 @@ function sortGrid(section, order) {
   _applyGridVisibility(section, false);
 }
 
+// Genera los botones de categoría de Hogar según los productos que existen.
+// Antes eran fijos ("Dormitorio", "Organización") y no coincidían con las
+// categorías reales, así que al tocarlos la grilla quedaba vacía.
+function buildHogarFilterChips() {
+  const cont = document.getElementById('hogarCatChips');
+  if (!cont) return;
+  const prods = (typeof dbGetProducts === 'function')
+    ? (dbGetProducts() || []).filter(p => p && p.section === 'hogar') : [];
+  // Las categorías pueden venir compuestas ("Cocina · Almacenamiento")
+  const cats = [...new Set(
+    prods.flatMap(p => String(p.cat || '').split('·').map(s => s.trim()).filter(Boolean))
+  )].sort((a, b) => a.localeCompare(b, 'es'));
+
+  let html = `<button class="gf-btn active" onclick="filterGrid('hogar','all',this)">Todos</button>`;
+  cats.forEach(c => {
+    html += `<button class="gf-btn" onclick="filterGrid('hogar','${esc(c).replace(/'/g, "\\'")}',this)">${esc(c)}</button>`;
+  });
+  cont.innerHTML = html;
+}
+
+// "Ver todo el hogar/la ropa": muestra la sección completa de una vez.
+// Antes estos enlaces eran href="#" y solo saltaban al inicio de la página.
+function verTodo(section) {
+  const grid = document.getElementById(section + 'Grid');
+  if (!grid) return;
+  _gridVisible[section] = grid.querySelectorAll('.pcard').length || GRID_PAGE_SIZE;
+  _applyGridVisibility(section, false);
+  observeReveal(grid);
+  const anchor = document.getElementById(section);
+  if (anchor) anchor.scrollIntoView({ behavior: 'smooth' });
+}
+
+// Oculta las secciones que no tienen ningún producto, para que el cliente no
+// vea una sección vacía con el cartel de "no hay productos todavía".
+function toggleSeccionesVacias() {
+  const tec = document.getElementById('tecnologiaSection');
+  if (tec) {
+    const n = document.querySelectorAll('#tecnologiaGrid .pcard').length;
+    tec.style.display = n > 0 ? '' : 'none';
+  }
+  const oportWrap = document.querySelector('.oport-section');
+  if (oportWrap) {
+    const n = document.querySelectorAll('#oportunidadesGrid .ocard').length;
+    oportWrap.style.display = n > 0 ? '' : 'none';
+  }
+  // Ocultar del menú los enlaces a secciones que no se muestran
+  document.querySelectorAll('a[href="#tecnologia"], a[href="#oportunidades"]').forEach(a => {
+    if (a.classList.contains('sec-all')) return;
+    const id = a.getAttribute('href').slice(1);
+    const wrap = id === 'tecnologia'
+      ? document.getElementById('tecnologiaSection')
+      : document.querySelector('.oport-section');
+    if (wrap) a.style.display = (wrap.style.display === 'none') ? 'none' : '';
+  });
+}
+
 function initGridCounts() {
-  ['hogar','ropa'].forEach(sec => {
+  ['hogar','ropa','tecnologia'].forEach(sec => {
     const grid = document.getElementById(sec + 'Grid');
     const countEl = document.getElementById(sec + 'Count');
     if (grid && countEl) {
@@ -6659,14 +7119,18 @@ let _pdGalleryIndex = 0;
 
 function buildGallery(card) {
   _pdGallery = [];
-  // Foto principal del card
+  // Foto principal: preferimos la original del producto (mayor resolución para
+  // el modal y el zoom) en vez de la miniatura reducida de la tarjeta.
+  const prodDb = (typeof dbGetProducts === 'function')
+    ? dbGetProducts().find(p => p.id === card.dataset.id) : null;
   const mainImg = card.querySelector('.pcard-img img');
-  if (mainImg) _pdGallery.push({ type: 'img', src: mainImg.src, alt: mainImg.alt });
+  const mainSrc = (prodDb && prodDb.img) ? prodDb.img : (mainImg ? mainImg.src : null);
+  if (mainSrc) _pdGallery.push({ type: 'img', src: cldOpt(mainSrc, 1000), alt: card.dataset.name || (mainImg ? mainImg.alt : '') });
 
   // Fotos adicionales desde data-gallery
   try {
     const extra = JSON.parse(card.dataset.gallery || '[]');
-    extra.forEach(src => _pdGallery.push({ type: 'img', src, alt: card.dataset.name }));
+    extra.forEach(src => _pdGallery.push({ type: 'img', src: cldOpt(src, 1000), alt: card.dataset.name }));
   } catch(e) {}
 
   // Videos desde data-videos
@@ -7108,16 +7572,30 @@ function renderProductCard(p) {
   const priceHtml = (p.priceOld && p.priceOld > p.price)
     ? `<div><span class="pcard-price-old">${formatPrice(p.priceOld)}</span><span class="pcard-price-sale">${formatPrice(p.price)}</span></div>`
     : `<span class="pcard-price">${formatPrice(p.price)}</span>`;
+  // Cuota: dato decisivo para el comprador argentino
+  const cuotasHtml = (p.price > 0 && CUOTAS_SIN_INTERES)
+    ? `<div class="pcard-cuotas">${CUOTAS_SIN_INTERES} cuotas sin interés de ${formatPrice(Math.ceil(p.price / CUOTAS_SIN_INTERES))}</div>`
+    : '';
+  // Descuento real calculado; si el producto tiene rebaja pero no etiqueta
+  // manual, igual se muestra el "−X%" para que no pase desapercibida.
+  const pctOff = (p.priceOld && p.priceOld > p.price)
+    ? Math.round((1 - p.price / p.priceOld) * 100) : 0;
   const tagClass = {hot:'tag-hot', sale:'tag-sale', new:'tag-new'}[p.tag] || 'tag-hot';
-  const tagHtml  = (p.tag && p.tagText) ? `<span class="pcard-tag ${tagClass}">${esc(p.tagText)}</span>` : '';
-  const stars    = '★'.repeat(Math.min(5, p.stars||5)) + '☆'.repeat(5 - Math.min(5, p.stars||5));
+  const tagHtml  = (p.tag && p.tagText)
+    ? `<span class="pcard-tag ${tagClass}">${esc(p.tagText)}</span>`
+    : (pctOff > 0 ? `<span class="pcard-tag tag-sale">−${pctOff}%</span>` : '');
+  // Estrellas: solo si el producto tiene reseñas reales
+  const rating   = getProdRating(p.name);
+  const stars    = rating
+    ? '★'.repeat(Math.round(rating.avg)) + '☆'.repeat(5 - Math.round(rating.avg))
+    : '';
   const gAttr    = (p.gallery && p.gallery.length) ? `data-gallery='${JSON.stringify(p.gallery)}'` : '';
   const vAttr    = (p.videos  && p.videos.length)  ? `data-videos='${JSON.stringify(p.videos)}'`   : '';
   const proxAttr = p.prox ? 'data-prox="1"' : '';
   const clickAttr= p.prox ? '' : 'onclick="openProduct(this)"';
   const proxOvl  = p.prox ? '<div class="pcard-prox"><div class="pcard-prox-badge">Próximamente</div><p class="pcard-prox-txt">Muy pronto disponible</p></div>' : '';
   const imgHtml  = p.img
-    ? `<img src="${esc(p.img)}" alt="${esc(p.name)}" loading="lazy">`
+    ? `<img src="${esc(cldOpt(p.img, 600))}" alt="${esc(p.name)}" loading="lazy">`
     : `<div style="width:100%;height:100%;display:flex;align-items:center;justify-content:center;background:#C4855A;color:rgba(255,255,255,.4);font-style:italic;font-size:.75rem">${esc(String(p.name||'').split(' ')[0])}</div>`;
   const ctaBtn   = p.prox ? '' : `<button class="pcard-cta" onclick="event.stopPropagation();openProduct(this.closest('.pcard'))">Ver producto</button>`;
   const safeDesc = (p.desc||'').replace(/"/g,'&quot;').replace(/\n/g,' ');
@@ -7130,7 +7608,7 @@ function renderProductCard(p) {
   const wishClass = isWished ? ' on' : '';
   const wishChar  = isWished ? '♥' : '♡';
 
-  return `<div class="pcard" ${clickAttr} data-id="${p.id}" data-name="${safeName}" data-price="${p.price}" data-stock="${p.stock}" ${gAttr} ${vAttr} ${proxAttr} data-desc="${safeDesc}">
+  return `<div class="pcard reveal-init" ${clickAttr} data-id="${p.id}" data-name="${safeName}" data-price="${p.price}" data-stock="${p.stock}" data-section="${esc(p.section||'')}" ${gAttr} ${vAttr} ${proxAttr} data-desc="${safeDesc}">
   <div class="pcard-img">
     ${imgHtml}${tagHtml}
     <button class="pcard-wish${wishClass}" onclick="event.stopPropagation();toggleWish(this)" style="${isWished?'opacity:1':''}">${wishChar}</button>
@@ -7141,7 +7619,8 @@ function renderProductCard(p) {
     <p class="pcard-name">${esc(p.name)}</p>
     <p class="pcard-sub">${esc(p.sub||'')}</p>
     ${stockBadge}
-    <div class="pcard-foot">${priceHtml}<span class="pcard-stars">${stars}</span></div>
+    <div class="pcard-foot">${priceHtml}<span class="pcard-stars">${stars}${rating ? ` <span class="pcard-rcount">(${rating.count})</span>` : ''}</span></div>
+    ${cuotasHtml}
   </div>
   <div class="pcard-options">
     <div class="opt-row">
@@ -7159,7 +7638,7 @@ function renderProductCard(p) {
 /* ── Renderiza el grid de una sección desde localStorage ── */
 const GRID_PAGE_SIZE = 8; // cuántos productos mostrar inicialmente
 // Mapa de cuántos productos están visibles por sección
-const _gridVisible = { hogar: GRID_PAGE_SIZE, ropa: GRID_PAGE_SIZE };
+const _gridVisible = { hogar: GRID_PAGE_SIZE, ropa: GRID_PAGE_SIZE, tecnologia: GRID_PAGE_SIZE };
 
 function renderProductGrid(section) {
   const grid = document.getElementById(section + 'Grid');
@@ -7177,6 +7656,7 @@ function renderProductGrid(section) {
     _gridVisible[section] = GRID_PAGE_SIZE;
     grid.innerHTML = prods.map(renderProductCard).join('');
     _applyGridVisibility(section, false);
+    observeReveal(grid); // aparición al hacer scroll
   }
   if (section === 'ropa') rebuildRopaFilters();
   initGridCounts();
@@ -7200,7 +7680,7 @@ function _applyGridVisibility(section, animate) {
     if (i < limit) {
       if (card.style.display === 'none') {
         card.style.display = '';
-        if (animate) { card.classList.add('revealing'); setTimeout(() => card.classList.remove('revealing'), 400); }
+        // La aparición la maneja el IntersectionObserver (reveal-init)
       }
       shown++;
     } else {
@@ -7245,7 +7725,7 @@ function renderOcard(p, idx) {
   const oldHtml    = (p.priceOld && p.priceOld > p.price) ? `<span class="ocard-old">${formatPrice(p.priceOld)}</span>` : '';
 
   const imgHtml = p.img
-    ? `<img src="${esc(p.img)}" alt="${esc(p.name)}" loading="lazy" style="width:100%;height:100%;object-fit:cover">`
+    ? `<img src="${esc(cldOpt(p.img, 700))}" alt="${esc(p.name)}" loading="lazy" style="width:100%;height:100%;object-fit:cover">`
     : `<div class="ocard-img oi-${(idx % 6) + 1}" style="aspect-ratio:16/9">${esc(String(p.name||'').split(' ')[0])}</div>`;
   const imgWrap = p.img
     ? `<div class="ocard-img" style="aspect-ratio:16/9;overflow:hidden">${imgHtml}</div>`
@@ -7267,7 +7747,7 @@ function renderOcard(p, idx) {
 
   const btnAttr = p.prox ? 'disabled style="opacity:.4;cursor:not-allowed"' : '';
 
-  return `<div class="ocard" data-prox="${p.prox?1:0}" style="position:relative">
+  return `<div class="ocard reveal-init" data-prox="${p.prox?1:0}" style="position:relative">
     ${proxOvl}
     ${ribbonHtml}
     ${imgWrap}
@@ -7313,6 +7793,7 @@ function renderOportunidadesGrid() {
     });
     grid._ocardBound = true;
   }
+  observeReveal(grid); // aparición al hacer scroll
   // Re-inicializar timers para las nuevas tarjetas
   initTimers();
 }
@@ -7367,7 +7848,7 @@ function renderAdminProducts(filterQ, filterSec) {
   };
   body.innerHTML = prods.map(p => {
     const thumb = p.img
-      ? `<img class="prod-thumb" src="${p.img}" alt="" onerror="this.style.display='none'">`
+      ? `<img class="prod-thumb" src="${cldOpt(p.img, 120)}" loading="lazy" alt="" onerror="this.style.display='none'">`
       : `<div class="prod-thumb-ph">📦</div>`;
     const estado = p.prox
       ? '<span style="color:rgba(255,255,255,.35);font-size:.72rem">🔒 Próximamente</span>'
@@ -7674,9 +8155,17 @@ document.addEventListener('keydown', e => {
    FEATURE 1 — MODO OSCURO
    ══════════════════════════════════════════════════════ */
 function toggleDarkMode() {
+  // Activar la transición suave de colores solo durante el cambio
+  document.body.classList.add('theme-transition');
   const isDark = document.body.classList.toggle('dark-mode');
   localStorage.setItem('sol_darkMode', isDark ? '1' : '0');
-  document.getElementById('darkToggleBtn').textContent = isDark ? '☀️' : '🌙';
+  const btn = document.getElementById('darkToggleBtn');
+  if (btn) {
+    btn.textContent = isDark ? '☀️' : '🌙';
+    btn.classList.remove('spin'); void btn.offsetWidth; btn.classList.add('spin');
+  }
+  clearTimeout(window._themeTransT);
+  window._themeTransT = setTimeout(() => document.body.classList.remove('theme-transition'), 550);
 }
 (function initDarkMode() {
   const saved = localStorage.getItem('sol_darkMode');
@@ -7903,7 +8392,7 @@ function fillSuccessSugeridos(excludeNames = []) {
     <div onclick="closePayment();setTimeout(()=>openProduct(document.querySelector('[data-id=\\'${p.id}\\']')),300)"
          style="cursor:pointer;border-radius:8px;overflow:hidden;border:1.5px solid var(--sand-deep);transition:transform .2s" onmouseover="this.style.transform='scale(1.03)'" onmouseout="this.style.transform=''">
       <div style="aspect-ratio:1;background:var(--sand);overflow:hidden">
-        ${p.img ? `<img src="${esc(p.img)}" alt="${esc(p.name)}" loading="lazy" style="width:100%;height:100%;object-fit:cover">` : `<div style="width:100%;height:100%;display:flex;align-items:center;justify-content:center;color:var(--stone);font-size:.65rem;padding:.3rem;text-align:center">${esc(p.name)}</div>`}
+        ${p.img ? `<img src="${esc(cldOpt(p.img, 300))}" alt="${esc(p.name)}" loading="lazy" style="width:100%;height:100%;object-fit:cover">` : `<div style="width:100%;height:100%;display:flex;align-items:center;justify-content:center;color:var(--stone);font-size:.65rem;padding:.3rem;text-align:center">${esc(p.name)}</div>`}
       </div>
       <div style="padding:.35rem .4rem;font-size:.65rem;font-weight:600;color:var(--ink);line-height:1.3">${esc(p.name)}<br><span style="color:var(--clay)">${formatPrice(p.price)}</span></div>
     </div>`).join('');
@@ -8711,6 +9200,8 @@ function openImgZoom(e) {
   if (e.target.closest('.pdg-arrow') || e.target.closest('.pdg-dots')) return;
   // No disparar si el ítem activo es un video
   if (_pdGallery[_pdGalleryIndex]?.type === 'video') return;
+  // No abrir el zoom si el gesto fue un swipe para cambiar de foto
+  if (window._pdSwipedAt && (new Date().getTime() - window._pdSwipedAt) < 400) return;
 
   const imgEl = document.querySelector('#pdModalImg img');
   if (!imgEl) return;
@@ -8728,12 +9219,228 @@ function closeImgZoom() {
   document.body.style.overflow = '';
 }
 
-// Cerrar zoom con Escape
-document.addEventListener('keydown', e => {
-  if (e.key === 'Escape') closeImgZoom();
-});
+// (El cierre del zoom con Escape se maneja en el listener principal, para que
+//  no cierre además la ficha del producto que está detrás.)
 
 // Arranque
+// ══ Calificaciones REALES por producto ══
+// Antes todas las tarjetas mostraban ★★★★★ fijas aunque el producto no tuviera
+// ninguna reseña. Eso es prueba social falsa. Ahora las estrellas salen de las
+// reseñas verdaderas y, si un producto no tiene ninguna, no se muestran.
+let _ratingMap = {};
+async function loadRatingMap() {
+  try {
+    const revs = (typeof dbGetReviews === 'function') ? await dbGetReviews() : [];
+    const map = {};
+    (revs || []).filter(r => r && r.visible !== false && r.prod).forEach(r => {
+      const k = String(r.prod).trim().toLowerCase();
+      if (!map[k]) map[k] = { sum: 0, count: 0, items: [] };
+      map[k].sum += Number(r.stars) || 0;
+      map[k].count++;
+      map[k].items.push(r);
+    });
+    Object.keys(map).forEach(k => { map[k].avg = map[k].sum / map[k].count; });
+    _ratingMap = map;
+  } catch (e) { _ratingMap = {}; }
+}
+
+// ── Reseñas del producto DENTRO de la ficha ──
+// Es el dato que más pesa al decidir: hoy había que bajar hasta el final de la
+// home para encontrarlas, y ahí ya nadie las asocia con el producto que mira.
+function renderPdReviews(prodName) {
+  const box = document.getElementById('pdModalReviewsBox');
+  if (!box) return;
+  const rt = getProdRating(prodName);
+  if (!rt || !rt.items || !rt.items.length) {
+    // Sin reseñas: invitamos a dejar la primera en vez de mostrar algo vacío
+    box.innerHTML = `<div class="pdrev-empty">
+        <b>Todavía no hay opiniones de este producto</b>
+        <span>Si ya lo compraste, contanos cómo te fue: ayudás a otros a decidirse.</span>
+        <button type="button" class="pdrev-cta" onclick="closePdModal();document.getElementById('resenas')?.scrollIntoView({behavior:'smooth'})">Escribir la primera reseña</button>
+      </div>`;
+    return;
+  }
+  const orden = rt.items.slice().sort((a, b) => (Number(b.stars) || 0) - (Number(a.stars) || 0)).slice(0, 3);
+  const prom = rt.avg.toFixed(1);
+  box.innerHTML = `
+    <div class="pdrev-head">
+      <div class="pdrev-score">${prom}<span>/5</span></div>
+      <div>
+        <div class="pdrev-stars">${'★'.repeat(Math.round(rt.avg))}${'☆'.repeat(5 - Math.round(rt.avg))}</div>
+        <div class="pdrev-count">${rt.count} opinión${rt.count !== 1 ? 'es' : ''} de clientes</div>
+      </div>
+    </div>
+    ${orden.map(r => `
+      <div class="pdrev-item">
+        <div class="pdrev-item-top">
+          <span class="pdrev-name">${esc(r.name)}</span>
+          <span class="pdrev-item-stars">${'★'.repeat(Number(r.stars) || 0)}</span>
+        </div>
+        <p class="pdrev-text">${esc(r.text)}</p>
+        <span class="pdrev-date">${esc(r.fecha || '')}</span>
+      </div>`).join('')}
+    ${rt.count > 3 ? `<button type="button" class="pdrev-cta" onclick="closePdModal();document.getElementById('resenas')?.scrollIntoView({behavior:'smooth'})">Ver las ${rt.count} opiniones</button>` : ''}`;
+}
+function getProdRating(name) {
+  const k = String(name || '').trim().toLowerCase();
+  return _ratingMap[k] || null;
+}
+
+// ══ Mosaico del hero con productos REALES ══
+// Antes eran 3 productos fijos escritos a mano que ya no se venden. Ahora se
+// arma solo con el catálogo: prioriza los de mayor descuento real y con stock.
+function renderHeroMosaic() {
+  const box = document.getElementById('heroMosaic');
+  if (!box) return;
+  const all = (typeof dbGetProducts === 'function') ? (dbGetProducts() || []) : [];
+  const disponibles = all.filter(p => p && p.img && !p.prox && Number(p.stock) > 0);
+  if (!disponibles.length) { box.innerHTML = ''; return; }
+
+  const dto = p => (p.priceOld && p.priceOld > p.price)
+    ? Math.round((1 - p.price / p.priceOld) * 100) : 0;
+
+  // Orden: primero los del hogar (es lo que encabeza la tienda), después el
+  // resto; dentro de cada grupo, mayor descuento primero.
+  const picks = disponibles
+    .slice()
+    .sort((a, b) =>
+      ((b.section === 'hogar' ? 1 : 0) - (a.section === 'hogar' ? 1 : 0)) ||
+      (dto(b) - dto(a)) ||
+      ((b.tag ? 1 : 0) - (a.tag ? 1 : 0))
+    )
+    .slice(0, 3);
+
+  box.innerHTML = picks.map(p => {
+    const d = dto(p);
+    const badge = d > 0 ? `−${d}% OFF` : (p.tagText || 'Destacado');
+    const detalle = d > 0
+      ? `Antes ${formatPrice(p.priceOld)} · Ahora ${formatPrice(p.price)}`
+      : `${p.cat || ''} · ${formatPrice(p.price)}`;
+    return `<div class="hm-cell" role="button" tabindex="0" data-id="${esc(p.id)}" aria-label="Ver ${esc(p.name)}">
+      <div class="hm-badge">${esc(badge)}</div>
+      <div class="hm-img" style="background-image:url('${esc(cldOpt(p.img, 700))}')"></div>
+      <div class="hm-overlay"><strong>${esc(p.name)}</strong><span>${esc(detalle)}</span></div>
+    </div>`;
+  }).join('');
+
+  // Al hacer clic se abre la ficha de ese producto (antes solo scrolleaba)
+  if (!box._bound) {
+    const abrir = el => { if (el && el.dataset.id) openProductById(el.dataset.id); };
+    box.addEventListener('click', e => abrir(e.target.closest('.hm-cell')));
+    box.addEventListener('keydown', e => {
+      if (e.key === 'Enter' || e.key === ' ') {
+        const c = e.target.closest('.hm-cell');
+        if (c) { e.preventDefault(); abrir(c); }
+      }
+    });
+    box._bound = true;
+  }
+
+  // El cartel de descuento del hero refleja el descuento real máximo
+  const badgeEl = document.querySelector('.hero-badge');
+  if (badgeEl) {
+    const max = Math.max.apply(null, disponibles.map(dto).concat([0]));
+    badgeEl.textContent = max > 0 ? `Hasta ${max}% OFF` : 'Nueva temporada';
+    badgeEl.style.display = '';
+  }
+}
+
+// ══ Optimización de imágenes de Cloudinary ══
+// Reescribe la URL para que Cloudinary sirva la imagen comprimida, en el
+// formato moderno que soporte el navegador (WebP/AVIF) y al ancho justo.
+// Ej: una foto de 2 MB pasa a ~180 KB sin volver a subirla.
+function cldOpt(url, width) {
+  if (!url || typeof url !== 'string') return url || '';
+  if (url.indexOf('res.cloudinary.com') === -1) return url;   // no es de Cloudinary
+  if (/\/upload\/(f_auto|q_auto|w_\d)/.test(url)) return url;  // ya optimizada
+  const t = 'f_auto,q_auto' + (width ? ',w_' + width + ',c_limit' : '');
+  return url.replace('/upload/', '/upload/' + t + '/');
+}
+
+// ══ Aparición de tarjetas al hacer scroll (IntersectionObserver) ══
+// Marcamos el <html> antes de renderizar: así las tarjetas nacen ocultas
+// (sin parpadeo) solo si el navegador soporta el observador.
+if ('IntersectionObserver' in window) document.documentElement.classList.add('io-ok');
+let _revealObserver = null;
+function _getRevealObserver() {
+  if (_revealObserver) return _revealObserver;
+  if (!('IntersectionObserver' in window)) return null;
+  _revealObserver = new IntersectionObserver((entries) => {
+    let i = 0;
+    entries.forEach(e => {
+      if (!e.isIntersecting) return;
+      const el = e.target;
+      el.style.transitionDelay = (i * 55) + 'ms'; // escalonado suave
+      i++;
+      el.classList.add('reveal-in');
+      _revealObserver.unobserve(el);
+      // Limpiar clases al terminar para que el hover vuelva a ser rápido
+      setTimeout(() => {
+        el.classList.remove('reveal-init', 'reveal-in');
+        el.style.transitionDelay = '';
+      }, 800);
+    });
+  }, { threshold: 0.08, rootMargin: '0px 0px -40px 0px' });
+  return _revealObserver;
+}
+function observeReveal(container) {
+  const io = _getRevealObserver();
+  if (!io) return;
+  (container || document).querySelectorAll('.pcard.reveal-init:not(.reveal-in), .ocard.reveal-init:not(.reveal-in)')
+    .forEach(el => io.observe(el));
+}
+// Si la página estaba en segundo plano (pestaña oculta), al volver a verse
+// re-evaluamos las tarjetas por si el observador no llegó a dispararse.
+document.addEventListener('visibilitychange', () => {
+  if (document.visibilityState === 'visible') observeReveal(document);
+});
+
+// ══ SEO: inyecta datos estructurados de PRODUCTOS reales (con precio y stock)
+//    para que Google los indexe. Es dinámico → los precios siempre coinciden
+//    con lo que ve el cliente. Googlebot ejecuta JS y lee este JSON-LD. ══
+function injectProductSchema() {
+  try {
+    const prods = (dbGetProducts() || []).filter(p => p && p.name && !p.prox);
+    if (!prods.length) return;
+    const items = prods.slice(0, 60).map((p, i) => ({
+      "@type": "ListItem",
+      "position": i + 1,
+      "item": {
+        "@type": "Product",
+        "name": p.name,
+        "image": p.img || "https://solentuhogar.com/caja-carrito.jpeg",
+        "description": (p.desc || p.sub || p.name).toString().slice(0, 300),
+        "category": p.cat || p.section || "",
+        "brand": { "@type": "Brand", "name": "Sol en tu Hogar" },
+        "offers": {
+          "@type": "Offer",
+          "price": Number(p.price) || 0,
+          "priceCurrency": "ARS",
+          "availability": (Number(p.stock) > 0)
+            ? "https://schema.org/InStock"
+            : "https://schema.org/OutOfStock",
+          "url": "https://solentuhogar.com/?producto=" + encodeURIComponent(p.id),
+          "seller": { "@type": "Organization", "name": "Sol en tu Hogar" }
+        }
+      }
+    }));
+    const data = {
+      "@context": "https://schema.org",
+      "@type": "ItemList",
+      "name": "Productos de Sol en tu Hogar",
+      "itemListElement": items
+    };
+    let el = document.getElementById('dynProductSchema');
+    if (!el) {
+      el = document.createElement('script');
+      el.type = 'application/ld+json';
+      el.id = 'dynProductSchema';
+      document.head.appendChild(el);
+    }
+    el.textContent = JSON.stringify(data);
+  } catch (e) { /* no romper la tienda por el SEO */ }
+}
+
 (async function initApp() {
   loadCartFromStorage(); // 🛒 Restaurar carrito guardado
   initTimers();
@@ -8743,17 +9450,33 @@ document.addEventListener('keydown', e => {
   await initAuthState(); // restaurar sesión de cliente / enlace de recuperación
   await syncFromSupabase();
   initEmailJS();
+  await loadRatingMap();  // calificaciones reales antes de dibujar las tarjetas
   renderProductGrid('hogar');
   renderProductGrid('ropa');
+  renderProductGrid('tecnologia');
   renderOportunidadesGrid();
+  renderHeroMosaic();     // hero con productos reales
+  injectProductSchema(); // SEO: datos de productos para Google
+  buildHogarFilterChips();
   buildRopaFilterChips();
   initGridCounts();
   applyAllSections(); // Aplicar visibilidad de secciones guardada
+  toggleSeccionesVacias(); // …y recién ahí ocultar las que quedaron sin productos
   populateReviewProductSelect();
   await renderReviews();
   await loadWishlist();
 
   checkProductDeepLink(); // 🔗 Abrir producto si la URL tiene ?producto=ID
+
+  // Red de seguridad: revelar SOLO las tarjetas que están dentro de la pantalla
+  // (las de más abajo se revelan solas al hacer scroll). Evita que algo quede oculto.
+  setTimeout(() => {
+    document.querySelectorAll('.pcard.reveal-init:not(.reveal-in), .ocard.reveal-init:not(.reveal-in)').forEach(el => {
+      if (el.offsetParent === null) return;
+      const r = el.getBoundingClientRect();
+      if (r.top < window.innerHeight && r.bottom > 0) el.classList.add('reveal-in');
+    });
+  }, 2500);
 
   // ── Tooltip "Cambiar tema" — aparece 1.2s después de cargar, desaparece sola ──
   // Solo se muestra una vez por sesión
@@ -8769,20 +9492,45 @@ document.addEventListener('keydown', e => {
   }
 
   // ── Swipe hacia abajo para cerrar modales en mobile ──
+  // Solo cierra si el contenido ya está scrolleado arriba del todo: antes,
+  // el cliente que bajaba leyendo la descripción cerraba la ficha sin querer.
   [
-    { id: 'pdModalOverlay', fn: () => { if (typeof closePdModal === 'function') closePdModal(); } },
-    { id: 'searchOverlay',  fn: () => { if (typeof closeSearch  === 'function') closeSearch();  } },
-  ].forEach(({ id, fn }) => {
+    { id: 'pdModalOverlay', scroller: '.pdModal-body', fn: () => { if (typeof closePdModal === 'function') closePdModal(); } },
+    { id: 'searchOverlay',  scroller: null,            fn: () => { if (typeof closeSearch  === 'function') closeSearch();  } },
+  ].forEach(({ id, scroller, fn }) => {
     const el = document.getElementById(id);
     if (!el) return;
-    let startY = 0, startX = 0;
-    el.addEventListener('touchstart', e => { startY = e.touches[0].clientY; startX = e.touches[0].clientX; }, { passive: true });
+    let startY = 0, startX = 0, startedAtTop = true;
+    el.addEventListener('touchstart', e => {
+      startY = e.touches[0].clientY; startX = e.touches[0].clientX;
+      const sc = scroller ? el.querySelector(scroller) : null;
+      startedAtTop = sc ? sc.scrollTop <= 2 : true;
+    }, { passive: true });
     el.addEventListener('touchend', e => {
       const dy = e.changedTouches[0].clientY - startY;
       const dx = Math.abs(e.changedTouches[0].clientX - startX);
-      if (dy > 80 && dx < 60) fn();
+      if (dy > 80 && dx < 60 && startedAtTop) fn();
     }, { passive: true });
   });
+
+  // ── Swipe horizontal sobre la foto para pasar la galería ──
+  // En mobile había que acertarle a los puntitos de 7px; en una camiseta la
+  // segunda foto suele ser la que define la compra.
+  (function () {
+    const img = document.getElementById('pdModalImg');
+    if (!img) return;
+    let sx = 0, sy = 0;
+    img.addEventListener('touchstart', e => { sx = e.touches[0].clientX; sy = e.touches[0].clientY; }, { passive: true });
+    img.addEventListener('touchend', e => {
+      if (!_pdGallery || _pdGallery.length < 2) return;
+      const dx = e.changedTouches[0].clientX - sx;
+      const dy = Math.abs(e.changedTouches[0].clientY - sy);
+      if (Math.abs(dx) > 50 && dy < 40) {
+        window._pdSwipedAt = new Date().getTime(); // para no abrir el zoom con el mismo gesto
+        pdGalleryGo(_pdGalleryIndex + (dx < 0 ? 1 : -1));
+      }
+    }, { passive: true });
+  })();
 })();
 
 </script>
