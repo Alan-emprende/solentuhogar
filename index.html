@@ -1502,7 +1502,13 @@ body.dark-mode .pd-talle-wa{color:#7BD99B}
 
 .pd360{position:relative;background:var(--surface);border:1px solid var(--sand-deep);border-radius:12px;overflow:hidden;aspect-ratio:4/3;display:flex;align-items:center;justify-content:center;cursor:grab;touch-action:pan-y;user-select:none;-webkit-user-select:none}
 .pd360.is-dragging{cursor:grabbing}
-.pd360-img{width:100%;height:100%;object-fit:contain;pointer-events:none;-webkit-user-drag:none}
+.pd360-img{width:100%;height:100%;object-fit:contain;pointer-events:none;-webkit-user-drag:none;transform-origin:center center;will-change:transform}
+/* Con el zoom activo el arrastre mueve la imagen en vez de girarla */
+.pd360.is-zoomed{cursor:move;touch-action:none}
+.pd360.is-zoomed.is-dragging{cursor:grabbing}
+.pd360-zoom-btn{position:absolute;top:.6rem;left:.7rem;z-index:3;width:34px;height:34px;border:none;border-radius:50%;background:rgba(26,18,9,.68);color:#fff;font-size:.9rem;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:background .2s,transform .18s}
+.pd360-zoom-btn:hover{background:rgba(26,18,9,.9);transform:scale(1.1)}
+.pd360-zoom-hint{position:absolute;bottom:.7rem;left:50%;transform:translateX(-50%);background:rgba(26,18,9,.78);color:#fff;font-size:.68rem;font-weight:600;padding:.32rem .75rem;border-radius:20px;pointer-events:none;white-space:nowrap;max-width:92%;overflow:hidden;text-overflow:ellipsis}
 .pd360-hint{position:absolute;bottom:.7rem;left:50%;transform:translateX(-50%);background:rgba(26,18,9,.78);color:#fff;font-size:.7rem;font-weight:600;padding:.35rem .8rem;border-radius:20px;display:flex;align-items:center;gap:.35rem;pointer-events:none;transition:opacity .35s}
 .pd360-hint span{font-size:.9rem}
 .pd360-hint.oculto{opacity:0}
@@ -3296,11 +3302,18 @@ body.dark-mode .pdModal-save{background:rgba(61,107,74,.28);color:#81c784}
               <span class="pe-gallery-empty" id="peSpinEmpty">Sin vista 360° aún</span>
             </div>
             <div style="display:flex;gap:.5rem;flex-wrap:wrap">
-              <button type="button" class="pe-gallery-add-btn" onclick="spinAddFrames()">🔄 Subir fotos del giro</button>
+              <button type="button" class="pe-gallery-add-btn" onclick="spinFromVideo()" style="border-color:var(--clay);color:var(--clay);font-weight:800">🎬 Generar desde un video (lo más rápido)</button>
+              <button type="button" class="pe-gallery-add-btn" onclick="spinAddFrames()">📷 Subir fotos una por una</button>
               <button type="button" class="pe-gallery-add-btn" onclick="spinClearFrames()" style="border-color:rgba(239,83,80,.4);color:#ef5350">🗑 Vaciar</button>
             </div>
+            <label style="display:flex;align-items:flex-start;gap:.5rem;margin-top:.6rem;font-size:.72rem;color:rgba(255,255,255,.7);cursor:pointer;line-height:1.45">
+              <input type="checkbox" id="peSpinNoBg" checked style="margin-top:.15rem;flex-shrink:0">
+              <span><b style="color:#fff">Quitar el fondo y centrar automáticamente</b> — deja el producto recortado sobre fondo blanco, parejo en todos los cuadros. No necesitás fondo especial para fotografiar: alcanza una mesa despejada.</span>
+            </label>
           </div>
-          <p class="pe-hint">Poné el producto sobre una superficie que gire, sacale entre <b>24 y 36 fotos</b> dando una vuelta completa (una cada 10-15°) sin mover la cámara, y subilas todas juntas. Se ordenan solas por nombre de archivo. Con menos de 8 fotos la vista 360° no se muestra.</p>
+          <p class="pe-hint"><b>Opción rápida (recomendada):</b> apoyá el celular fijo, poné el producto sobre algo que gire y grabá un video de <b>10 a 20 segundos</b> dando una vuelta completa. Elegí "Generar desde un video": los cuadros se cortan acá en tu navegador y solo se suben las fotos (el video no se sube, así que no hay límite de tamaño).<br>
+          <b>Opción manual:</b> sacá 24-36 fotos girando el producto de a poco y subilas todas juntas (se ordenan por nombre: 01, 02, 03…).<br>
+          Con menos de 8 cuadros la vista 360° no se muestra.</p>
         </div>
       </div>
 
@@ -5824,6 +5837,11 @@ document.addEventListener('keydown', e => {
       closeImgZoom();
       return;
     }
+    // Lo mismo con el zoom del visor 360: primero se sale del zoom
+    if (typeof _spinZoom !== 'undefined' && _spinZoom.on) {
+      spinZoomSet(1);
+      return;
+    }
     closePayment();
     closeAuth();
     closeAdmin();
@@ -6929,24 +6947,40 @@ function verTodo(section) {
 // Oculta las secciones que no tienen ningún producto, para que el cliente no
 // vea una sección vacía con el cartel de "no hay productos todavía".
 function toggleSeccionesVacias() {
-  const tec = document.getElementById('tecnologiaSection');
-  if (tec) {
-    const n = document.querySelectorAll('#tecnologiaGrid .pcard').length;
-    tec.style.display = n > 0 ? '' : 'none';
-  }
-  const oportWrap = document.querySelector('.oport-section');
-  if (oportWrap) {
-    const n = document.querySelectorAll('#oportunidadesGrid .ocard').length;
-    oportWrap.style.display = n > 0 ? '' : 'none';
-  }
-  // Ocultar del menú los enlaces a secciones que no se muestran
-  document.querySelectorAll('a[href="#tecnologia"], a[href="#oportunidades"]').forEach(a => {
-    if (a.classList.contains('sec-all')) return;
-    const id = a.getAttribute('href').slice(1);
-    const wrap = id === 'tecnologia'
-      ? document.getElementById('tecnologiaSection')
-      : document.querySelector('.oport-section');
-    if (wrap) a.style.display = (wrap.style.display === 'none') ? 'none' : '';
+  // Cada sección del catálogo: si se queda sin productos, se oculta sola
+  // (junto con su enlace del menú). Así, si sacás una categoría entera,
+  // la tienda se acomoda sin dejar huecos ni carteles de "no hay nada".
+  const secciones = [
+    { id: 'hogar',        grid: 'hogarGrid',        item: '.pcard' },
+    { id: 'ropa',         grid: 'ropaGrid',         item: '.pcard' },
+    { id: 'tecnologia',   grid: 'tecnologiaGrid',   item: '.pcard' },
+    { id: 'oportunidades',grid: 'oportunidadesGrid',item: '.ocard' },
+  ];
+
+  secciones.forEach(sec => {
+    const grid = document.getElementById(sec.grid);
+    if (!grid) return;
+    const hay = grid.querySelectorAll(sec.item).length > 0;
+
+    // El bloque visible es el hermano siguiente del ancla <div id="...">
+    const ancla = document.getElementById(sec.id);
+    let wrap = ancla ? ancla.nextElementSibling : null;
+    // Oportunidades está envuelta en .oport-section
+    if (sec.id === 'oportunidades') wrap = document.querySelector('.oport-section') || wrap;
+    if (wrap) wrap.style.display = hay ? '' : 'none';
+
+    // Enlaces del menú (nav, drawer y pie) que apuntan a esta sección
+    document.querySelectorAll(`a[href="#${sec.id}"]`).forEach(a => {
+      if (a.classList.contains('sec-all')) return; // el "Ver todo" vive dentro de la sección
+      a.style.display = hay ? '' : 'none';
+      const li = a.closest('li');
+      if (li) li.style.display = hay ? '' : 'none';
+    });
+
+    // Botones del hero que llevan a una sección vacía
+    document.querySelectorAll(`.hero-actions a[href="#${sec.id}"]`).forEach(a => {
+      a.style.display = hay ? '' : 'none';
+    });
   });
 }
 
@@ -8045,6 +8079,7 @@ function openProductEditor(id) {
   document.getElementById('peImg').value       = p?.img || '';
   galleryLoadFromProduct(p); // Cargar galería visual
   videoLoadFromProduct(p);   // Cargar videos
+  spinLoadFromProduct(p);    // Cargar vista 360°
   document.getElementById('peProx').value      = p?.prox ? '1' : '0';
   document.getElementById('peStars').value     = p?.stars || 5;
   document.getElementById('peTimerHours').value = p?.timerHours || '';
@@ -8133,6 +8168,7 @@ function saveProductFromEditor() {
 
   const gallery = galleryGetList(); // Leer de la galería visual
   const videos  = videoGetList();   // Leer videos
+  const spin360 = spinGetList();    // Leer cuadros de la vista 360°
 
   const prod = {
     id:         document.getElementById('peId').value || ('p_' + Date.now()),
@@ -8145,7 +8181,7 @@ function saveProductFromEditor() {
     tag: tagType||'', tagText: finalTagText,
     prox:       document.getElementById('peProx').value === '1',
     img:        document.getElementById('peImg').value.trim(),
-    gallery,    videos,
+    gallery,    videos,    spin360,
     desc: document.getElementById('peDesc').value.trim(),
     timerHours: parseInt(document.getElementById('peTimerHours').value) || null,
     material: document.getElementById('peMaterial')?.value.trim() || '',
@@ -9136,6 +9172,201 @@ function galleryGetList() {
 }
 
 /* ══════════════════════════════════════════════════════
+   EDITOR DE VISTA 360° — secuencia de fotos del producto girando
+   ══════════════════════════════════════════════════════ */
+let _peSpinList = [];
+
+function spinRenderThumbs() {
+  const wrap  = document.getElementById('peSpinThumbs');
+  const empty = document.getElementById('peSpinEmpty');
+  if (!wrap) return;
+  wrap.querySelectorAll('.pe-gallery-thumb').forEach(el => el.remove());
+  if (empty) {
+    empty.style.display = _peSpinList.length ? 'none' : '';
+    if (_peSpinList.length) empty.style.display = 'none';
+  }
+  _peSpinList.forEach((src, i) => {
+    const div = document.createElement('div');
+    div.className = 'pe-gallery-thumb';
+    div.innerHTML = `
+      <img src="${cldOpt(src, 120)}" alt="Cuadro ${i + 1}">
+      <button type="button" class="pe-gallery-thumb-del" onclick="spinRemoveFrame(${i})" title="Quitar este cuadro">✕</button>
+      <span class="pe-gallery-thumb-idx">${i + 1}</span>`;
+    wrap.insertBefore(div, empty);
+  });
+  // Aviso de cantidad
+  let info = document.getElementById('peSpinInfo');
+  if (!info) {
+    info = document.createElement('p');
+    info.id = 'peSpinInfo';
+    info.className = 'pe-hint';
+    wrap.parentElement.appendChild(info);
+  }
+  if (!_peSpinList.length) info.textContent = '';
+  else if (_peSpinList.length < 8) info.innerHTML = `⚠️ <b>${_peSpinList.length} fotos</b> — hacen falta al menos 8 para que se muestre el 360°.`;
+  else info.innerHTML = `✅ <b>${_peSpinList.length} fotos</b> cargadas — la vista 360° va a aparecer en la ficha.`;
+}
+
+function spinRemoveFrame(i) { _peSpinList.splice(i, 1); spinRenderThumbs(); }
+
+// Deja todos los cuadros parejos: recorta el fondo, centra el producto y lo
+// encuadra igual en los 24 cuadros. Así el giro no "salta" y no hace falta
+// fotografiar sobre un fondo especial.
+function _spinAcabado(url) {
+  const quitarFondo = document.getElementById('peSpinNoBg')?.checked;
+  if (!url || url.indexOf('res.cloudinary.com') === -1) return url;
+  if (/\/upload\/(e_background_removal|w_\d)/.test(url)) return url; // ya procesada
+  const t = quitarFondo
+    ? 'e_background_removal/w_800,h_800,c_pad,b_white,f_jpg,q_auto'
+    : 'w_800,h_800,c_pad,b_auto,f_jpg,q_auto';
+  return url.replace('/upload/', '/upload/' + t + '/');
+}
+
+function spinClearFrames() {
+  if (!_peSpinList.length) return;
+  if (!confirm('¿Quitar todas las fotos de la vista 360° de este producto?')) return;
+  _peSpinList = [];
+  spinRenderThumbs();
+  showToast('Vista 360° vaciada — acordate de guardar el producto');
+}
+
+async function spinAddFrames() {
+  const input = document.createElement('input');
+  input.type = 'file'; input.accept = 'image/*'; input.multiple = true;
+  input.onchange = async () => {
+    // Se ordenan por nombre para respetar el orden del giro (foto_01, foto_02…)
+    const files = Array.from(input.files).sort((a, b) =>
+      a.name.localeCompare(b.name, 'es', { numeric: true, sensitivity: 'base' }));
+    if (!files.length) return;
+    if (_peSpinList.length + files.length > 48) { showToast('⚠️ Máximo 48 fotos para el 360°'); return; }
+
+    if (CLOUDINARY_CLOUD_NAME === 'TU_CLOUD_NAME') {
+      files.forEach(file => {
+        const reader = new FileReader();
+        reader.onload = e => { _peSpinList.push(e.target.result); spinRenderThumbs(); };
+        reader.readAsDataURL(file);
+      });
+      return;
+    }
+
+    let ok = 0, i = 0;
+    for (const file of files) {
+      i++;
+      showToast(`⏳ Subiendo foto ${i} de ${files.length}...`);
+      if (file.size > 8 * 1024 * 1024) { showToast(`❌ ${file.name} pesa más de 8MB`); continue; }
+      try {
+        const fd = new FormData();
+        fd.append('file', file);
+        fd.append('upload_preset', CLOUDINARY_UPLOAD_PRESET);
+        fd.append('folder', 'solentuhogar/360');
+        const res  = await fetch(`https://api.cloudinary.com/v1_1/${CLOUDINARY_CLOUD_NAME}/image/upload`, { method: 'POST', body: fd });
+        const data = await res.json();
+        if (data.secure_url) { _peSpinList.push(_spinAcabado(data.secure_url)); ok++; spinRenderThumbs(); }
+        else showToast('❌ Error: ' + (data.error?.message || 'desconocido'));
+      } catch (e) { showToast('❌ Error de red al subir'); }
+    }
+    spinRenderThumbs();
+    if (ok > 0) showToast(`✅ ${ok} foto${ok > 1 ? 's' : ''} del giro cargada${ok > 1 ? 's' : ''}`);
+  };
+  input.click();
+}
+
+function spinLoadFromProduct(p) {
+  _peSpinList = p?.spin360 ? [...p.spin360] : [];
+  spinRenderThumbs();
+}
+
+function spinGetList() { return [..._peSpinList]; }
+
+/* ── Vista 360° a partir de un VIDEO ──
+   Es la forma más rápida: grabás ~15 segundos girando el producto y Cloudinary
+   corta los cuadros solo. No hace falta sacar 24 fotos ni subirlas una por una.
+   Los cuadros son fotogramas REALES del video, así que muestran el producto
+   tal cual es (a diferencia de generarlos con IA, que inventaría la parte
+   de atrás que la cámara nunca vio). */
+async function spinFromVideo() {
+  if (CLOUDINARY_CLOUD_NAME === 'TU_CLOUD_NAME') {
+    showToast('⚙️ Configurá Cloudinary primero para usar esta función');
+    return;
+  }
+  const input = document.createElement('input');
+  input.type = 'file';
+  input.accept = 'video/*';
+  input.onchange = async () => {
+    const file = input.files[0];
+    if (!file) return;
+
+    const cuantos = parseInt(prompt('¿Cuántos cuadros querés para el giro?\n\n24 = fluido y liviano (recomendado)\n36 = más suave\n16 = más liviano', '24'), 10);
+    if (!cuantos || cuantos < 8 || cuantos > 48) { showToast('⚠️ Elegí un número entre 8 y 48'); return; }
+
+    let url = null;
+    try {
+      // ── 1) Cortamos los cuadros acá mismo, en el navegador ──
+      // Así no dependemos de la conversión de video de Cloudinary (que en el
+      // plan gratis se corta en 40MB) y el video original ni se sube.
+      showToast('⏳ Leyendo el video...');
+      url = URL.createObjectURL(file);
+      const vid = document.createElement('video');
+      vid.preload = 'auto'; vid.muted = true; vid.playsInline = true; vid.src = url;
+
+      await new Promise((ok, err) => {
+        vid.onloadedmetadata = ok;
+        vid.onerror = () => err(new Error('formato de video no soportado'));
+        setTimeout(() => err(new Error('el video tardó demasiado en abrir')), 30000);
+      });
+
+      const dur = vid.duration;
+      if (!dur || !isFinite(dur)) throw new Error('no se pudo leer la duración');
+
+      const ancho = Math.min(800, vid.videoWidth || 800);
+      const alto  = Math.round((vid.videoHeight || 600) * (ancho / (vid.videoWidth || 800)));
+      const canvas = document.createElement('canvas');
+      canvas.width = ancho; canvas.height = alto;
+      const ctx = canvas.getContext('2d');
+
+      const blobs = [];
+      for (let i = 0; i < cuantos; i++) {
+        const t = dur * i / cuantos;
+        await new Promise((ok, err) => {
+          vid.onseeked = ok;
+          vid.onerror = () => err(new Error('error al recorrer el video'));
+          vid.currentTime = Math.min(t, Math.max(0, dur - 0.05));
+          setTimeout(ok, 3000); // si el navegador no avisa, seguimos igual
+        });
+        ctx.drawImage(vid, 0, 0, ancho, alto);
+        const blob = await new Promise(r => canvas.toBlob(r, 'image/jpeg', 0.85));
+        if (blob) blobs.push(blob);
+        showToast(`⏳ Cortando cuadros... ${i + 1}/${cuantos}`);
+      }
+      if (!blobs.length) throw new Error('no se pudo cortar ningún cuadro');
+
+      // ── 2) Subimos los cuadros como imágenes comunes ──
+      const frames = [];
+      for (let i = 0; i < blobs.length; i++) {
+        showToast(`⏳ Subiendo cuadro ${i + 1} de ${blobs.length}...`);
+        const fd = new FormData();
+        fd.append('file', blobs[i]);
+        fd.append('upload_preset', CLOUDINARY_UPLOAD_PRESET);
+        fd.append('folder', 'solentuhogar/360');
+        const res  = await fetch(`https://api.cloudinary.com/v1_1/${CLOUDINARY_CLOUD_NAME}/image/upload`, { method: 'POST', body: fd });
+        const data = await res.json();
+        if (data.secure_url) frames.push(_spinAcabado(data.secure_url));
+      }
+      if (frames.length < 8) throw new Error('se subieron muy pocos cuadros (' + frames.length + ')');
+
+      _peSpinList = frames;
+      spinRenderThumbs();
+      showToast(`✅ ${frames.length} cuadros listos — revisá el orden y guardá el producto`);
+    } catch (e) {
+      showToast('❌ ' + (e.message || 'No se pudo procesar el video'));
+    } finally {
+      if (url) URL.revokeObjectURL(url);
+    }
+  };
+  input.click();
+}
+
+/* ══════════════════════════════════════════════════════
    EDITOR DE VIDEOS — lista de videos del producto
    ══════════════════════════════════════════════════════ */
 let _peVideoList = []; // Array de URLs de video
@@ -9323,8 +9554,10 @@ function renderPdMedia(prodId) {
       <div class="pdmedia-sub">Arrastrá sobre la foto (o deslizá con el dedo) para girarlo.</div>
       <div class="pd360" id="pd360">
         <img class="pd360-img" id="pd360Img" src="${esc(cldOpt(frames[0], 800))}" alt="${esc(p.name)} en 360 grados" draggable="false">
-        <div class="pd360-hint" id="pd360Hint"><span>↔</span> Arrastrá para girar</div>
+        <div class="pd360-hint" id="pd360Hint"><span>↔</span> Arrastrá para girar · doble clic para acercar</div>
+        <div class="pd360-zoom-hint" id="pd360ZoomHint" style="display:none">Arrastrá para moverte · rueda o pellizcá para acercar</div>
         <div class="pd360-count"><span id="pd360Num">1</span>/${frames.length}</div>
+        <button type="button" class="pd360-zoom-btn" id="pd360ZoomBtn" onclick="spinZoomToggle()" title="Acercar" aria-label="Acercar">🔍</button>
         <div class="pd360-loading" id="pd360Loading">Cargando vista 360°…</div>
       </div>
       <input class="pd360-range" id="pd360Range" type="range" min="0" max="${frames.length - 1}" value="0"
@@ -9358,13 +9591,70 @@ function renderPdMedia(prodId) {
 }
 
 // Precarga los cuadros y engancha el arrastre
+// Estado del zoom del visor
+let _spinZoom = { on: false, escala: 1, tx: 0, ty: 0 };
+let _spinArrastre = null;   // estado del arrastre en curso
+let _spinDemo = null;       // giro de bienvenida
+let _spinGlobalListo = false;
+
+const SPIN_ZOOM_MAX = 4;
+
+// Versión en alta resolución del cuadro (para que el zoom no se vea pixelado)
+function _spinUrlGrande(url) {
+  if (!url) return url;
+  return url.replace(/w_800,h_800/, 'w_1800,h_1800').replace(/w_800(?!,h)/, 'w_1800');
+}
+
+function _spinAplicarTransform() {
+  const img = document.getElementById('pd360Img');
+  const cont = document.getElementById('pd360');
+  if (!img || !cont) return;
+  const s = _spinZoom.escala;
+  // Limitamos el desplazamiento para que nunca se vea borde vacío
+  const maxX = cont.clientWidth  * (s - 1) / 2;
+  const maxY = cont.clientHeight * (s - 1) / 2;
+  _spinZoom.tx = Math.max(-maxX, Math.min(maxX, _spinZoom.tx));
+  _spinZoom.ty = Math.max(-maxY, Math.min(maxY, _spinZoom.ty));
+  img.style.transform = `translate(${_spinZoom.tx}px, ${_spinZoom.ty}px) scale(${s})`;
+  cont.classList.toggle('is-zoomed', _spinZoom.on);
+  const btn = document.getElementById('pd360ZoomBtn');
+  if (btn) {
+    btn.textContent = _spinZoom.on ? '✕' : '🔍';
+    btn.title = _spinZoom.on ? 'Salir del zoom' : 'Acercar';
+    btn.setAttribute('aria-label', btn.title);
+  }
+  const ay = document.getElementById('pd360ZoomHint');
+  if (ay) ay.style.display = _spinZoom.on ? '' : 'none';
+}
+
+function spinZoomSet(escala, centrar) {
+  const cont = document.getElementById('pd360');
+  if (!cont) return;
+  const s = Math.max(1, Math.min(SPIN_ZOOM_MAX, escala));
+  const salia = _spinZoom.on;
+  _spinZoom.escala = s;
+  _spinZoom.on = s > 1.02;
+  if (!_spinZoom.on) { _spinZoom.tx = 0; _spinZoom.ty = 0; _spinZoom.escala = 1; }
+  if (centrar && _spinZoom.on) { _spinZoom.tx = centrar.x; _spinZoom.ty = centrar.y; }
+  // Al entrar en zoom pedimos el cuadro en alta; al salir volvemos al liviano
+  if (_spinZoom.on !== salia) spinGoTo(_spinIdx);
+  _spinAplicarTransform();
+  if (_spinZoom.on) _ocultarHint();
+}
+
+function spinZoomToggle() {
+  spinZoomSet(_spinZoom.on ? 1 : 2.5);
+}
+
 function _initSpin(frames) {
   _spinFrames = frames.map(f => cldOpt(f, 800));
   _spinIdx = 0;
+  _spinZoom = { on: false, escala: 1, tx: 0, ty: 0 };
   const cont = document.getElementById('pd360');
   const img  = document.getElementById('pd360Img');
   const load = document.getElementById('pd360Loading');
   if (!cont || !img) return;
+  _spinAplicarTransform();
 
   // Precarga en segundo plano para que el giro sea fluido
   let listas = 0;
@@ -9378,32 +9668,101 @@ function _initSpin(frames) {
   });
   setTimeout(() => { if (load) load.style.display = 'none'; }, 6000); // por las dudas
 
-  let arrastrando = false, xIni = 0, idxIni = 0;
-  const px = 6; // píxeles de arrastre por cuadro
+  const px = 6; // píxeles de arrastre por cuadro cuando estamos girando
 
-  const empezar = x => { arrastrando = true; xIni = x; idxIni = _spinIdx; cont.classList.add('is-dragging'); _ocultarHint(); };
-  const mover = x => {
-    if (!arrastrando) return;
-    const delta = Math.round((x - xIni) / px);
-    spinGoTo(idxIni + delta);
-  };
-  const terminar = () => { arrastrando = false; cont.classList.remove('is-dragging'); };
+  // ── Un solo juego de listeners para toda la vida de la página ──
+  // (antes se agregaban de nuevo con cada producto y se iban acumulando)
+  if (!_spinGlobalListo) {
+    _spinGlobalListo = true;
 
-  cont.addEventListener('mousedown', e => { e.preventDefault(); empezar(e.clientX); });
-  window.addEventListener('mousemove', e => mover(e.clientX));
-  window.addEventListener('mouseup', terminar);
-  cont.addEventListener('touchstart', e => empezar(e.touches[0].clientX), { passive: true });
-  cont.addEventListener('touchmove', e => {
-    if (!arrastrando) return;
-    e.preventDefault(); // evita que la página scrollee mientras gira
-    mover(e.touches[0].clientX);
-  }, { passive: false });
-  cont.addEventListener('touchend', terminar, { passive: true });
+    const contActual = () => document.getElementById('pd360');
+
+    const empezar = (x, y) => {
+      const c = contActual(); if (!c) return;
+      _spinArrastre = { x0: x, y0: y, idx0: _spinIdx, tx0: _spinZoom.tx, ty0: _spinZoom.ty };
+      c.classList.add('is-dragging');
+      _ocultarHint();
+      if (_spinDemo) { clearInterval(_spinDemo); _spinDemo = null; }
+    };
+    const mover = (x, y) => {
+      if (!_spinArrastre) return;
+      if (_spinZoom.on) {
+        // Con zoom activo, arrastrar mueve la imagen en vez de girarla
+        _spinZoom.tx = _spinArrastre.tx0 + (x - _spinArrastre.x0);
+        _spinZoom.ty = _spinArrastre.ty0 + (y - _spinArrastre.y0);
+        _spinAplicarTransform();
+      } else {
+        spinGoTo(_spinArrastre.idx0 + Math.round((x - _spinArrastre.x0) / px));
+      }
+    };
+    const terminar = () => {
+      _spinArrastre = null;
+      const c = contActual(); if (c) c.classList.remove('is-dragging');
+    };
+
+    document.addEventListener('mousedown', e => {
+      const c = e.target.closest && e.target.closest('#pd360');
+      if (!c) return;
+      if (e.target.id === 'pd360ZoomBtn') return; // el botón tiene lo suyo
+      e.preventDefault();
+      empezar(e.clientX, e.clientY);
+    });
+    window.addEventListener('mousemove', e => mover(e.clientX, e.clientY));
+    window.addEventListener('mouseup', terminar);
+
+    // Rueda del mouse = acercar / alejar
+    document.addEventListener('wheel', e => {
+      const c = e.target.closest && e.target.closest('#pd360');
+      if (!c) return;
+      e.preventDefault();
+      spinZoomSet(_spinZoom.escala * (e.deltaY < 0 ? 1.18 : 1 / 1.18));
+    }, { passive: false });
+
+    // Doble clic = entrar y salir del zoom
+    document.addEventListener('dblclick', e => {
+      const c = e.target.closest && e.target.closest('#pd360');
+      if (!c) return;
+      e.preventDefault();
+      spinZoomToggle();
+    });
+
+    // ── Táctil: un dedo gira o desplaza; dos dedos hacen zoom ──
+    let pinchIni = 0, escalaIni = 1;
+    const dist = t => Math.hypot(t[0].clientX - t[1].clientX, t[0].clientY - t[1].clientY);
+
+    document.addEventListener('touchstart', e => {
+      const c = e.target.closest && e.target.closest('#pd360');
+      if (!c) return;
+      if (e.touches.length === 2) {
+        pinchIni = dist(e.touches); escalaIni = _spinZoom.escala; _spinArrastre = null;
+      } else {
+        empezar(e.touches[0].clientX, e.touches[0].clientY);
+      }
+    }, { passive: true });
+
+    document.addEventListener('touchmove', e => {
+      const c = e.target.closest && e.target.closest('#pd360');
+      if (!c) return;
+      if (e.touches.length === 2 && pinchIni) {
+        e.preventDefault();
+        spinZoomSet(escalaIni * (dist(e.touches) / pinchIni));
+      } else if (_spinArrastre) {
+        e.preventDefault(); // que la página no scrollee mientras se usa el visor
+        mover(e.touches[0].clientX, e.touches[0].clientY);
+      }
+    }, { passive: false });
+
+    document.addEventListener('touchend', e => {
+      if (e.touches.length < 2) pinchIni = 0;
+      terminar();
+    }, { passive: true });
+  }
 
   // Giro de bienvenida: muestra que se puede mover
   let auto = 0;
-  const demo = setInterval(() => {
-    if (arrastrando || auto >= _spinFrames.length) { clearInterval(demo); return; }
+  if (_spinDemo) clearInterval(_spinDemo);
+  _spinDemo = setInterval(() => {
+    if (_spinArrastre || _spinZoom.on || auto >= _spinFrames.length) { clearInterval(_spinDemo); _spinDemo = null; return; }
     spinGoTo(_spinIdx + 1); auto++;
   }, 60);
 }
@@ -9420,7 +9779,9 @@ function spinGoTo(i) {
   const img = document.getElementById('pd360Img');
   const num = document.getElementById('pd360Num');
   const rng = document.getElementById('pd360Range');
-  if (img) img.src = _spinFrames[_spinIdx];
+  // Con el zoom activo pedimos el cuadro en alta para que no se vea pixelado
+  const src = _spinZoom.on ? _spinUrlGrande(_spinFrames[_spinIdx]) : _spinFrames[_spinIdx];
+  if (img && img.getAttribute('src') !== src) img.src = src;
   if (num) num.textContent = _spinIdx + 1;
   if (rng && document.activeElement !== rng) rng.value = _spinIdx;
 }
@@ -9555,7 +9916,8 @@ function renderHeroMosaic() {
 function cldOpt(url, width) {
   if (!url || typeof url !== 'string') return url || '';
   if (url.indexOf('res.cloudinary.com') === -1) return url;   // no es de Cloudinary
-  if (/\/upload\/(f_auto|q_auto|w_\d)/.test(url)) return url;  // ya optimizada
+  if (url.indexOf('/video/upload/') !== -1) return url;        // cuadros sacados de un video: ya vienen con su transformación
+  if (/\/upload\/(f_auto|q_auto|w_\d|so_)/.test(url)) return url; // ya optimizada
   const t = 'f_auto,q_auto' + (width ? ',w_' + width + ',c_limit' : '');
   return url.replace('/upload/', '/upload/' + t + '/');
 }
