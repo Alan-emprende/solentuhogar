@@ -3302,8 +3302,8 @@ body.dark-mode .pdModal-save{background:rgba(61,107,74,.28);color:#81c784}
               <span class="pe-gallery-empty" id="peSpinEmpty">Sin vista 360° aún</span>
             </div>
             <div style="display:flex;gap:.5rem;flex-wrap:wrap">
-              <button type="button" class="pe-gallery-add-btn" onclick="spinFromVideo()" style="border-color:var(--clay);color:var(--clay);font-weight:800">🎬 Generar desde un video (lo más rápido)</button>
-              <button type="button" class="pe-gallery-add-btn" onclick="spinAddFrames()">📷 Subir fotos una por una</button>
+              <button type="button" class="pe-gallery-add-btn" onclick="spinAddFrames()" style="border-color:var(--clay);color:var(--clay);font-weight:800">📷 Subir las fotos del giro (todas juntas)</button>
+              <button type="button" class="pe-gallery-add-btn" onclick="spinFromVideo()">🎬 Generar desde un video</button>
               <button type="button" class="pe-gallery-add-btn" onclick="spinClearFrames()" style="border-color:rgba(239,83,80,.4);color:#ef5350">🗑 Vaciar</button>
             </div>
             <label style="display:flex;align-items:flex-start;gap:.5rem;margin-top:.6rem;font-size:.72rem;color:rgba(255,255,255,.7);cursor:pointer;line-height:1.45">
@@ -3311,9 +3311,9 @@ body.dark-mode .pdModal-save{background:rgba(61,107,74,.28);color:#81c784}
               <span><b style="color:#fff">Quitar el fondo y centrar automáticamente</b> — deja el producto recortado sobre fondo blanco, parejo en todos los cuadros. No necesitás fondo especial para fotografiar: alcanza una mesa despejada.</span>
             </label>
           </div>
-          <p class="pe-hint"><b>Opción rápida (recomendada):</b> apoyá el celular fijo, poné el producto sobre algo que gire y grabá un video de <b>10 a 20 segundos</b> dando una vuelta completa. Elegí "Generar desde un video": los cuadros se cortan acá en tu navegador y solo se suben las fotos (el video no se sube, así que no hay límite de tamaño).<br>
-          <b>Opción manual:</b> sacá 24-36 fotos girando el producto de a poco y subilas todas juntas (se ordenan por nombre: 01, 02, 03…).<br>
-          Con menos de 8 cuadros la vista 360° no se muestra.</p>
+          <p class="pe-hint"><b>Con fotos:</b> sacá las fotos girando el producto de a poco y subilas <b>todas juntas</b> de una vez. Se ordenan solas por nombre de archivo (01, 02, 03…). Con <b>12 fotos</b> (una cada 30°) ya se ve bien; con 24 (una cada 15°) queda bien suave. Mínimo 8.<br>
+          <b>Con video (más rápido):</b> celular fijo, producto sobre algo que gire, grabá 10-20 segundos dando una vuelta y usá "Generar desde un video". Los cuadros se cortan acá en tu navegador; el video no se sube, así que no hay límite de tamaño.<br>
+          En los dos casos: no muevas la cámara, girá solo el producto.</p>
         </div>
       </div>
 
@@ -9599,6 +9599,16 @@ let _spinGlobalListo = false;
 
 const SPIN_ZOOM_MAX = 4;
 
+// Cuántos píxeles hay que arrastrar para pasar de un cuadro al siguiente.
+// Se adapta a la cantidad de fotos: la vuelta completa siempre lleva más o
+// menos el mismo recorrido del dedo, así con 10 fotos el giro no se dispara
+// ni con 36 se hace eterno.
+function _spinPxPorCuadro() {
+  const n = _spinFrames.length || 24;
+  const RECORRIDO_VUELTA = 340; // píxeles para dar una vuelta entera
+  return Math.max(5, Math.min(45, RECORRIDO_VUELTA / n));
+}
+
 // Versión en alta resolución del cuadro (para que el zoom no se vea pixelado)
 function _spinUrlGrande(url) {
   if (!url) return url;
@@ -9668,8 +9678,6 @@ function _initSpin(frames) {
   });
   setTimeout(() => { if (load) load.style.display = 'none'; }, 6000); // por las dudas
 
-  const px = 6; // píxeles de arrastre por cuadro cuando estamos girando
-
   // ── Un solo juego de listeners para toda la vida de la página ──
   // (antes se agregaban de nuevo con cada producto y se iban acumulando)
   if (!_spinGlobalListo) {
@@ -9692,7 +9700,7 @@ function _initSpin(frames) {
         _spinZoom.ty = _spinArrastre.ty0 + (y - _spinArrastre.y0);
         _spinAplicarTransform();
       } else {
-        spinGoTo(_spinArrastre.idx0 + Math.round((x - _spinArrastre.x0) / px));
+        spinGoTo(_spinArrastre.idx0 + Math.round((x - _spinArrastre.x0) / _spinPxPorCuadro()));
       }
     };
     const terminar = () => {
