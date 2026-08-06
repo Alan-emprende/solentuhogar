@@ -455,7 +455,8 @@ nav.raised{box-shadow:0 4px 24px rgba(26,18,9,.08)}
 .pdg-dots{position:absolute;bottom:.65rem;left:0;right:0;display:flex;justify-content:center;gap:.4rem;z-index:10}
 .pdg-dot{width:7px;height:7px;border-radius:50%;background:rgba(255,255,255,.5);border:none;cursor:pointer;transition:background .2s,transform .2s;padding:0}
 .pdg-dot.active{background:#fff;transform:scale(1.25)}
-.pdg-counter{position:absolute;top:.65rem;right:.65rem;background:rgba(0,0,0,.45);color:#fff;font-size:.62rem;font-weight:700;padding:.2rem .55rem;border-radius:20px;z-index:10;letter-spacing:.05em}
+/* El contador va a la izquierda: a la derecha están la ✕ y el botón compartir */
+.pdg-counter{position:absolute;top:.65rem;left:.65rem;right:auto;background:rgba(0,0,0,.45);color:#fff;font-size:.62rem;font-weight:700;padding:.2rem .55rem;border-radius:20px;z-index:10;letter-spacing:.05em}
 
 /* ── Reseñas ── */
 .reviews-section{padding:3.5rem 0;background:var(--surface);border-top:1px solid var(--sand-deep)}
@@ -1548,8 +1549,9 @@ body.dark-mode .pd-talle-wa{color:#7BD99B}
    La foto ocupa la izquierda y el contenido la derecha, sin recuadro flotante.
    El texto no se estira de lado a lado: los márgenes crecen con la pantalla
    para que las líneas sigan siendo cómodas de leer. */
-@media(min-width:681px){
+@media(min-width:861px){
   .pdModal-overlay{align-items:stretch;justify-content:stretch;padding:0}
+  .pdModal{flex-direction:row}
   .pdModal{
     width:100%;max-width:100%;
     height:100dvh;max-height:100dvh;
@@ -1662,11 +1664,9 @@ body.dark-mode .pdModal-save{background:rgba(61,107,74,.28);color:#81c784}
 
 /* ── Botón de compra siempre visible en celular ──
    Sin esto el CTA se pierde apenas el cliente scrollea a leer la descripción. */
-@media(max-width:680px){
+@media(max-width:860px){
   /* En el celular la ficha ocupa TODA la pantalla y se comporta como una
-     página aparte, no como un recuadro con el sitio asomando detrás.
-     La foto arriba, el contenido scrollea en el medio y el botón de compra
-     queda anclado abajo, siempre a la vista. */
+     página aparte, no como un recuadro con el sitio asomando detrás. */
   .pdModal-overlay{align-items:stretch;padding:0;background:rgba(26,18,9,.35)}
   .pdModal{
     display:flex;flex-direction:column;
@@ -1677,10 +1677,17 @@ body.dark-mode .pdModal-save{background:rgba(61,107,74,.28);color:#81c784}
   }
   .pdModal-overlay.open .pdModal{transform:translateY(0)}
   .pdModal::before{display:none} /* el "asa" ya no corresponde: es una pantalla, no un panel */
-  .pdModal-img{width:100%;height:42dvh;min-height:250px;flex:0 0 auto}
   /* Respetar la muesca y la barra de gestos del teléfono */
   .pdModal-close,.pdModal-share-btn{top:calc(.6rem + env(safe-area-inset-top,0px))}
   .pdModal-body{flex:1 1 auto;min-height:0;overflow-y:auto;padding-bottom:1rem}
+  /* ── La FOTO viaja dentro del área que scrollea ──
+     Antes quedaba clavada arriba comiéndose media pantalla para siempre y el
+     texto se leía por una ranura. Ahora se corre hacia arriba al bajar y el
+     contenido aprovecha toda la pantalla, como en cualquier tienda grande. */
+  .pdModal-body > .pdModal-img{
+    flex:none;width:auto;height:46dvh;min-height:230px;max-height:420px;
+    margin:-1.2rem -1.2rem 0;border-radius:0;
+  }
   .pdModal-qty-row{
     flex:0 0 auto;
     background:var(--white);
@@ -6339,12 +6346,19 @@ function _pdPlaceBuyBar() {
   const row  = document.getElementById('pdModalQtyRow');
   const body = document.querySelector('.pdModal-body');
   const modal= document.getElementById('pdModal');
-  if (!row || !body || !modal) return;
-  const esMobile = window.matchMedia('(max-width:680px)').matches;
-  if (esMobile) {
+  const foto = document.getElementById('pdModalImg');
+  if (!row || !body || !modal || !foto) return;
+  const esAngosto = window.matchMedia('(max-width:860px)').matches;
+  if (esAngosto) {
+    // La foto entra al área que scrollea, así se corre hacia arriba al bajar
+    // leyendo y el contenido gana toda la pantalla.
+    if (foto.parentElement !== body) body.insertBefore(foto, body.firstChild);
+    // La barra de compra sale del scroll y queda anclada al pie.
     if (row.parentElement !== modal) modal.appendChild(row);
   } else {
-    // Volver a su posición original: justo antes del bloque de garantías
+    // Pantalla grande: la foto vuelve a la izquierda, fija, y la barra de
+    // compra vuelve al contenido (queda pegada abajo con position:sticky).
+    if (foto.parentElement !== modal) modal.insertBefore(foto, body);
     const ancla = body.querySelector('.pdModal-assure');
     if (row.parentElement !== body) {
       if (ancla) body.insertBefore(row, ancla); else body.appendChild(row);
